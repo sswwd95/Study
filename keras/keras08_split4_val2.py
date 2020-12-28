@@ -38,7 +38,7 @@ print(y_train.shape)
 print(y_test.shape)
 
 x_train, x_val, y_train, y_val= train_test_split(x_train, y_train,
-                                                 test_size=0.2, shuffle = False) # 트레인사이즈는 64개  val은 16개  
+                                                 test_size=0.4, shuffle = False) # 트레인사이즈는 64개  val은 16개  
 
 
 print(x_train.shape)
