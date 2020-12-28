@@ -26,7 +26,7 @@ y_test = y[80:]
 # 텐서플로우 안에서 sklearn쓰면 더 강력해짐
 
 from sklearn.model_selection import train_test_split
-x_train, x_test, y_train, y_test= train_test_split(x,y, test_size=0.2, shuffle=True)  # x_train을 60프로 주겠다. x_test는 40 / 0.8이면 81~100까지 나옴
+x_train, x_test, y_train, y_test= train_test_split(x,y, train_size=0.8, shuffle=False)  # train_size = 0.6 -> x_train을 60프로 주겠다. x_test는 40 / 0.8이면 test는 81~100까지 나옴
 
 # shuffle=True가 기본값이다. False하면 순서대로 나옴. 순서대로 하면 범위 맞지 않음. 
 # 왜 숫자들이 무작위로 나오는가?? 섞은게 좋다. 왜?? 안섞고 순서대로 하면 범위가 맞지 않다. 훈련데이터셋과 테스트데이터셋의 범위가 달라짐. 섞으면 무작위로 전체 범위에서 뽑는거기 때문에 범위가 같아짐. 
@@ -38,7 +38,7 @@ print(y_train.shape)
 print(y_test.shape)
 
 x_train, x_val, y_train, y_val= train_test_split(x_train, y_train,
-                                                 train_size=0.8, shuffle = True) # 트레인사이즈는 64개  val은 16개  
+                                                 test_size=0.2, shuffle = False) # 트레인사이즈는 64개  val은 16개  
 
 
 print(x_train.shape)
