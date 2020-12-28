@@ -21,7 +21,9 @@ model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam', metrics=['mae'])
-model.fit(x_train, y_train, epochs=100, batch_size=1, validation_split=0.2)
+model.fit(x_train, y_train, epochs=100, batch_size=1, validation_split=0.2)  #20프로 쓴다는 뜻. 8개만 쓰겠다. 
+
+#2.3번 모델구성, 컴파일&훈련 -> 하이퍼 파라미터 튜닝.
 
 #4. 평가, 예측
 results = model.evaluate(x_test, y_test, batch_size=1)

@@ -42,5 +42,5 @@ print("mse : ", mean_squared_error(y_predict, y_test))
 
 from sklearn.metrics import r2_score
 r2 = r2_score(y_test, y_predict)
-print("R2 : ", r2)
+print("R2 : ", r2)                            #r2는 높을수록 좋다. 0~1까지의 지표로 나타내기 때문. 
 # 기본 값에서 실행하면 0.87나오지만 val_split=0.1로하면 0.996나옴.

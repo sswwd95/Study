@@ -20,7 +20,7 @@ model.add(Dense(5))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam', metrics=['mae'])
+model.compile(loss='mse', optimizer='adam', metrics=['mae'])   # acc로 하면 정확도가 떨어진다. 3.1과 3은 다르기 때문. 그래서 mse사용. 분류모델. 
 model.fit(x_train, y_train, epochs=100, batch_size=1, validation_split=0.2)
 
 #4. 평가, 예측
@@ -34,8 +34,8 @@ y_predict = model.predict(x_test)
 # 사이킷런? sklearn -> 머신러닝의 라이브러리
 from sklearn.metrics import mean_squared_error
 def RMSE(y_test, y_predict) : 
-    return np.sqrt(mean_squared_error(y_test, y_predict))
-print("RMSE : ", RMSE(y_test, y_predict))
+    return np.sqrt(mean_squared_error(y_test, y_predict))    
+print("RMSE : ", RMSE(y_test, y_predict))                 # mse 수치가 너무 클 때 rmse 사용, rmse는 낮을수록 좋다. 
 # print("mse : ", mean_squared_error(y_test, y_predict))
 
 print("mse : ", mean_squared_error(y_predict, y_test))

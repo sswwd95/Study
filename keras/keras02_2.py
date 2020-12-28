@@ -10,8 +10,8 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense 
 #1. 데이터
 x_train = np.array([1,2,3,4,5,6,7,8,9,10])
-y_train = np.array([2,4,6,8,10,12,14,16,18,20])
-x_test = np.array([101,102,103,104,105,106,107,108,109,110])
+y_train = np.array([2,4,6,8,10,12,14,16,18,20])  # w =2 b =0 / w 가중치, b 바이어스  y= wx + b
+x_test = np.array([101,102,103,104,105,106,107,108,109,110])  # w=1 b = 10     # x,y 가 다르기 때문에 값이 제대로 안나옴. 
 y_test = np.array([111,112,113,114,115,116,117,118,119,120])
 
 x_predict = np.array([111,112,113])
