@@ -10,6 +10,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense #가장 기본적인 Dense층. 
 
 # input_dim 이 input, Dense는 output . input_dim을 1로 설정해서 하나에서 나가고 Dense 5면 5개에서 output해서 밑에 3개에서 받는다. 그 밑에 3개에서 받았으니 input은 따로 명시 안한다.)
+# input_dim 에서 dim은 dimension 차원
 
 model = Sequential()
 model.add(Dense(5, input_dim=1, activation='linear')) #가중치를 구하는 activation. linear은 relu-> 평타 85프로. 처음엔 여기까지만 이해하기.

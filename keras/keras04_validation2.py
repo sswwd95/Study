@@ -30,3 +30,4 @@ results = model.evaluate(x_test, y_test, batch_size=1)
 print("results : ", results)
 y_pred = model.predict(x_pred)
 print("y_predict : "), y_pred
+

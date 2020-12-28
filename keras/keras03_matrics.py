@@ -26,6 +26,7 @@ model.add(Dense(1))
 # model.compile(loss='mse', optimizer='adam', metrics=['mse'])
 model.compile(loss='mse', optimizer='adam', metrics=['mae'])
 
+# metrcis 평가지표. 검증셋과 연관. 훈련 과정을 모니터링 하는데 사용
 
 model.fit(x_train, y_train, epochs=100, batch_size=1)
 
