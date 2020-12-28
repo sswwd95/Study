@@ -44,7 +44,7 @@ y_predict = model.predict(x_test)
 # 사이킷런? sklearn -> 머신러닝의 라이브러리
 from sklearn.metrics import mean_squared_error
 def RMSE(y_test, y_predict) : 
-    return np.sqrt(mean_squared_error(y_test, y_predict))
+    return np.sqrt(mean_squared_error(y_test, y_predict))    #sqrt => 제곱근 (square root)
 print("RMSE : ", RMSE(y_test, y_predict))
 # print("mse : ", mean_squared_error(y_test, y_predict))
 
