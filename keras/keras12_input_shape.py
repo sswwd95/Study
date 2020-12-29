@@ -1,8 +1,3 @@
-#실습
-# x는 (100,5) 데이터 임의로 구성
-# y는 (100,2) 데이터 임의로 구성
-# 모델 완성해라
-
 
 import numpy as np
 # 1. 데이터
@@ -43,7 +38,8 @@ from tensorflow.keras.layers import Dense # 텐서플로우에서 케라스 부�
 # from keras.layers import Dense -> 원래는 이렇게 썼는데 텐서플로우가 케라스 먹음. 이건 좀 느림
 
 model = Sequential()
-model.add(Dense(10, input_dim=5))  # 컬럼=피처=특성=열
+# model.add(Dense(10, input_dim=5))  # 컬럼=피처=특성=열
+model.add(Dense(10, input_shape=(5,)))  
 model.add(Dense(5))
 model.add(Dense(5))
 model.add(Dense(2))
@@ -52,10 +48,37 @@ model.add(Dense(2))
 
 # 3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam', metrics=['mae'])
-model.fit(x_train, y_train, epochs=100, batch_size=1, validation_split=0.2)
+model.fit(x_train, y_train, epochs=100, batch_size=1,
+         validation_split=0.2, verbose=0)
 
+'''
+verbose==없이 :
+loss :  4.3425934848073666e-08
+mae :  0.00019666850857902318
+RMSE :  0.00020838890033362997
+R2 :  0.9999999999450533
+verbose==0 : 
+loss :  3.292345240879513e-08
+mae :  0.00016314387903548777
+RMSE :  0.00018144821252875598
+R2 :  0.999999999958342
+verbose==1 :
+loss :  3.3154776701849187e-09
+mae :  4.395246651256457e-05
+RMSE :  5.7580184700857975e-05
+R2 :  0.9999999999958049
+verbose==2 :
+loss :  1.1077021966343636e-08
+mae :  8.912682824302465e-05
+RMSE :  0.00010524743042503351
+R2 :  0.9999999999859842
+verbose==3 :
+loss :  1.5092356875356927e-07
+mae :  0.0003520280006341636
+RMSE :  0.0003884888238632737
+R2 :  0.9999999998090368
 
-
+'''
 # 4. 평가 , 예측
 loss, mae = model.evaluate(x_test, y_test)
 print('loss : ', loss)
@@ -73,17 +96,5 @@ from sklearn.metrics import r2_score
 r2 = r2_score(y_test, y_predict)
 print("R2 : ", r2)
 
-# input_dim=5 x의 열 값
-# Dense의 마지막 output값은 y의 열값
-# loss :  1.1731470017650736e-08
-# mae :  7.531345181632787e-05
-# RMSE :  0.00010831191160387863
-# R2 :  0.9999999999851562
-
 y_pred2 = model.predict(x_pred2)
 print(y_pred2)
-# loss :  8.901626991075773e-09
-# mae :  7.717758126091212e-05
-# RMSE :  9.434843349127707e-05
-# R2 :  0.9999999999887368
-# [[992.8982   68.80997]]

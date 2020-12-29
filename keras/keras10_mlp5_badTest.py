@@ -1,8 +1,11 @@
 #실습
-# x는 (100,5) 데이터 임의로 구성
-# y는 (100,2) 데이터 임의로 구성
-# 모델 완성해라
+# r2 : 0.5이하/ 음수 안돼
+# layer : 5 이상
+# node : 각 10개 이상
+# batch_size :8 이하
+# epochs : 30이상
 
+# -> validationo_split =0.2로 두자.
 
 import numpy as np
 # 1. 데이터
@@ -44,15 +47,16 @@ from tensorflow.keras.layers import Dense # 텐서플로우에서 케라스 부�
 
 model = Sequential()
 model.add(Dense(10, input_dim=5))  # 컬럼=피처=특성=열
-model.add(Dense(5))
-model.add(Dense(5))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
 model.add(Dense(2))
 
 # input과 output은 데이터에 맞춰서 해야함. 히든레이어는 수정가능
 
 # 3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam', metrics=['mae'])
-model.fit(x_train, y_train, epochs=100, batch_size=1, validation_split=0.2)
+model.fit(x_train, y_train, epochs=80, batch_size=8, validation_split=0.2)
 
 
 
