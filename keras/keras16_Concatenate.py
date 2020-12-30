@@ -1,3 +1,5 @@
+# concatenate -> Concatenate
+
 import numpy as np
 
 #1. 데이터
@@ -44,12 +46,12 @@ dense2 = Dense(5, activation='relu')(dense2)
 # output2 = Dense(3)(dense2)
 
 # 모델 병합 / concatenate
-from tensorflow.keras.layers import concatenate, Concatenate
+from tensorflow.keras.layers import Concatenate
 # from keras.layers.merge import concatenate, Concatenate 
 # from keras.layers import concatenate, Concatenate
 
 # merge = 합치다
-merge1 = concatenate([dense1, dense2]) # 제일 끝의 dense 변수명 넣기
+merge1 = Concatenate()([dense1, dense2]) # 제일 끝의 dense 변수명 넣기
 middle1 = Dense(30)(merge1)
 middle1 = Dense(10)(middle1)
 middle1 = Dense(10)(middle1)
@@ -71,7 +73,7 @@ model = Model(inputs=[input1, input2],
               # 두개 묶어줄 때는 list [ ] 사용
 
 model.summary()
-'''
+
 # 3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam', metrics='mse')
 model.fit([x1_train, x2_train], [y1_train, y2_train],
@@ -120,4 +122,3 @@ r2 = (r2_1 + r2_2)/2
 print("R2_1 :  : ", r2_1)
 print("R2_2 :  : ", r2_2)
 print("R2 :  : ", r2)
-'''

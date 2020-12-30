@@ -21,12 +21,6 @@ y = np.transpose(y)
 
 y_pred2 = y_pred2.reshape(1, 3)
 
-print(y)
-print(x.shape)    
-print(y.shape)   
-print(y_pred2.shape)
-print("y_pred2.shape : ", y_pred2.shape)  
-
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test= train_test_split(
