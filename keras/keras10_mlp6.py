@@ -1,17 +1,32 @@
-# 다 : 다 mlp
+# 1 : 다 mlp
+
+
+# 실습 : 코드를 완성할 것
+# mlp4처럼 predict값을 완성할 것
 
 
 import numpy as np
 # 1. 데이터
-x = np.array([range(100), range(301, 401), range(1,101)])
+x = np.array(range(100))
 y = np.array([range(711,811),range(1,101), range(201,301)])
 print(x.shape) 
 print(y.shape)   
 
+y_pred2 = np.array([812,102,302])
+print("y_pred2.shape : ", y_pred2.shape)
+
+
 x = np.transpose(x) 
-y = np.transpose(y)      
-print(x)
+y = np.transpose(y)   
+
+y_pred2 = y_pred2.reshape(1, 3)
+
+print(y)
 print(x.shape)    
+print(y.shape)   
+print(y_pred2.shape)
+print("y_pred2.shape : ", y_pred2.shape)  
+
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test= train_test_split(
@@ -28,7 +43,7 @@ from tensorflow.keras.layers import Dense # 텐서플로우에서 케라스 부�
 # from keras.layers import Dense -> 원래는 이렇게 썼는데 텐서플로우가 케라스 먹음. 이건 좀 느림
 
 model = Sequential()
-model.add(Dense(10, input_dim=3))  # 컬럼=피처=특성=열
+model.add(Dense(10, input_dim=1))  # 컬럼=피처=특성=열
 model.add(Dense(5))
 model.add(Dense(5))
 model.add(Dense(3))

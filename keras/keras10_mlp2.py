@@ -1,3 +1,5 @@
+# 다 : 1 mlp
+
 # 실습 : train과 test 분리해서 소스를 완성하라
 
 import numpy as np

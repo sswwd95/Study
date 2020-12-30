@@ -1,17 +1,29 @@
-# 다 : 다 mlp
+# 1 : 다 mlp 함수형
+# keras10_mlp6.py를 함수형으로 바꾸시오.
 
 
 import numpy as np
 # 1. 데이터
-x = np.array([range(100), range(301, 401), range(1,101)])
+x = np.array(range(100))
 y = np.array([range(711,811),range(1,101), range(201,301)])
 print(x.shape) 
 print(y.shape)   
 
+y_pred2 = np.array([812,102,302])
+print("y_pred2.shape : ", y_pred2.shape)
+
+
 x = np.transpose(x) 
-y = np.transpose(y)      
-print(x)
+y = np.transpose(y)   
+
+y_pred2 = y_pred2.reshape(1, 3)
+
+print(y)
 print(x.shape)    
+print(y.shape)   
+print(y_pred2.shape)
+print("y_pred2.shape : ", y_pred2.shape)  
+
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test= train_test_split(
@@ -23,15 +35,16 @@ print(x_train.shape)   #(80,3)
 print(y_train.shape)    #(80,3)
 
 # 2. 모델구성
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense # 텐서플로우에서 케라스 부르는게 속도 더 빠름
-# from keras.layers import Dense -> 원래는 이렇게 썼는데 텐서플로우가 케라스 먹음. 이건 좀 느림
+from tensorflow.keras.models import Sequential,Model
+from tensorflow.keras.layers import Dense,Input
 
-model = Sequential()
-model.add(Dense(10, input_dim=3))  # 컬럼=피처=특성=열
-model.add(Dense(5))
-model.add(Dense(5))
-model.add(Dense(3))
+input1=Input(shape=(1,))
+dense1 = Dense(1, activation='relu')(input1)
+dense2 = Dense(5)(dense1)
+dense3 = Dense(5)(dense2)
+outputs = Dense(3)(dense3)
+model = Model(inputs = input1, outputs = outputs)
+model.summary()
 
 # 3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam', metrics=['mae'])
