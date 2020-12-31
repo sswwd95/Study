@@ -13,6 +13,9 @@ model = Sequential()
 model.add(Dense(3, input_dim=1, activation='linear')) 
 model.add(Dense(6, activation='linear'))      
 model.add(Dense(4, name = 'aa'))
+
+
+
 model.add(Dense(1))
 
 model.summary()
@@ -22,3 +25,4 @@ model.summary()
 # 계산하고 이해한 것을 과제로 제출할것
 #layer을 만들 때 'name'이란 것에 대해 확인하고 설명할 것
 # name을 반드시 써야할 때가 있다. 그때를 말해라.
+# model.add(Dense(4, name = 'new name')) -> 기존 값과 충돌된다. name은 중복사용 안됨.
