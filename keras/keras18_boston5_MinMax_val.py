@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.datasets import load_boston
 
 #1. 데이터
-dataset = models.load_boston()
+dataset=load_boston()
 x = dataset.data
 y = dataset.target
 
