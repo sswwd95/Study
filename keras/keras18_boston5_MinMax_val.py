@@ -65,7 +65,7 @@ model.add(Dense(1))
 # 3. 컴파일, 훈련
 
 model.compile(loss = 'mse', optimizer = 'adam', metrics = ['mae'])
-model.fit(x_train, y_train, batch_size = 8, epochs=1000, validation_data=(x_val,y_val))
+model.fit(x_train, y_train, batch_size = 8, epochs=100, validation_data=(x_val,y_val))
 
 
 
