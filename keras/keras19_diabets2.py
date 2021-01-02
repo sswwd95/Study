@@ -28,14 +28,15 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 
 model = Sequential()
-model.add(Dense(128, activation='relu', input_shape=(10, )))
-model.add(Dense(32, activation='relu'))
-model.add(Dense(32, activation='relu'))
+model.add(Dense(100, activation='relu', input_shape=(10, )))
+model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(1))
 
+
 model.compile(loss='mse', optimizer='adam', metrics=['mae'])
-model.fit(x_train, y_train, validation_split=0.2, epochs=100, batch_size=8)
+model.fit(x_train, y_train, validation_split=0.2, epochs=300, batch_size=8)
+
 
 #3. 평가, 예측
 
@@ -54,11 +55,11 @@ r2 = r2_score(y_test,y_predict)
 print("R2 : " , r2)
 
 # 1번
-# loss, mae :  3918.458251953125 51.98662567138672
-# RMSE :  62.59759042244219
-# R2 :  0.5076496894168653
+# loss, mae :  3768.1259765625 49.35535430908203
+# RMSE :  61.385062871563136
+# R2 :  0.4193986921311813
 
 # 2번 
-# loss, mae :  6419.54931640625 68.53453826904297
-# RMSE :  80.12209294065812
-# R2 :  0.010861353306766519
+# loss, mae :  5818.3115234375 65.9879379272461
+# RMSE :  76.27786132701927
+# R2 :  0.10350140045743106

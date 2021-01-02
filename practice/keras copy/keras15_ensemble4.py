@@ -6,16 +6,13 @@ import numpy as np
 #1. 데이터
 x1 = np.array([range(100), range(301, 401), range(1,101)])
 y1 = np.array([range(711,811),range(1,101), range(201,301)])
-
-# x2 = np.array([range(101,201), range(411,511),range(100,200)])
 y2 = np.array([range(501,601), range(711,811), range(100)])
 
 x1 = np.transpose(x1)
-# x2 = np.transpose(x2)
 y1 = np.transpose(y1)
 y2 = np.transpose(y2)
 
-#### 코드 완성하시오 ###
+
 
 from sklearn.model_selection import train_test_split
 x1_train, x1_test, y1_train, y1_test, y2_train, y2_test = train_test_split(
@@ -33,19 +30,12 @@ dense1 = Dense(10,activation='relu')(input1)
 dense1 = Dense(5, activation='relu')(dense1)
 dense1 = Dense(5, activation='relu')(dense1)
 dense1 = Dense(5, activation='relu')(dense1)
-# output1 = Dense(3)(dense1)
 
 
 # 모델 병합 / concatenate
 from tensorflow.keras.layers import concatenate, Concatenate
 # from keras.layers.merge import concatenate, Concatenate 
 # from keras.layers import concatenate, Concatenate
-
-# # merge = 합치다
-# merge1 = concatenate([dense1, dense2]) # 제일 끝의 dense 변수명 넣기
-# middle1 = Dense(30)(merge1)
-# middle1 = Dense(10)(middle1)
-# middle1 = Dense(10)(middle1)
 
 # 모델 분기1
 output1 = Dense(30)(dense1)
@@ -62,10 +52,9 @@ output2 = Dense(3)(output2)
 # 모델 선언
 model = Model(inputs=input1,
               outputs=[output1, output2])
-              # 두개 묶어줄 때는 list [ ] 사용
 
 model.summary()
-'''
+
 # 3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam', metrics='mse')
 model.fit(x1_train, [y1_train, y2_train],
@@ -98,11 +87,6 @@ print("RMSE1 : ",RMSE1)
 print("RMSE2 : ",RMSE2)
 print("RMSE : ",RMSE)
 
-
-
-# print("RMSE : ", RMSE(y_test, y_predict))
-
-
 # R2구하기
 from sklearn.metrics import r2_score
 r2_1 = r2_score(y1_test, y1_predict)
@@ -112,4 +96,3 @@ r2 = (r2_1 + r2_2)/2
 print("R2_1 :  : ", r2_1)
 print("R2_2 :  : ", r2_2)
 print("R2 :  : ", r2)
-'''

@@ -17,9 +17,6 @@ y1 = np.transpose(y1)
 y2 = np.transpose(y2)
 y3 = np.transpose(y3)
 
-
-# shape 전부다 100행 3열
-
 from sklearn.model_selection import train_test_split
 x1_train, x1_test, y1_train, y1_test, x2_train, x2_test, y2_train, y2_test, y3_train, y3_test= train_test_split (
     x1, x2, y1, y2, y3, shuffle = False, train_size=0.8)
@@ -33,7 +30,6 @@ from tensorflow.keras.layers import Dense, Input
 input1 = Input(shape=(3,))
 dense1 = Dense(10,activation='relu')(input1)
 dense1 = Dense(5, activation='relu')(dense1)
-# output1 = Dense(3)(dense1)
 
 # 모델2
 input2 = Input(shape=(3,))
@@ -41,7 +37,6 @@ dense2 = Dense(10,activation='relu')(input2)
 dense2 = Dense(5, activation='relu')(dense2)
 dense2 = Dense(5, activation='relu')(dense2)
 dense2 = Dense(5, activation='relu')(dense2)
-# output2 = Dense(3)(dense2)
 
 # 모델 병합 / concatenate
 from tensorflow.keras.layers import concatenate, Concatenate
@@ -71,10 +66,9 @@ output3 = Dense(3)(output3)
 # 모델 선언
 model = Model(inputs=[input1, input2],
               outputs=[output1, output2, output3])
-              # 두개 묶어줄 때는 list [ ] 사용
 
 model.summary()
-'''
+
 # 3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam', metrics='mse')
 model.fit([x1_train, x2_train], [y1_train, y2_train, y3_train],
@@ -125,4 +119,3 @@ print("R2_1 :  : ", r2_1)
 print("R2_2 :  : ", r2_2)
 print("R2_3 :  : ", r2_3)
 print("R2 :  : ", r2)
-'''

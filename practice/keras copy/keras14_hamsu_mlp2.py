@@ -1,29 +1,22 @@
-# 1 : 다 mlp 함수형
-# keras10_mlp6.py를 함수형으로 바꾸시오.
-
+# 다 : 다 mlp 함수형
+# keras10_mlp3.py를 함수형으로 바꾸시오.
 
 import numpy as np
 # 1. 데이터
-x = np.array(range(100))
+x = np.array([range(100), range(301, 401), range(1,101)])
 y = np.array([range(711,811),range(1,101), range(201,301)])
-x_pred2 = np.array([101])
-
-print(x.shape) # (3,100)
-print(y.shape)   
+print(x.shape) #(3,100)
+print(y.shape)  #(3,100) 
 
 x = np.transpose(x) 
-y = np.transpose(y)   
-
-print(x.shape)    
-print(y.shape)   
-
-
+y = np.transpose(y)      
+print(x)
+print(x.shape)   #( 100,3)
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test= train_test_split(
     x,y, random_state=66, train_size=0.8, shuffle=True)
 
-# 랜덤 스테이트는 그냥 아무 숫자나 정하는 것.어차피 값에 따라 결과 나옴.
 
 print(x_train.shape)   #(80,3)
 print(y_train.shape)    #(80,3)
@@ -32,13 +25,14 @@ print(y_train.shape)    #(80,3)
 from tensorflow.keras.models import Sequential,Model
 from tensorflow.keras.layers import Dense,Input
 
-input1=Input(shape=(1,))
-dense1 = Dense(1, activation='relu')(input1)
+input1=Input(shape=(3,))
+dense1 = Dense(3, activation='relu')(input1)
 dense2 = Dense(5)(dense1)
 dense3 = Dense(5)(dense2)
 outputs = Dense(3)(dense3)
 model = Model(inputs = input1, outputs = outputs)
 model.summary()
+
 
 # 3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam', metrics=['mae'])

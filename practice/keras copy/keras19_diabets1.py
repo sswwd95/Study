@@ -26,14 +26,14 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 
 model = Sequential()
-model.add(Dense(356, activation='relu', input_shape=(10, )))
-model.add(Dense(128, activation='relu'))
-
-
+model.add(Dense(100, activation='relu', input_shape=(10, )))
+model.add(Dense(64, activation='relu'))
+model.add(Dense(32, activation='relu'))
 model.add(Dense(1))
 
+
 model.compile(loss='mse', optimizer='adam', metrics=['mae'])
-model.fit(x_train, y_train, validation_split=0.2, epochs=500, batch_size=8)
+model.fit(x_train, y_train, validation_split=0.2, epochs=300, batch_size=8)
 
 #3. 평가, 예측
 
@@ -51,7 +51,6 @@ from sklearn.metrics import r2_score
 r2 = r2_score(y_test,y_predict)
 print("R2 : " , r2)
 
-
-# loss, mae :  3918.458251953125 51.98662567138672
-# RMSE :  62.59759042244219
-# R2 :  0.5076496894168653
+# loss, mae :  3768.1259765625 49.35535430908203
+# RMSE :  61.385062871563136
+# R2 :  0.4193986921311813

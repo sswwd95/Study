@@ -46,12 +46,12 @@ dense2 = Dense(5, activation='relu')(dense2)
 # output2 = Dense(3)(dense2)
 
 # 모델 병합 / concatenate
-from tensorflow.keras.layers import Concatenate
+from tensorflow.keras.layers import concatenate, Concatenate
 # from keras.layers.merge import concatenate, Concatenate 
 # from keras.layers import concatenate, Concatenate
 
 # merge = 합치다
-merge1 = Concatenate()([dense1, dense2]) # 제일 끝의 dense 변수명 넣기
+merge1 = Concatenate()([dense1, dense2]) 
 middle1 = Dense(30)(merge1)
 middle1 = Dense(10)(middle1)
 middle1 = Dense(10)(middle1)

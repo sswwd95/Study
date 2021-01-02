@@ -49,7 +49,7 @@ from tensorflow.keras.layers import concatenate, Concatenate
 # from keras.layers import concatenate, Concatenate
 
 # merge = 합치다
-merge1 = concatenate([dense1, dense2]) # 제일 끝의 dense 변수명 넣기
+merge1 = concatenate([dense1, dense2]) 
 middle1 = Dense(30)(merge1)
 middle1 = Dense(10)(middle1)
 middle1 = Dense(10)(middle1)
@@ -68,10 +68,9 @@ output2 = Dense(3)(output2)
 # 모델 선언
 model = Model(inputs=[input1, input2],
               outputs=[output1, output2])
-              # 두개 묶어줄 때는 list [ ] 사용
 
 model.summary()
-'''
+
 # 3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam', metrics='mse')
 model.fit([x1_train, x2_train], [y1_train, y2_train],
@@ -104,10 +103,7 @@ print("RMSE1 : ",RMSE1)
 print("RMSE2 : ",RMSE2)
 print("RMSE : ",RMSE)
 
-
-
 # print("RMSE : ", RMSE(y_test, y_predict))
-
 
 # R2구하기
 from sklearn.metrics import r2_score
@@ -120,4 +116,3 @@ r2 = (r2_1 + r2_2)/2
 print("R2_1 :  : ", r2_1)
 print("R2_2 :  : ", r2_2)
 print("R2 :  : ", r2)
-'''

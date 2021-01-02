@@ -13,34 +13,19 @@ y = dataset.target
 print(x.shape) # (506, 13)
 print(y.shape)  # (506, )
 print("=================")
-print(x[:5])  # 0~4까지  -> x 1개당 [6.3200e-03 1.8000e+01 2.3100e+00 0.0000e+00 5.3800e-01 
-#                                   6.5750e+00 6.5200e+01 4.0900e+00 1.0000e+00 2.9600e+02 1.5300e+01 3.9690e+02 4.9800e+00] 13개씩 들어있음. 
+print(x[:5])  
 print(y[:10])
 print(np.max(x), np.min(x)) # 711.0  0,0
 print(dataset.feature_names)
-# print(dataset.DESCR)
 
-# 데이터 전처리(MinMax)
-# x = x / 711  # 최댓값으로만 나눈다. x의 값이 0~711이면 float형인데  711.하면 실수형으로 된다. 정수면 .안찍어도 상관없지만 형변환
-# x = (x - 최소) / (최대 - 최소)
-#   = (x - np.min(x)) / (np.max(x) - np.min(x)) 식 자체가 이렇게 되어있다는 것을 이해하기
 print(np.max(x[0]))
 
 from sklearn.preprocessing import MinMaxScaler
-
-# scaler = MinMaxScaler()
-# scaler.fit(x)     # -> 이렇게 하면 전체에 전처리 들어가서 예측 값이 범위 벗어나면 값 엉망. x train만 전처리.
-# x = scaler.transform(x)
-
-# print(np.max(x), np.min(x)) # 711.0  0,0 => 1.0  0.0
-# print(np.max(x[0]))  #0.99999999
-
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(
     x, y, train_size = 0.7, random_state = 66
 )
-
 x_train, x_val, y_train, y_val= train_test_split(x_train, y_train,
                                                  test_size=0.3, shuffle = True)
 scaler = MinMaxScaler()
@@ -48,8 +33,6 @@ scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 x_val = scaler.transform(x_val)
-
-
 
 #2 . 모델구성
 from tensorflow.keras.models import Sequential
@@ -70,10 +53,9 @@ model.add(Dense(1))
 model.compile(loss = 'mse', optimizer = 'adam', metrics = ['mae'])
 
 from tensorflow.keras.callbacks import EarlyStopping
-early_stopping = EarlyStopping(monitor = 'loss', patience=20, mode='min') # mode에 acc면 'max' /loss면 최솟값이 나와야하니까 min. 헷갈려? 그럼 'auto'넣어
+early_stopping = EarlyStopping(monitor = 'loss', patience=20, mode='min') 
 
 model.fit(x_train, y_train, batch_size = 8, callbacks=[early_stopping], epochs=2000, validation_data=(x_val,y_val))
-
 
 
 # 4. 평가 예측

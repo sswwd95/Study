@@ -75,7 +75,7 @@ model = Model(inputs=[input1, input2],
 model.summary()
 
 # 3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam', metrics=['mae','mse']) # 'mae' / ['mae'] 둘다 실행됨. 두개 넣고 지표 보고 싶으면 리스트해서 넣기.
+model.compile(loss='mse', optimizer='adam', metrics=['mae','mse'])
 model.fit([x1_train, x2_train], [y1_train, y2_train],
           epochs=10, batch_size=1,
           validation_split=0.2, verbose=1)
@@ -90,9 +90,7 @@ print(loss)
 y1_predict, y2_predict = model.predict([x1_test, x2_test])
 
 print("==================")
-# print("y1_predict : \n", y1_predict)
-# print("==================")
-# print("y2_predict : \n", y2_predict)
+
 print("==================")
 
 # RMSE 구하기

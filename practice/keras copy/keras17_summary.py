@@ -13,9 +13,6 @@ model = Sequential()
 model.add(Dense(3, input_dim=1, activation='linear')) 
 model.add(Dense(6, activation='linear'))      
 model.add(Dense(4, name = 'aa'))
-
-
-
 model.add(Dense(1))
 
 model.summary()

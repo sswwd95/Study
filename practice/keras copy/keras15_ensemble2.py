@@ -9,28 +9,15 @@ x2 = np.array([range(101,201), range(411,511),range(100,200)])
 
 y = np.array([range(711,811),range(1,101), range(201,301)])
 
-# y2 = np.array([range(501,601), range(711,811), range(100)])
 
 x1 = np.transpose(x1)
 x2 = np.transpose(x2)
 y = np.transpose(y)
-# y2 = np.transpose(y2)
-
-# shape 전부다 100행 3열
 
 from sklearn.model_selection import train_test_split
 x1_train, x1_test, x2_train, x2_test, y_train, y_test = train_test_split(
     x1, x2, y, shuffle = False, train_size=0.8
 )
-# from sklearn.model_selection import train_test_split
-# x1_train, x1_test, y_train, y_test = train_test_split(
-#     x1, y, shuffle = False, train_size=0.8)
-
-# from sklearn.model_selection import train_test_split
-# x2_train, x2_test, y_train, y_test = train_test_split(
-#     x2, y, shuffle = False, train_size=0.8)
-# 이렇게 해도 되지만 자원낭비 느낌..?ㅎ
-
 
 # 2. 모델구성
 from tensorflow.keras.models import Sequential, Model
@@ -61,24 +48,13 @@ merge1 = concatenate([dense1, dense2]) # 제일 끝의 dense 변수명 넣기
 middle1 = Dense(30)(merge1)
 middle1 = Dense(10)(middle1)
 middle1 = Dense(10)(middle1)
-# # 모델 분기1
-# output1 = Dense(30)(middle1)
-# output1 = Dense(7)(output1)
-output1 = Dense(3)(middle1) #진정한 아웃풋, 분기 안하면 맨 밑에 아웃풋 넣고 미들로 인풋넣어주면됨.
-
-# 모델 분기2
-# output2 = Dense(15)(middle1)
-# output2 = Dense(7)(output2)
-# output2 = Dense(7)(output2)
-# output2 = Dense(3)(output2)
-
-# 모델 선언
+output1 = Dense(3)(middle1) 
 model = Model(inputs=[input1, input2],
               outputs=output1)
         
 
 model.summary()
-'''
+
 # 3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam', metrics='mse')
 model.fit([x1_train, x2_train], y_train,
@@ -110,4 +86,3 @@ from sklearn.metrics import r2_score
 r2 = r2_score(y_test, y_predict)
 
 print("R2 : ", r2)
-'''
