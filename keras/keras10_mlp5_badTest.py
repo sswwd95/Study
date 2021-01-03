@@ -5,15 +5,12 @@
 # batch_size :8 이하
 # epochs : 30이상
 
-# -> validationo_split =0.2로 두자.
 
 import numpy as np
 # 1. 데이터
 x = np.array([range(100), range(201, 301), range(401,501),
               range(601,701),range(801,901)])
 y = np.array([range(811,911),range(1,101)])
-
-# range 값이 같아도 상관없다. 
 
 print(x.shape)  # (5,100)
 print(y.shape)  # (2,100)
@@ -42,8 +39,7 @@ print(y_train.shape)    #(80,2)
 
 # 2. 모델구성
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense # 텐서플로우에서 케라스 부르는게 속도 더 빠름
-# from keras.layers import Dense -> 원래는 이렇게 썼는데 텐서플로우가 케라스 먹음. 이건 좀 느림
+from tensorflow.keras.layers import Dense 
 
 model = Sequential()
 model.add(Dense(10, input_dim=5))  # 컬럼=피처=특성=열
@@ -52,13 +48,9 @@ model.add(Dense(10))
 model.add(Dense(10))
 model.add(Dense(2))
 
-# input과 output은 데이터에 맞춰서 해야함. 히든레이어는 수정가능
-
 # 3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam', metrics=['mae'])
-model.fit(x_train, y_train, epochs=80, batch_size=8, validation_split=0.2)
-
-
+model.fit(x_train, y_train, epochs=30, batch_size=8, validation_split=0.2)
 
 # 4. 평가 , 예측
 loss, mae = model.evaluate(x_test, y_test)
@@ -77,17 +69,13 @@ from sklearn.metrics import r2_score
 r2 = r2_score(y_test, y_predict)
 print("R2 : ", r2)
 
-# input_dim=5 x의 열 값
-# Dense의 마지막 output값은 y의 열값
-# loss :  1.1731470017650736e-08
-# mae :  7.531345181632787e-05
-# RMSE :  0.00010831191160387863
-# R2 :  0.9999999999851562
 
 y_pred2 = model.predict(x_pred2)
 print(y_pred2)
-# loss :  8.901626991075773e-09
-# mae :  7.717758126091212e-05
-# RMSE :  9.434843349127707e-05
-# R2 :  0.9999999999887368
-# [[992.8982   68.80997]]
+
+# bad test 결과
+# loss :  491.02264404296875
+# mae :  13.938364028930664
+# RMSE :  22.15903156989115
+# R2 :  0.37870986380274896
+# [[1001.1828    80.79363]]

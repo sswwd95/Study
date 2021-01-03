@@ -57,42 +57,10 @@ model.summary()
 # model.add(Dense(2))
 # model.summary()
 
-
-
-# input과 output은 데이터에 맞춰서 해야함. 히든레이어는 수정가능
-
 # 3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam', metrics=['mae'])
 model.fit(x_train, y_train, epochs=5000, batch_size=1,
          validation_split=0.2, verbose=0)
-
-'''
-verbose==없이 :
-loss :  4.3425934848073666e-08
-mae :  0.00019666850857902318
-RMSE :  0.00020838890033362997
-R2 :  0.9999999999450533
-verbose==0 : 
-loss :  3.292345240879513e-08
-mae :  0.00016314387903548777
-RMSE :  0.00018144821252875598
-R2 :  0.999999999958342
-verbose==1 :
-loss :  3.3154776701849187e-09
-mae :  4.395246651256457e-05
-RMSE :  5.7580184700857975e-05
-R2 :  0.9999999999958049
-verbose==2 :
-loss :  1.1077021966343636e-08
-mae :  8.912682824302465e-05
-RMSE :  0.00010524743042503351
-R2 :  0.9999999999859842
-verbose==3 :
-loss :  1.5092356875356927e-07
-mae :  0.0003520280006341636
-RMSE :  0.0003884888238632737
-R2 :  0.9999999998090368
-'''
 
 # 4. 평가 , 예측
 loss, mae = model.evaluate(x_test, y_test)

@@ -1,6 +1,5 @@
 # 다 : 다 mlp
 
-
 import numpy as np
 # 1. 데이터
 x = np.array([range(100), range(301, 401), range(1,101)])
@@ -17,16 +16,12 @@ from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test= train_test_split(
     x,y, random_state=66, train_size=0.8, shuffle=True)
 
-# 랜덤 스테이트는 그냥 아무 숫자나 정하는 것.어차피 값에 따라 결과 나옴.
-
 print(x_train.shape)   #(80,3)
 print(y_train.shape)    #(80,3)
 
 # 2. 모델구성
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense # 텐서플로우에서 케라스 부르는게 속도 더 빠름
-# from keras.layers import Dense -> 원래는 이렇게 썼는데 텐서플로우가 케라스 먹음. 이건 좀 느림
-
+from tensorflow.keras.layers import Dense 
 model = Sequential()
 model.add(Dense(10, input_dim=3))  # 컬럼=피처=특성=열
 model.add(Dense(5))

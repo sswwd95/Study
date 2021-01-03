@@ -16,7 +16,7 @@ y = np.array([range(811,911),range(1,101)])
 
 print(x.shape)  # (5,100)
 print(y.shape)  # (2,100)
-x_pred2 = np.array([100,302,502,702,1001])
+x_pred2 = np.array([100,301,501,701,901])
 print("x_pred2.shape : ", x_pred2.shape)
 
 x = np.transpose(x) 
@@ -75,8 +75,6 @@ from sklearn.metrics import r2_score
 r2 = r2_score(y_test, y_predict)
 print("R2 : ", r2)
 
-# input_dim=5 x의 열 값
-# Dense의 마지막 output값은 y의 열값
 # loss :  1.1731470017650736e-08
 # mae :  7.531345181632787e-05
 # RMSE :  0.00010831191160387863
