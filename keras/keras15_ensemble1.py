@@ -16,12 +16,12 @@ y2 = np.transpose(y2)
 
 from sklearn.model_selection import train_test_split
 x1_train, x1_test, y1_train, y1_test = train_test_split(
-    x1, y1, shuffle = False, train_size=0.8
+    x1, y1, shuffle = True, train_size=0.8
 )
 
 from sklearn.model_selection import train_test_split
 x2_train, x2_test, y2_train, y2_test = train_test_split(
-    x2, y2, shuffle = False, train_size=0.8
+    x2, y2, shuffle = True, train_size=0.8
 )
 
 # 2. 모델구성
@@ -71,7 +71,7 @@ model = Model(inputs=[input1, input2],
               # 두개 묶어줄 때는 list [ ] 사용
 
 model.summary()
-'''
+
 # 3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam', metrics='mse')
 model.fit([x1_train, x2_train], [y1_train, y2_train],
@@ -104,10 +104,7 @@ print("RMSE1 : ",RMSE1)
 print("RMSE2 : ",RMSE2)
 print("RMSE : ",RMSE)
 
-
-
 # print("RMSE : ", RMSE(y_test, y_predict))
-
 
 # R2구하기
 from sklearn.metrics import r2_score
@@ -120,4 +117,3 @@ r2 = (r2_1 + r2_2)/2
 print("R2_1 :  : ", r2_1)
 print("R2_2 :  : ", r2_2)
 print("R2 :  : ", r2)
-'''
