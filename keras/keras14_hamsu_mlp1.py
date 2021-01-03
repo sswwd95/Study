@@ -8,21 +8,16 @@ y = np.array(range(711,811))
 print(x.shape)  
 print(y.shape)   
 
+x = np.transpose(x)     
 
-x = np.transpose(x)      
-print(x)
 print(x.shape)    
-
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test= train_test_split(
     x,y, random_state=66, train_size=0.8, shuffle=True)
 
-
-
 print(x_train.shape)  
 print(y_train.shape)    
-
 
 # 2. 모델구성
 from tensorflow.keras.models import Sequential,Model
@@ -36,11 +31,9 @@ outputs = Dense(1)(dense3)
 model = Model(inputs = input1, outputs = outputs)
 model.summary()
 
-
 # 3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam', metrics=['mae'])
 model.fit(x_train, y_train, epochs=100, batch_size=1, validation_split=0.2)
-
 
 # 4. 평가 , 예측
 loss, mae = model.evaluate(x_test, y_test)
@@ -49,12 +42,10 @@ print('mae : ', mae)
 
 y_predict = model.predict(x_test)
 
-
 from sklearn.metrics import mean_squared_error
 def RMSE(y_test, y_predict) : 
     return np.sqrt(mean_squared_error(y_test, y_predict))
 print("RMSE : ", RMSE(y_test, y_predict))
-
 print("mse : ", mean_squared_error(y_predict, y_test))
 
 from sklearn.metrics import r2_score

@@ -9,15 +9,14 @@ print(x.shape)
 print(y.shape)   
 
 x = np.transpose(x) 
-y = np.transpose(y)      
-print(x)
+y = np.transpose(y)  
+
 print(x.shape)    
+print(y.shape)   
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test= train_test_split(
     x,y, random_state=66, train_size=0.8, shuffle=True)
-
-# 랜덤 스테이트는 그냥 아무 숫자나 정하는 것.어차피 값에 따라 결과 나옴.
 
 print(x_train.shape)   #(80,3)
 print(y_train.shape)    #(80,3)
@@ -38,7 +37,6 @@ model.summary()
 # 3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam', metrics=['mae'])
 model.fit(x_train, y_train, epochs=100, batch_size=1, validation_split=0.2)
-
 
 
 # 4. 평가 , 예측

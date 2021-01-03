@@ -9,27 +9,15 @@ y = np.array([range(711,811),range(1,101), range(201,301)])
 print(x.shape) 
 print(y.shape)   
 
-y_pred2 = np.array([812,102,302])
-print("y_pred2.shape : ", y_pred2.shape)
-
-
 x = np.transpose(x) 
 y = np.transpose(y)   
 
-y_pred2 = y_pred2.reshape(1, 3)
-
-print(y)
 print(x.shape)    
 print(y.shape)   
-print(y_pred2.shape)
-print("y_pred2.shape : ", y_pred2.shape)  
-
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test= train_test_split(
     x,y, random_state=66, train_size=0.8, shuffle=True)
-
-# 랜덤 스테이트는 그냥 아무 숫자나 정하는 것.어차피 값에 따라 결과 나옴.
 
 print(x_train.shape)   #(80,3)
 print(y_train.shape)    #(80,3)
