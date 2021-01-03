@@ -6,9 +6,6 @@
 # 4. 데이터 조작 금지 
 #5. 히든레이어의 노드의 갯수는 10이상
 
-
-
-
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 import numpy as np
@@ -26,13 +23,10 @@ x_pred = array([16,17,18])
 
 #2. 모델 구성
 model = Sequential()
-model.add(Dense(10, input_dim=1,activation='relu'))
-model.add(Dense(2))
-model.add(Dense(3))
-model.add(Dense(1))
-model.add(Dense(1))
-model.add(Dense(1))
-model.add(Dense(1))
+model.add(Dense(1000, input_dim=1,activation='relu'))
+model.add(Dense(200))
+model.add(Dense(10))
+model.add(Dense(10))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
@@ -43,20 +37,14 @@ model.fit(x_train, y_train, epochs=100, batch_size=1, validation_split=0.2)
 results = model.evaluate(x_test, y_test, batch_size=1)
 print("mse, mae : ", results)
 y_predict = model.predict(x_test)
-# print("y_predict : ", y_predict)
 
-# np.sqrt(results[0])
-
-# 사이킷런? sklearn -> 머신러닝의 라이브러리
 from sklearn.metrics import mean_squared_error
 def RMSE(y_test, y_predict) : 
     return np.sqrt(mean_squared_error(y_test, y_predict))
 print("RMSE : ", RMSE(y_test, y_predict))
-# print("mse : ", mean_squared_error(y_test, y_predict))
-
-print("mse : ", mean_squared_error(y_predict, y_test))
+print("mse : ", mean_squared_error(y_test, y_predict))
 
 from sklearn.metrics import r2_score
 r2 = r2_score(y_test, y_predict)
 print("R2 : ", r2)
-# 기본 값에서 실행하면 0.87나오지만 val_split=0.1로하면 0.996나옴.
+

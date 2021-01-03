@@ -18,7 +18,6 @@ y_test = np.array([6,7,8])
 #데이터를 두개로 나눴지만 실제로 데이터는 1개임. 원래 데이터는 1~8까지인 것.
 
 
-
 #2. 모델구성
 model = Sequential()
 # model = models.Sequential()
@@ -33,10 +32,10 @@ model.compile(loss='mse', optimizer='adam')
 model.fit(x_train, y_train, epochs=1700, batch_size=1)
 
 #4. 평가
-loss = model.evaluate(x_test, y_test, batch_size=1) # 1번 파일에서는 x,y를 넣어서 답안지를 보고 평가하는 식이었지만 테스트 데이터를 따로 구분해서 더 정밀하게 올리는 식.
+loss = model.evaluate(x_test, y_test, batch_size=1) 
 print('loss : ', loss)
 
-result = model.predict([9])  #레이어의 깊이와(deep) 노드의 수를 늘릴수록 성능이 더 좋아짐. 역으로 노드의 숫자를 너무 크게 넣으면 터짐. 재부팅할수도 있음....크기조절 잘 해야함. 
+result = model.predict([9])  
 print("result : ", result)
 
 

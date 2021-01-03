@@ -25,8 +25,8 @@ print(np.max(x), np.min(x))
 print(np.max(x[0]))
 
 
-from sklearn.model_selection import train_test_split
-x_train, x_test, y_train, y_test = train_test_split(
+from sklearn.model_selection import train_test_splitS
+x_train, x_test, y_train, y_test = train_test_splitS(
     x, y, train_size = 0.8, random_state = 66)
 
 # 2. 모델구성

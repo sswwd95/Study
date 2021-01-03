@@ -2,10 +2,8 @@
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
-# from tensorflow.keras import models
-# from tensorflow import keras
-
 from tensorflow.keras.layers import Dense 
+
 #1. 데이터
 x_train = np.array([1,2,3,4,5])
 y_train = np.array([1,2,3,4,5])
