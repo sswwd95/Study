@@ -112,8 +112,9 @@ r2_1 = r2_score(y1_test, y1_predict)
 r2_2 = r2_score(y2_test, y2_predict)
 r2 = (r2_1 + r2_2)/2
 
-
-
 print("R2_1 :  : ", r2_1)
 print("R2_2 :  : ", r2_2)
 print("R2 :  : ", r2)
+
+# model.metrics_names :  ['loss', 'dense_11_loss', 'dense_15_loss', 'dense_11_mse', 'dense_15_mse']
+# [3996.93115234375, 3344.108642578125, 652.8228149414062, 3344.108642578125, 652.82281
