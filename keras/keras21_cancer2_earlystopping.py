@@ -48,7 +48,10 @@ model.add(Dense(1, activation='sigmoid'))
                 # mean_squared_error -> 풀네임도 가능함
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
 
-model.fit(x_train,y_train, epochs=100, validation_data=(x_val, y_val), batch_size=8)
+from tensorflow.keras.callbacks import EarlyStopping
+early_stopping = EarlyStopping(monitor = 'acc', patience=5, mode = 'max' )
+
+model.fit(x_train,y_train, epochs=100, callbacks=[early_stopping], validation_data=(x_val, y_val), batch_size=8)
 
 #4. 평가, 예측
 loss, acc = model.evaluate(x_test,y_test, batch_size=8)
@@ -66,4 +69,15 @@ print(np.argmax(y_predict,axis=0))
 #  [9.9999976e-01]]
 # [1 0 1 1]
 # [0]
+
+# earlystopping 후
+# loss, acc :  0.14489495754241943 0.9736841917037964
+# [[0.9999343 ]
+#  [0.00247921]
+#  [0.99968374]
+#  [0.9996431 ]]
+# [1 0 1 1]
+# [0]
+
+
 
