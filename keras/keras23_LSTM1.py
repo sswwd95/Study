@@ -51,4 +51,4 @@ dense_2 (Dense)              (None, 1)                 21
 =================================================================
 '''
 # LSTM의 param 480?
-# 4(input_dim + num_unit + 1(bias)) * num_unit
+# 4(gate)*(input_dim + num_unit + 1(bias)) * num_unit
