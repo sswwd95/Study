@@ -55,9 +55,8 @@ loss, acc = model.evaluate(x_test,y_test, batch_size=8)
 print('loss, acc : ', loss, acc)
 
 y_predict = model.predict(x_test[-5:-1])
-print(y_predict)
+print(np.where(y_predict<0.5, 0, 1))
 print(y_test[-5:-1])
-print(np.argmax(y_predict,axis=0))
 
 # loss, acc :  0.4048005938529968 0.9736841917037964
 # [[1.0000000e+00]
@@ -65,5 +64,10 @@ print(np.argmax(y_predict,axis=0))
 #  [9.9999988e-01]
 #  [9.9999976e-01]]
 # [1 0 1 1]
-# [0]
 
+# np.where사용
+# [[1]
+#  [0]
+#  [1]
+#  [1]]
+# [1 0 1 1]
