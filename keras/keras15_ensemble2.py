@@ -64,7 +64,7 @@ middle1 = Dense(10)(middle1)
 # # 모델 분기1
 # output1 = Dense(30)(middle1)
 # output1 = Dense(7)(output1)
-output1 = Dense(3)(middle1) #진정한 아웃풋, 분기 안하면 맨 밑에 아웃풋 넣고 미들로 인풋넣어주면됨.
+output1 = Dense(3)(middle1) 
 
 # 모델 분기2
 # output2 = Dense(15)(middle1)
