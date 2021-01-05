@@ -15,7 +15,7 @@ print("y.shape : ", y.shape) #(13,)
 x = x.reshape(13, 3, 1)
 
 #2. 모델구성
-from tensorflow.keras.models import Model
+from tensorflow.keras.models import Sequential,Model
 from tensorflow.keras.layers import Dense,Input,LSTM
 
 input1 = Input(shape = (3,1)) 

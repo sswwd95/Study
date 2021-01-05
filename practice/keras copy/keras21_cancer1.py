@@ -29,7 +29,6 @@ x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 x_val = scaler.transform(x_val)
 
-# 전처리 알아서 해 / minmax, train_test_split
 
 #2. 모델
 from tensorflow.keras.models import Sequential
@@ -41,12 +40,10 @@ model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(10, activation='relu'))
 model.add(Dense(1, activation='sigmoid'))
-# 히든레이어 없어도 괜찮다. 
 
 # 3. 컴파일, 훈련
-                # mean_squared_error -> 풀네임도 가능함
-model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
 
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
 model.fit(x_train,y_train, epochs=100, validation_data=(x_val, y_val), batch_size=8)
 
 #4. 평가, 예측

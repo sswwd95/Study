@@ -12,10 +12,8 @@ x = datasets.data
 y = datasets.target
 print(x.shape) # (569, 30)
 print(y.shape)  # (569,) 
-# print(x[:5])
-# print(y)
-from sklearn.preprocessing import MinMaxScaler
 
+from sklearn.preprocessing import MinMaxScaler
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(
@@ -30,8 +28,6 @@ x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 x_val = scaler.transform(x_val)
 
-# 전처리 알아서 해 / minmax, train_test_split
-
 #2. 모델
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
@@ -42,15 +38,13 @@ model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(10, activation='relu'))
 model.add(Dense(1, activation='sigmoid'))
-# 히든레이어 없어도 괜찮다. 
 
 # 3. 컴파일, 훈련
-                # mean_squared_error -> 풀네임도 가능함
+
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
 
 from tensorflow.keras.callbacks import EarlyStopping
 early_stopping = EarlyStopping(monitor = 'acc', patience=5, mode = 'max' )
-
 model.fit(x_train,y_train, epochs=100, callbacks=[early_stopping], validation_data=(x_val, y_val), batch_size=8)
 
 #4. 평가, 예측

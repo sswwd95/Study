@@ -1,4 +1,4 @@
-# keras21_cancer1.py를 다중분류로 코딩하시오. 
+# keras21_cancer1.py를 다중분류로 코딩
 
 # 유방암 예측 모델
 import numpy as np
@@ -14,8 +14,6 @@ x = datasets.data
 y = datasets.target
 print(x.shape) # (569, 30)
 print(y.shape)  # (569,) 
-# print(x[:5])
-# print(y)
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(
@@ -40,8 +38,7 @@ y_test = to_categorical(y_test)
 y_val = to_categorical(y_val)
 print(y)
 print(x.shape) #(569, 30)
-print(y.shape) # (569, 2) -> reshape됨
-
+print(y.shape) # (569, 2)
 
 #2. 모델
 from tensorflow.keras.models import Sequential
@@ -56,7 +53,6 @@ model.add(Dense(2, activation='softmax'))
 
 
 # 3. 컴파일, 훈련
-                # mean_squared_error -> 풀네임도 가능함
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
 model.fit(x_train,y_train, epochs=100, validation_data=(x_val, y_val), batch_size=8)
 

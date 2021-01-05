@@ -1,4 +1,3 @@
-# LSTM 코딩. 80을 원한다
 
 import numpy as np
 # 1. 데이터

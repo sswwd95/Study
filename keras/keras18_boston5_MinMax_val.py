@@ -23,7 +23,6 @@ print(dataset.feature_names)
 #   = (x - np.min(x)) / (np.max(x) - np.min(x)) 식 자체가 이렇게 되어있다는 것을 이해하기
 print(np.max(x[0]))
 
-from sklearn.preprocessing import MinMaxScaler
 
 # scaler = MinMaxScaler()
 # scaler.fit(x)     # -> 이렇게 하면 전체에 전처리 들어가서 예측 값이 범위 벗어나면 값 엉망. x train만 전처리.
@@ -40,6 +39,9 @@ x_train, x_test, y_train, y_test = train_test_split(
 
 x_train, x_val, y_train, y_val= train_test_split(x_train, y_train,
                                                  test_size=0.3, shuffle = True)
+
+from sklearn.preprocessing import MinMaxScaler
+
 scaler = MinMaxScaler()
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
@@ -65,7 +67,7 @@ model.add(Dense(1))
 # 3. 컴파일, 훈련
 
 model.compile(loss = 'mse', optimizer = 'adam', metrics = ['mae'])
-model.fit(x_train, y_train, batch_size = 8, epochs=100, validation_data=(x_val,y_val))
+model.fit(x_train, y_train, batch_size = 8, epochs=10, validation_data=(x_val,y_val))
 
 
 

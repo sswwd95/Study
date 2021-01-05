@@ -2,31 +2,20 @@ import numpy as np
 from sklearn.datasets import load_iris
 
 #1. 데이터
-
-# x,y = load_iris(return_X_y=True) 아래와 같은 방법인데 아래 방법이 더 좋다. 
 dataset = load_iris()
 x = dataset.data
 y = dataset.target
-# print(dataset.DESCR)
-# print(dataset.feature_names)
 print(x.shape) # (150,4)
 print(y.shape) # (150,)
 print(x[:5])
 print(y)
-# 꽃이 3 종류(y값이 3개)
-# 0=1 0 0, 1=0 1 0, 2 = 0 0 1
 
 ## 원핫인코딩 OneHotEncoding
-from tensorflow.keras.utils import to_categorical # 2.0의 방식
-# from keras.utils.np_utils import to_categorical -> 옛날버전
-
+from tensorflow.keras.utils import to_categorical 
 y = to_categorical(y)
-# y_train = to_categorical(y_train)
-# y_test = to_categorical(y_test)
-# y_val = to_categorical(y_val)
 print(y)
 print(x.shape) #(150,4)
-print(y.shape) # (150,3) -> reshape됨
+print(y.shape) # (150,3) 
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(
@@ -34,9 +23,7 @@ x_train, x_test, y_train, y_test = train_test_split(
 
 x_train, x_val, y_train, y_val = train_test_split(x_train, y_train,
                                                   test_size=0.4, shuffle=True)
-
 from sklearn.preprocessing import MinMaxScaler
-
 scaler = MinMaxScaler()
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
@@ -66,7 +53,6 @@ y_predict = model.predict(x_test[-5:-1])
 print(y_predict)
 print(y_test[-5:-1])
 print(np.argmax(y_predict,axis=-1))
-#결과치 나오게 코딩할것.   #argmax
 
 # loss, acc :  0.09609115868806839 0.9666666388511658
 # [[1.61500391e-09 3.95920433e-05 9.99960423e-01]

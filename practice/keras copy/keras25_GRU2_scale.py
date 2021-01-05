@@ -16,7 +16,7 @@ x = x.reshape(13, 3, 1)
 
 #2. 모델구성
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense,GRU
+from tensorflow.keras.layers import Dense, LSTM, SimpleRNN,GRU
 
 model = Sequential()
 model.add(GRU(10, activation='relu', input_shape=(3,1)))

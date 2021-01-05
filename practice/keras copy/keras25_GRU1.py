@@ -13,7 +13,7 @@ x = x.reshape(4, 3, 1)
 
 #2. 모델구성
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense,GRU
+from tensorflow.keras.layers import Dense, LSTM, SimpleRNN, GRU
 model = Sequential()
 model.add(GRU(10, activation='sigmoid', input_shape=(3,1)))
 model.add(Dense(20))
@@ -24,7 +24,6 @@ model.summary()
 # 3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
 model.fit(x,y, epochs=100, batch_size=1)
-
 
 # 4. 평가, 예측
 loss = model.evaluate(x, y)

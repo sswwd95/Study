@@ -2,19 +2,13 @@ import numpy as np
 from sklearn.datasets import load_iris
 
 #1. 데이터
-
-# x,y = load_iris(return_X_y=True) 아래와 같은 방법인데 아래 방법이 더 좋다. 
 dataset = load_iris()
 x = dataset.data
 y = dataset.target
-# print(dataset.DESCR)
-# print(dataset.feature_names)
 print(x.shape) # (150,4)
 print(y.shape) # (150,)
 print(x[:5])
 print(y)
-# 꽃이 3 종류(y값이 3개)
-# 0=1 0 0, 1=0 1 0, 2 = 0 0 1
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(
@@ -22,7 +16,6 @@ x_train, x_test, y_train, y_test = train_test_split(
 
 x_train, x_val, y_train, y_val = train_test_split(x_train, y_train,
                                                   test_size=0.4, shuffle=True)
-
 from sklearn.preprocessing import MinMaxScaler
 
 scaler = MinMaxScaler()
@@ -45,10 +38,9 @@ y_val = enc.transform(y_val).toarray()
 
 print(y)
 print(x.shape) #(150,4)
-print(y.shape) # (150,3) -> reshape됨
+print(y.shape) # (150,3)
 
 # 2. 모델구성
-
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 
@@ -62,7 +54,6 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc']
 model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs= 100, batch_size=8)
 
 #3. 평가, 예측
-
 loss,acc = model.evaluate(x_test, y_test, batch_size=8)
 print("loss, acc : ", loss, acc)
 
@@ -70,7 +61,6 @@ y_predict = model.predict(x_test[-5:-1])
 print(y_predict)
 print(y_test[-5:-1])
 print(np.argmax(y_predict,axis=-1))
-#결과치 나오게 코딩할것.   #argmax
 
 # loss, acc :  0.09609115868806839 0.9666666388511658
 # [[1.61500391e-09 3.95920433e-05 9.99960423e-01]

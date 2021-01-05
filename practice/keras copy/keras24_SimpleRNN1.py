@@ -1,4 +1,4 @@
-# LSTM1.py 복사
+# LSTM1.py
 
 #1. 데이터
 import numpy as np
@@ -25,7 +25,6 @@ model.summary()
 model.compile(loss='mse', optimizer='adam')
 model.fit(x,y, epochs=100, batch_size=1)
 
-
 # 4. 평가, 예측
 loss = model.evaluate(x, y)
 print(loss)
@@ -35,7 +34,6 @@ x_pred = x_pred.reshape(1, 3 , 1)
 
 result = model.predict(x_pred)
 print(result)
-
 
 # LSTM 1
 # 0.0016605528071522713
