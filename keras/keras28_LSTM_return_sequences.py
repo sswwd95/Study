@@ -3,7 +3,6 @@
 # model.add(LSTM(10,input_shape=(3,1)))
 # modle.add(LSTM(10))
 
-
 import numpy as np
 # 1. 데이터
 x = np.array([[1,2,3] ,[2,3,4], [3,4,5], [4,5,6],
@@ -42,7 +41,7 @@ model.summary()
 #   [81.4755 ]
 #   [81.82193]]]
 # 값이 3개로 나옴 (3차원 그대로 받아서 )
-'''
+
 # 3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
 from tensorflow.keras.callbacks import EarlyStopping
@@ -70,7 +69,7 @@ print(result)
 # LSTM 3개
 # loss :  0.044297657907009125
 # [[82.34313]]
-'''
+
 '''
 _________________________________________________________________
 Layer (type)                 Output Shape              Param #
