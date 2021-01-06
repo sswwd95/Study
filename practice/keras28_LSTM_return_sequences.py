@@ -18,7 +18,7 @@ print(x.shape[0])
 print(x.shape[1])
 
 # x = x.reshape(13, 3, 1)
-x = x.reshape(x.shape[0],x.shape[1],1) # 0번째면 13, 1번째면 3 = (13, 3, 1)
+x = x.reshape(x.shape[0],x.shape[1],1)
 
 #2. 모델구성
 from tensorflow.keras.models import Sequential
@@ -31,17 +31,6 @@ model.add(Dense(20, activation='relu'))
 model.add(Dense(10, activation='relu'))
 model.add(Dense(1))
 model.summary()
-
-# model.add(LSTM(30, return_sequences = True, activation='relu'))
-# model.add(LSTM(30, activation='relu'))
-# 이렇게 해야함. (차원을 그대로 받는것)
-# model.add(LSTM(30, return_sequences = True, activation='relu'))
-# model.add(Dense(30, activation='relu'))  
-# LSTM retur_sequences 후 Dense가 받으면 
-# [[[77.59082]
-#   [81.4755 ]
-#   [81.82193]]]
-# 값이 3개로 나옴 (3차원 그대로 받아서 )
 
 # 3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
