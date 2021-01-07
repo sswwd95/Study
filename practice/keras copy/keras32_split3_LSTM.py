@@ -57,17 +57,17 @@ x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 x_pred = scaler.transform(x_pred)
 
-# x_train = x_train.reshape(x_train.shape[0],x_train.shape[1],1)
-# x_test = x_test.reshape(x_test.shape[0],x_test.shape[1],1)
-# print(x_train.shape)  #(76, 5, 1)
-# print(x_test.shape)  #(19, 5, 1)
-# print(x_pred.shape)  #(5, 5, 1)
+x_train = x_train.reshape(x_train.shape[0],x_train.shape[1],1)
+x_test = x_test.reshape(x_test.shape[0],x_test.shape[1],1)
+print(x_train.shape)  #(76, 5, 1)
+print(x_test.shape)  #(19, 5, 1)
+print(x_pred.shape)  #(5, 5, 1)
 
 #2. 모델구성
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, LSTM
 model = Sequential()
-model.add(Dense(500, activation='relu', input_shape=(5,)))
+model.add(LSTM(500, activation='relu', input_shape=(5,1)))
 model.add(Dense(100, activation='relu'))
 model.add(Dense(100, activation='relu'))
 model.add(Dense(100, activation='relu'))
@@ -88,7 +88,7 @@ model.fit(x_train, y_train, batch_size=1, callbacks=[early_stopping],epochs=1000
 loss = model.evaluate(x_test,y_test, batch_size=1)
 print('loss : ',loss)
 
-# x_pred = x_pred.reshape(x_pred.shape[0],x_pred.shape[1],1)
+x_pred = x_pred.reshape(x_pred.shape[0],x_pred.shape[1],1)
 
 result = model.predict(x_pred)
 print('result : ',result)
@@ -100,11 +100,3 @@ print('result : ',result)
 #  [103.41383 ]
 #  [104.416824]
 #  [105.422066]]
-
-# Dense
-# loss :  0.004237275570631027
-# result :  [[100.94791 ]
-#  [101.94839 ]
-#  [102.94887 ]
-#  [103.949326]
-#  [104.94979 ]]
