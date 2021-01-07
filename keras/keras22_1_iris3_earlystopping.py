@@ -68,6 +68,7 @@ print("loss, acc : ", loss, acc)
 
 y_predict = model.predict(x_test[-5:-1])
 print(y_predict)
+#
 print(y_test[-5:-1])
 print(np.argmax(y_predict,axis=-1))
 #결과치 나오게 코딩할것.   #argmax
