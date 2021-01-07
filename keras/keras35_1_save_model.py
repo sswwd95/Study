@@ -19,3 +19,9 @@ model.summary()
 # 모델 저장
 # model.save("./")  . 은 현재폴더라는 뜻 (Study 폴더)
 model.save("./model/save_keras35.h5") #h5는 확장자
+model.save("./model//save_keras35_1.h5")
+model.save(".\model\save_keras35_2.h5")
+model.save(".\\model\\save_keras35_3.h5")
+# 위에 4개 다 똑같이 실행됨
+# '', "" 상관없음
+# \n 이면 줄바꾸기 예약문자라서 같이 쓰려면 2개

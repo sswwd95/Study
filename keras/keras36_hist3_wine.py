@@ -1,3 +1,5 @@
+# hist를 이용하여 그래프를 그리시오
+# loss, val_loss, acc, val_acc
 from sklearn.datasets import load_wine
 import numpy as np
 
@@ -60,8 +62,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics='acc')
 
 from tensorflow.keras.callbacks import EarlyStopping
 early_stopping = EarlyStopping(monitor = 'acc', patience = 20, mode='max')
-
-model.fit(x_train, y_train, callbacks=[early_stopping], validation_data=(x_val,y_val), batch_size=8, epochs=1000)
+hist = model.fit(x_train, y_train, callbacks=[early_stopping], validation_data=(x_val,y_val), batch_size=8, epochs=1000)
 
 #. 4. 평가, 예측
 loss, acc = model.evaluate(x_test, y_test, batch_size=8)
@@ -78,3 +79,17 @@ print(np.argmax(y_predict,axis=-1))
 #  [2.6080270e-06 9.9999702e-01 4.0747332e-07]
 #  [1.3668525e-09 2.1839366e-09 1.0000000e+00]]
 # [1 1 1 2]
+
+
+import matplotlib.pyplot as plt
+
+plt.plot(hist.history['loss'])
+plt.plot(hist.history['val_loss'])
+plt.plot(hist.history['acc'])
+plt.plot(hist.history['val_acc'])
+
+plt.title('loss & acc')
+plt.ylabel('loss,acc')
+plt.xlabel('epoch')
+plt.legend(['train loss', 'val loss', 'train acc', 'val acc'])
+plt.show()
