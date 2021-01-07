@@ -27,6 +27,10 @@ model = load_model('./model/save_keras35.h5')
 
 model.summary()
 
+# WARNING:tensorflow:No training configuration found 
+# in the save file, so the model was *not* compiled. Compile it manually.
+# 위의 문구는 가중치 저장을 안해서 뜨는 것
+
 # 3. 컴파일, 훈련
 model.compile(loss = 'mse', optimizer='adam')
 from tensorflow.keras.callbacks import EarlyStopping
