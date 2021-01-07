@@ -18,4 +18,4 @@ model.summary()
 
 # 모델 저장
 # model.save("./")  . 은 현재폴더라는 뜻 (Study 폴더)
-model.save("./model/save_keras35.h5")
+model.save("./model/save_keras35.h5") #h5는 확장자
