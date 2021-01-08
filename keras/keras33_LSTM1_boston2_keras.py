@@ -27,7 +27,6 @@ x_train = x_train.reshape(x_train.shape[0],x_train.shape[1],1)
 x_test = x_test.reshape(x_test.shape[0],x_test.shape[1],1)
 x_val = x_val.reshape(x_val.shape[0],x_val.shape[1],1)
 
-
 #2. 모델
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense,LSTM

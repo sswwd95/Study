@@ -1,4 +1,4 @@
-#실습 : 19_1,2,3,4,5 Early stopping까지 총 6개의 파일 완성하기
+# 실습 : dropout적용
 
 # 1. 데이터
 import numpy as np
@@ -22,29 +22,38 @@ from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(
     x, y, train_size = 0.8, random_state = 66)
 
+x_train, x_val, y_train, y_val = train_test_split(x_train, y_train,
+                                                  test_size=0.4, shuffle=True)
+
 scaler = MinMaxScaler()
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
+x_var = scaler.transform(x_val)
 
 # 2. 모델구성
 
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, Dropout
+
 
 model = Sequential()
 model.add(Dense(100, activation='relu', input_shape=(10, )))
+model.add(Dropout(0.2))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(1))
 
 model.compile(loss='mse', optimizer='adam', metrics=['mae'])
-model.fit(x_train, y_train, validation_split=0.2, epochs=300, batch_size=8)
 
+from tensorflow.keras.callbacks import EarlyStopping
+early_stopping = EarlyStopping(monitor = 'loss', patience = 20, mode = 'min')
+model.fit(x_train, y_train, validation_data=(x_val, y_val),
+         callbacks=[early_stopping], epochs= 300, batch_size=8)
 
 #3. 평가, 예측
 
-loss,mae = model.evaluate(x_test, y_test, batch_size=8)
+loss,mae = model.evaluate(x_test, y_test, batch_size=1)
 print("loss, mae : ", loss, mae)
 
 y_predict = model.predict(x_test)
@@ -77,3 +86,18 @@ print("R2 : " , r2)
 # loss, mae :  3736.541748046875 48.8818359375
 # RMSE :  61.12725628077463
 # R2 :  0.42426530025513365
+
+#  제대로 전처리(validation_data)
+# loss, mae :  3873.400634765625 51.55214309692383
+# RMSE :  62.23664736125453
+# R2 :  0.4031777867820261
+
+# early stopping
+# loss, mae :  3433.62353515625 48.48197937011719
+# RMSE :  58.59713822916717
+# R2 :  0.4709394090660546
+
+#dropout 후 (성능 좋아짐)
+# loss, mae :  3376.09375 48.167259216308594
+# RMSE :  58.10415494963148
+# R2 :  0.4798040358943778

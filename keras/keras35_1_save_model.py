@@ -24,4 +24,4 @@ model.save(".\model\save_keras35_2.h5")
 model.save(".\\model\\save_keras35_3.h5")
 # 위에 4개 다 똑같이 실행됨
 # '', "" 상관없음
-# \n 이면 줄바꾸기 예약문자라서 같이 쓰려면 2개
+# \n 이면 줄바꾸기된다. n 같이 쓰려면 \\ 2개 넣어주기

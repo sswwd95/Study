@@ -31,6 +31,8 @@ from tensorflow.keras.layers import Dense
 model = Sequential()
 # model.add(Dense(128, activation = 'relu', imput_dim = 13)) 가능
 model.add(Dense(128, activation ='relu', input_shape = (13,)))
+model.add(Dense(128, activation='relu'))
+model.add(Dense(128, activation='relu'))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(64, activation='relu'))
@@ -54,3 +56,8 @@ print("RMSE : ", RMSE(y_test, y_predict))
 from sklearn.metrics import r2_score
 r2 = r2_score(y_test, y_predict)
 print("R2 : ", r2)
+
+#전처리 전
+# loss, mae :  17.961238861083984 3.0568878650665283
+# RMSE :  4.238070188962735
+# R2 :  0.7825965976870914

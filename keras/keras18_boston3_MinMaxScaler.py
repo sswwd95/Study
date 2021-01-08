@@ -44,6 +44,8 @@ from tensorflow.keras.layers import Dense
 model = Sequential()
 # model.add(Dense(128, activation = 'relu', imput_dim = 13)) 가능
 model.add(Dense(128, activation ='relu', input_shape = (13,)))
+model.add(Dense(128, activation='relu'))
+model.add(Dense(128, activation='relu'))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(64, activation='relu'))
@@ -73,16 +75,16 @@ r2 = r2_score(y_test, y_predict)
 print("R2 : ", r2)
 
 #전처리 전
-# loss, mae :  27.019460678100586 4.129007816314697
-# RMSE :  5.198024668725807
-# R2 :  0.6729555986669336
+# loss, mae :  17.961238861083984 3.0568878650665283
+# RMSE :  4.238070188962735
+# R2 :  0.7825965976870914
 
 # 전처리 후 x = x/711.
-# loss, mae :  13.402970314025879 2.729325771331787
-# RMSE :  3.661006663445475
-# R2 :  0.8377700310479839
+# loss, mae :  13.763806343078613 2.824580430984497
+# RMSE :  3.7099605406018363
+# R2 :  0.8334024435018605
 
 # MinMaxScaler
-# loss, mae :  11.915349960327148 2.335031270980835
-# RMSE :  3.4518620227303067
-# R2 :  0.8557762106548309
+# loss, mae :  13.234770774841309 2.4213950634002686
+# RMSE :  3.637962471311643
+# R2 :  0.8398059151970972

@@ -1,5 +1,4 @@
-# hist를 이용하여 그래프를 그리시오
-# loss, val_loss, acc, val_acc
+# 실습 : dropout적용
 
 # 유방암 예측 모델
 import numpy as np
@@ -24,6 +23,7 @@ x_train, x_test, y_train, y_test = train_test_split(
 
 x_train, x_val, y_train, y_val = train_test_split(x_train, y_train,
                                                   test_size=0.2, shuffle=True)
+
 from sklearn.preprocessing import MinMaxScaler
 
 scaler = MinMaxScaler()
@@ -32,24 +32,32 @@ x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 x_val = scaler.transform(x_val)
 
+from tensorflow.keras.utils import to_categorical 
+
+y = to_categorical(y)
+y_train = to_categorical(y_train)
+y_test = to_categorical(y_test)
+y_val = to_categorical(y_val)
+print(y)
+print(x.shape) #(569, 30)
+print(y.shape) # (569, 2) -> reshape됨
+
 #2. 모델
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, Dropout
 
 model = Sequential()
 model.add(Dense(128, activation='relu', input_shape=(30,)))
+model.add(Dropout(0.2))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(10, activation='relu'))
-model.add(Dense(1, activation='sigmoid'))
+model.add(Dense(2, activation='softmax'))
+
 
 # 3. 컴파일, 훈련
-model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
-
-from tensorflow.keras.callbacks import EarlyStopping
-early_stopping = EarlyStopping(monitor = 'acc', patience=5, mode = 'max' )
-
-hist = model.fit(x_train,y_train, epochs=100, callbacks=[early_stopping], validation_data=(x_val, y_val), batch_size=8)
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
+model.fit(x_train,y_train, epochs=100, validation_data=(x_val, y_val), batch_size=8)
 
 #4. 평가, 예측
 loss, acc = model.evaluate(x_test,y_test, batch_size=8)
@@ -58,36 +66,27 @@ print('loss, acc : ', loss, acc)
 y_predict = model.predict(x_test[-5:-1])
 print(y_predict)
 print(y_test[-5:-1])
-print(np.argmax(y_predict,axis=0))
+print(np.argmax(y_predict,axis=-1))
 
-# loss, acc :  0.4048005938529968 0.9736841917037964
-# [[1.0000000e+00]
-#  [3.7346189e-04]
-#  [9.9999988e-01]
-#  [9.9999976e-01]]
+# loss, acc :  0.3076542913913727 0.9561403393745422
+# [[7.0065487e-09 1.0000000e+00]
+#  [1.0000000e+00 3.3975954e-08]
+#  [1.7665387e-06 9.9999821e-01]
+#  [3.9296706e-06 9.9999607e-01]]
+# [[0. 1.]
+#  [1. 0.]
+#  [0. 1.]
+#  [0. 1.]]
 # [1 0 1 1]
-# [0]
 
-# earlystopping 후
-# loss, acc :  0.14489495754241943 0.9736841917037964
-# [[0.9999343 ]
-#  [0.00247921]
-#  [0.99968374]
-#  [0.9996431 ]]
+#dropout 후 (loss와 acc 둘 다 떨어지면 성능이 좋아진것, 기준은 loss!)
+# loss, acc :  0.22323311865329742 0.9473684430122375
+# [[4.8269221e-06 9.9999523e-01]
+#  [9.9990499e-01 9.5025200e-05]
+#  [7.1617811e-05 9.9992836e-01]
+#  [5.7905517e-04 9.9942100e-01]]
+# [[0. 1.]
+#  [1. 0.]
+#  [0. 1.]
+#  [0. 1.]]
 # [1 0 1 1]
-# [0]
-
-import matplotlib.pyplot as plt
-
-plt.plot(hist.history['loss'])
-plt.plot(hist.history['val_loss'])
-plt.plot(hist.history['acc'])
-plt.plot(hist.history['val_acc'])
-
-plt.title('loss & acc')
-plt.ylabel('loss,acc')
-plt.xlabel('epoch')
-plt.legend(['train loss', 'val loss', 'train acc', 'val acc'])
-plt.show()
-
-
