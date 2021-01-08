@@ -52,11 +52,11 @@ model.add(Dropout(0.2))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(10, activation='relu'))
-model.add(Dense(2, activation='softmax'))
+model.add(Dense(2, activation='sigmoid'))
 
 
 # 3. 컴파일, 훈련
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
 model.fit(x_train,y_train, epochs=100, validation_data=(x_val, y_val), batch_size=8)
 
 #4. 평가, 예측
