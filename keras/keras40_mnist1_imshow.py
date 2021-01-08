@@ -14,5 +14,9 @@ print(x_test.shape, y_test.shape) # (10000, 28, 28) (10000,)
 
 print(x_train[0])
 print(y_train[0])
+print(x_train[0].shape) #(28,28)
 
-print
+plt.imshow(x_train[0],'gray') # -> 특성이 있는 부분이 하얀색
+# plt.imshow(x_train[0]) -> 칼라로 나옴
+plt.show()
+
