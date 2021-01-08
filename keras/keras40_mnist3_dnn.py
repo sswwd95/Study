@@ -17,9 +17,10 @@ print(y_train[0])
 print(x_train[0].shape) #(28,28)
 print(np.max)
 
-x_train = x_train.reshape(60000,28,28,1).astype('float32')/255.
+# x_train = x_train.reshape(60000,28*28).astype('float32')/255.
+x_train.reshape(x_train.shape[1]*x_train.shape[2],1)
+x_test.reshape(x_test.shape[1]*x_test.shape[2],1)
 
-x_trest.reshape(x_test.shape[0],x_test.shape[1],x_test.shape[2],1)) 
 
 #OneHotEncoding
 from tensorflow.keras.utils import to_categorical
@@ -32,16 +33,15 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 
 model = Sequential()
-model.add(Conv2D(filters=10, kernel_size=(2,2), padding='same', strides=1, input_shape=(28*28,)))
-model.add(MaxPooling2D(pool_size=2))
-model.add(Conv2D(9,2))
-model.add(Conv2D(8,2))
+model.add(Dense(10, activation='relu',input_shape=(28*28,)))
 model.add(Dense(40,activation='relu'))
-model.add(Dense(10,activation='softmax'))
-
+model.add(Dense(40,activation='relu'))
+model.add(Dense(40,activation='relu'))
+model.add(Dense(40,activation='relu'))
+model.add(Dense(40,activation='relu'))
+model.add(Dense(10,activation='relu'))
 
 model.summary()
-
 
 #3. 컴파일, 훈련
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
