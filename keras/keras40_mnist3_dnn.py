@@ -17,10 +17,11 @@ print(y_train[0])
 print(x_train[0].shape) #(28,28)
 print(np.max)
 
-# x_train = x_train.reshape(60000,28*28).astype('float32')/255.
-x_train.reshape(x_train.shape[1]*x_train.shape[2],1)
-x_test.reshape(x_test.shape[1]*x_test.shape[2],1)
+x_train = x_train.reshape(x_train.shape[0],x_train.shape[1]*x_train.shape[2])/255.
+x_test = x_test.reshape(x_test.shape[0],x_test.shape[1]*x_test.shape[2])/255.
 
+print(x_train.shape) #(60000, 784)
+print(x_test.shape) #(10000, 784)
 
 #OneHotEncoding
 from tensorflow.keras.utils import to_categorical
@@ -30,40 +31,34 @@ y_test = to_categorical(y_test)
 print(y_train.shape) #(60000,10)
 
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, Dropout
 
 model = Sequential()
-model.add(Dense(10, activation='relu',input_shape=(28*28,)))
-model.add(Dense(40,activation='relu'))
-model.add(Dense(40,activation='relu'))
-model.add(Dense(40,activation='relu'))
-model.add(Dense(40,activation='relu'))
-model.add(Dense(40,activation='relu'))
-model.add(Dense(10,activation='relu'))
-
+model.add(Dense(200, activation='relu',input_shape=(28*28,)))
+model.add(Dropout(0.2))
+model.add(Dense(100,activation='relu'))
+model.add(Dense(50,activation='relu'))
+model.add(Dense(50,activation='relu'))
+model.add(Dense(20,activation='relu'))
+model.add(Dense(10,activation='softmax'))
 model.summary()
 
 #3. 컴파일, 훈련
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
 from tensorflow.keras.callbacks import EarlyStopping
 es = EarlyStopping(monitor='acc', patience=20, mode='max')
-model.fit(x_train,y_train, callbacks=[es],epochs=10, validation_split=0.2, batch_size=16)
+model.fit(x_train,y_train, callbacks=[es],epochs=100, validation_split=0.2, batch_size=32)
 
 
 #4. 평가, 예측
-loss, acc = model.evaluate(x_test, y_test, batch_size=16)
+loss, acc = model.evaluate(x_test, y_test, batch_size=32)
 print('loss, acc : ', loss, acc)
 
 y_predict = model.predict(x_test[:10])
 print(y_predict)
 print(y_test[:10])
 
-# 실습! 완성하기. 지표는 acc
-# 응용 : y_test 10개와 y_pred 10개를 출력하시오
-
-# y_test[:10] = (?,?,?,?,?,?,?,?,?,?)
-# y_pred[:10] = (?,?,?,?,?,?,?,?,?,?)
-
+# mnist_cnn
 
 # loss, acc :  0.06896616518497467 0.9800999760627747
 # [[1.91534921e-09 2.67154132e-10 2.49314354e-07 1.90946957e-05
@@ -96,6 +91,49 @@ print(y_test[:10])
 #  [3.41864218e-16 3.38261049e-13 4.04568360e-13 1.17140075e-07
 #   1.21894968e-03 3.29304868e-08 2.13533548e-17 4.16680632e-05
 #   1.26934574e-05 9.98726428e-01]]
+# [[0. 0. 0. 0. 0. 0. 0. 1. 0. 0.]
+#  [0. 0. 1. 0. 0. 0. 0. 0. 0. 0.]
+#  [0. 1. 0. 0. 0. 0. 0. 0. 0. 0.]
+#  [1. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+#  [0. 0. 0. 0. 1. 0. 0. 0. 0. 0.]
+#  [0. 1. 0. 0. 0. 0. 0. 0. 0. 0.]
+#  [0. 0. 0. 0. 1. 0. 0. 0. 0. 0.]
+#  [0. 0. 0. 0. 0. 0. 0. 0. 0. 1.]
+#  [0. 0. 0. 0. 0. 1. 0. 0. 0. 0.]
+#  [0. 0. 0. 0. 0. 0. 0. 0. 0. 1.]]
+
+# mnist_dnn
+#loss, acc :  0.13697706162929535 0.9828000068664551
+# [[0.00000000e+00 2.43601619e-26 6.62896959e-22 5.33566180e-28
+#   1.95766927e-27 0.00000000e+00 0.00000000e+00 1.00000000e+00
+#   2.69256150e-32 1.77099678e-27]
+#  [2.30655389e-30 5.05390397e-19 1.00000000e+00 3.61710939e-11
+#   1.53311111e-16 8.29963704e-21 1.25765986e-21 6.75870670e-15
+#   1.33391715e-16 6.84429858e-23]
+#  [1.07898577e-26 1.00000000e+00 4.62250740e-15 7.08433191e-23
+#   2.71048730e-21 1.97574089e-21 1.81471383e-16 5.62771663e-10
+#   1.31413205e-11 1.33136254e-20]
+#  [1.00000000e+00 1.64037493e-26 5.97325303e-13 2.47222353e-21
+#   8.65423862e-14 4.53586659e-23 8.93532549e-14 2.67156055e-14
+#   3.62259719e-27 8.66473126e-13]
+#  [8.67631895e-18 3.24554676e-16 1.15894118e-15 1.64425372e-25
+#   1.00000000e+00 1.58696704e-26 1.76590298e-20 1.35505188e-17
+#   3.08602392e-17 2.12954272e-11]
+#  [1.71936749e-33 1.00000000e+00 1.60065765e-20 8.78299888e-29
+#   7.44102630e-28 8.67531985e-27 1.69632186e-21 4.07277727e-12
+#   1.25562755e-13 1.13089364e-24]
+#  [2.10405738e-12 7.51081697e-11 6.32324609e-11 2.31030139e-18
+#   1.00000000e+00 2.29909087e-19 2.64801117e-14 2.56158267e-13
+#   5.40495491e-13 3.58563419e-08]
+#  [9.48852329e-17 3.07709197e-12 3.83221010e-10 2.79155756e-08
+#   2.19953389e-09 4.89460739e-09 3.06090148e-23 1.67979575e-09
+#   6.13492590e-10 1.00000000e+00]
+#  [6.61494086e-17 1.44482058e-22 9.13345569e-16 3.70681743e-14
+#   5.10412624e-18 1.00000000e+00 8.17923784e-11 1.88000899e-20
+#   2.74410700e-17 2.71194889e-11]
+#  [2.99829014e-29 1.84765249e-20 3.60751291e-18 4.17204093e-16
+#   1.23233306e-13 6.82813520e-14 0.00000000e+00 7.65866809e-17
+#   1.05861756e-17 1.00000000e+00]]
 # [[0. 0. 0. 0. 0. 0. 0. 1. 0. 0.]
 #  [0. 0. 1. 0. 0. 0. 0. 0. 0. 0.]
 #  [0. 1. 0. 0. 0. 0. 0. 0. 0. 0.]
