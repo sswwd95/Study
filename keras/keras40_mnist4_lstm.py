@@ -73,7 +73,6 @@ y_predict = model.predict(x_test[:10])
 # print(y_test[:10])
 
 # mnist_cnn
-
 # loss, acc :  0.06896616518497467 0.9800999760627747
 
 # mnist_dnn
