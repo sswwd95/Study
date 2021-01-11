@@ -15,10 +15,6 @@ print(np.max) #255
 x_train = x_train.reshape(60000,28,28,1).astype('float32')/255. # 옛날 방식
 x_test = x_test.reshape(10000,28,28,1)/255.
 
-# x_train = x_train.reshape(x_train[0],x_train[1],x_train[2],1)/255.
-# x_test = x_test.reshape(x_train[0],x_train[1],x_train[2],1)/255.
-# TypeError: only integer scalar arrays can be converted to a scalar index
-
 from tensorflow.keras.utils import to_categorical
 y_train = to_categorical(y_train)
 y_test = to_categorical(y_test)

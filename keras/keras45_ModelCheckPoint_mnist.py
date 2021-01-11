@@ -67,8 +67,10 @@ print(y_test[:10])
 
 #시각화
 import matplotlib.pyplot as plt
-import matplotlib.font_manager as fm
-path = 'C:\\Users\\bit\Downloads\\nanumbarungothic.ttf'
+# import matplotlib.font_manager as fm
+# font_path = r'C:/Users/bit/Downloads/NanumGothic.ttf'
+# fontprop = fm.FontProperties(fname=font_path, size=15)
+plt.rc('font',family='Malgun Gothic')
 plt.figure(figsize=(10,6))  # 판 깔아주는 것.
 plt.subplot(2,1,1) #(2행 1열 중 첫번째)
 plt.plot(hist.history['loss'],marker='.', c='red', label='loss')

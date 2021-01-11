@@ -1,4 +1,4 @@
-
+'''
 데이터가 너무 딱 맞으면 새로운 데이터가 들어왔을 때 성능 떨어진다. - > 과적합
 
 과적합이 안되려면?
@@ -10,11 +10,11 @@
 4. dropout(딥러닝 해당, 1~3번은 머신러닝도 포함)
    - 노드 중 몇 개를 사용하지 않는 것(삭제하는 것 아님)
 (5. 앙상블 : 2~5% 향상된다는 말이 있다. (신뢰없음))
- 
+
 ##### dropout #####
 넣고 싶은 곳에 넣는 것. 
 다 넣는 것 아님!
-
+'''
 #2 . 모델구성
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
