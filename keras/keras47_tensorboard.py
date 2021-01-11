@@ -73,10 +73,12 @@ hist = model.fit(x_train,y_train, callbacks=[es,cp,tb], epochs=10, validation_sp
 
 # 기본은 모델이 완벽해야 모델체크포인트에 저장된게 좋은것. 모델이 안좋으면 쓰레기 안에서 그나마 나은걸 뽑은 것.
 '''
-log_dir : TensorBoard에서 로그 파일을 저장할 디렉토리의 경로입니다.
-histogram_freq :모델의 계층에 대한 활성화 및 가중치 히스토그램을 계산할 빈도 (에포크 단위). 0으로 설정하면 히스토그램이 계산되지 않습니다. 
-                히스토그램 시각화를 위해 유효성 검사 데이터 (또는 분할)를 지정해야합니다.
-write_graph : TensorBoard 에서 그래프를 시각화할지 여부. write_graph가 True로 설정되면 로그 파일이 상당히 커질 수 있습니다.
+log_dir : TensorBoard에서 로그 파일을 저장할 디렉토리의 경로
+histogram_freq :모델의 계층에 대한 활성화 및 가중치 히스토그램을 계산할 빈도 (에포크 단위).                           
+                0으로 설정하면 히스토그램이 계산되지 않는다.
+                히스토그램 시각화를 위해 유효성 검사 데이터 (또는 분할)를 지정해야한다.                          
+                *histogram= 통계 등 자료의 빈도 분포 특성을 시각화하는 도구  
+write_graph : TensorBoard 에서 그래프를 시각화할지 여부. write_graph가 True로 설정되면 로그 파일이 상당히 커질 수 있다.
 write_images : TensorBoard 에서 이미지로 시각화하기 위해 모델 가중치를 쓸지 여부.
 '''
 #4. 평가, 예측
@@ -90,8 +92,7 @@ print(y_test[:10])
 
 #시각화
 import matplotlib.pyplot as plt
-import matplotlib.font_manager as fm
-path = 'C:\\Users\\bit\Downloads\\nanumbarungothic.ttf'
+plt.rc('font', family='Malgun Gothic') # 한글 폰트 설치
 plt.figure(figsize=(10,6))  # 판 깔아주는 것.
 plt.subplot(2,1,1) #(2행 1열 중 첫번째)
 plt.plot(hist.history['loss'],marker='.', c='red', label='loss')
