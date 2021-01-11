@@ -19,7 +19,7 @@ x_train = x_train.reshape(60000,28,28,1).astype('float32')/255.
 # .astype('float32') -> 정수형을 실수형으로 바꾸는 것
 x_test= x_test.reshape(10000,28,28,1)/255. 
 # 이렇게 해도 실수형으로 바로 된다. 
-#x_test = x_trest.reshape(x_test.shape[0],x_test.shape[1],x_test.shape[2],1)) -> 코딩할 때 이렇게 쓰기!
+#x_test = x_test.reshape(x_test.shape[0],x_test.shape[1],x_test.shape[2],1)) -> 코딩할 때 이렇게 쓰기!
 
 #OneHotEncoding
 from tensorflow.keras.utils import to_categorical
