@@ -38,27 +38,12 @@ model.add(Flatten())
 model.add(Dense(40,activation='relu'))
 model.add(Dense(10,activation='softmax'))
 
-# model.save('../data/h5/k52_1_model1.h5')
-
 # 3. 컴파일, 훈련
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
-# modelpath = '../data/modelCheckpoint/k52_1_mnist_{epoch:02d}-{val_loss:.4f}.hdf5'
-# k52_1_mnist_??? => k52_1_MCK.h5 이름을 바꿔줄 것
-# es = EarlyStopping(monitor='val_loss', patience=20, mode='min')
-# cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
-# hist = model.fit(x_train,y_train, callbacks=[es,cp], epochs=2, validation_split=0.2, batch_size=16)
+
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
 
-# model.save('../data/h5/k52_1_model2.h5')
-# model.save_weights('../data/h5/k52_1_weight.h5')
-
-# model = load_model('../data/h5/k52_1_model.h5')
-
-#4-1. 평가, 예측
-# result = model.evaluate(x_test, y_test, batch_size=16)
-# print('model1_loss : ', result[0])
-# print('model1_acc : ', result[1])
-
+# fit부분에서 가중치만 저장해서 compile은 명시해야함. 
 model.load_weights('../data/h5/k52_1_weight.h5')
 #4-2. 평가, 예측
 result = model.evaluate(x_test, y_test, batch_size=16)
@@ -67,10 +52,12 @@ print('가중치_acc : ', result[1])
 # 가중치_loss :  0.0892680361866951
 # 가중치_acc :  0.9729999899864197
 
-
+# 모델~컴파일, 훈련까지 다 저장
 model2=load_model('../data/h5/k52_1_model2.h5')
 result2 = model2.evaluate(x_test, y_test, batch_size=16)
 print('로드모델_loss : ', result2[0])
 print('로드모델_acc : ', result2[1])
 # 로드모델_loss :  0.0892680361866951
 # 로드모델_acc :  0.9729999899864197
+
+# 두 개다 weight값 저장했기 때문에 값 같음

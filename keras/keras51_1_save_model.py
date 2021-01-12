@@ -46,7 +46,7 @@ model.save('../data/h5/k51_1_model1.h5')
 #3. 컴파일, 훈련
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
-modelpath = '../data/modelCheckpoint/k45_mnist_{epoch:02d}-{val_loss:.4f}.hdf5'
+modelpath = '../data/modelCheckpoint/k51_mnist_{epoch:02d}-{val_loss:.4f}.hdf5'
 es = EarlyStopping(monitor='val_loss', patience=20, mode='min')
 cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
 hist = model.fit(x_train,y_train, callbacks=[es,cp], epochs=2, validation_split=0.2, batch_size=16)
@@ -57,42 +57,9 @@ model.save('../data/h5/k51_1_model2.h5')
 #####################################################
 
 #4. 평가, 예측
-loss, acc = model.evaluate(x_test, y_test, batch_size=16)
-print('loss, acc : ', loss, acc)
+result = model.evaluate(x_test, y_test, batch_size=16)
+print('model_loss : ', result[0])
+print('model_acc : ', result[1])
 
-y_predict = model.predict(x_test[:10])
-print(y_predict)
-print(y_test[:10])
-# loss, acc :  0.06896616518497467 0.9800999760627747
-'''
-#시각화
-import matplotlib.pyplot as plt
-plt.rc('font',family='Malgun Gothic') # 한글 폰트 설치
-
-plt.figure(figsize=(10,6))  # 판 깔아주는 것.
-plt.subplot(2,1,1) #(2행 1열 중 첫번째)
-plt.plot(hist.history['loss'],marker='.', c='red', label='loss')
-plt.plot(hist.history['val_loss'],marker='.', c='blue', label='val_loss')
-plt.grid()
-# subplot은 두 개의 그림을 그린다는 것. plot은 도화지 하나라고 생각.
-plt.title('손실비용') 
-plt.ylabel('loss')
-plt.xlabel('epoch')
-plt.legend(loc='upper right') # 상단의 우측 부분에 라벨 명시를 해주는 것
-# legend는 표시해주는 거라 그래프 보고 알아서 위치 설정하기.
-
-plt.subplot(2,1,2) #(2행 2열 중 2번째)
-plt.plot(hist.history['acc'],marker='.', c='red') #metrics의 이름과 똑같이 넣기
-# 그림보면 갱신되는 점은 그대로 두고 뒤에 값 올라간 점은 없어도 된다. 
-plt.plot(hist.history['val_acc'],marker='.', c='blue')
-plt.grid() # 격자. 모눈종이 형태. 바탕을 그리드로 하겠다는 것. 
-
-plt.title('정확도') 
-plt.ylabel('acc')
-plt.xlabel('epoch')
-plt.legend(['acc','val_acc']) # 레전드에 직접 라벨명 넣어줄 수 있다. 위치 알아서 설정함
-
-plt.show()
-
-# loss, acc :  0.05949907749891281 0.9835000038146973
-'''
+# model_loss :  0.0760040208697319
+# model_acc :  0.9757999777793884

@@ -1,3 +1,4 @@
+# k51_1_파일의 모델만 저장, 훈련만 다시 설정하는 것
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -24,7 +25,6 @@ print(y_train.shape) #(60000,10)
 
 #2. 모델
 from tensorflow.keras.models import Sequential,load_model
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropout
 
 model = load_model('../data/h5/k51_1_model1.h5')
 model.summary()
@@ -38,38 +38,9 @@ cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True
 hist = model.fit(x_train,y_train, callbacks=[es,cp], epochs=2, validation_split=0.2, batch_size=16)
 
 #4. 평가, 예측
-loss, acc = model.evaluate(x_test, y_test, batch_size=16)
-print('loss, acc : ', loss, acc)
+result = model.evaluate(x_test, y_test, batch_size=16)
+print('model1_loss : ', result[0])
+print('model1_acc : ', result[1])
 
-y_predict = model.predict(x_test[:10])
-print(y_predict)
-print(y_test[:10])
-# loss, acc :  0.06896616518497467 0.9800999760627747
-
-'''
-#시각화
-import matplotlib.pyplot as plt
-plt.rc('font',family='Malgun Gothic') # 한글 폰트 설치
-
-plt.figure(figsize=(10,6))
-plt.subplot(2,1,1)
-plt.plot(hist.history['loss'],marker='.', c='red', label='loss')
-plt.plot(hist.history['val_loss'],marker='.', c='blue', label='val_loss')
-plt.grid()
-
-plt.title('손실비용') 
-plt.ylabel('loss')
-plt.xlabel('epoch')
-plt.legend(loc='upper right') 
-
-plt.subplot(2,1,2)
-plt.plot(hist.history['acc'],marker='.', c='red') 
-plt.plot(hist.history['val_acc'],marker='.', c='blue')
-plt.grid() 
-
-plt.title('정확도') 
-plt.ylabel('acc')
-plt.xlabel('epoch')
-plt.legend(['acc','val_acc']) 
-plt.show()
-'''
+# model1_loss :  0.0803590789437294
+# model1_acc :  0.9736999869346619

@@ -26,7 +26,7 @@ print(y_train.shape) #(60000,10)
 
 # 2. 모델구성
 from tensorflow.keras.models import Sequential,load_model
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropout
+# from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropout
 
 # model = Sequential()
 # model.add(Conv2D(filters=10, kernel_size=(2,2), padding='same', strides=1, input_shape=(28,28,1)))
@@ -74,3 +74,5 @@ print('로드체크포인트_loss : ', result[0])
 print('로드체크포인트_acc : ', result[1])
 # 로드체크포인트_loss :  0.07565636932849884
 # 로드체크포인트_acc :  0.9764999747276306
+
+# modelcheckpoint를 load하면 loss 값 찍은 부분을 불러오는거라 값의 변동없음. 

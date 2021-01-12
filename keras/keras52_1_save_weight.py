@@ -38,7 +38,6 @@ model.add(Flatten())
 model.add(Dense(40,activation='relu'))
 model.add(Dense(10,activation='softmax'))
 
-model.save('../data/h5/k52_1_model1.h5')
 
 #3. 컴파일, 훈련
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
@@ -48,8 +47,8 @@ es = EarlyStopping(monitor='val_loss', patience=20, mode='min')
 cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
 hist = model.fit(x_train,y_train, callbacks=[es,cp], epochs=2, validation_split=0.2, batch_size=16)
 
-model.save('../data/h5/k52_1_model2.h5')
-model.save_weights('../data/h5/k52_1_weight.h5')
+model.save('../data/h5/k52_1_model2.h5') # 모델 ~ 컴파일, 훈련까지 다 저장
+model.save_weights('../data/h5/k52_1_weight.h5') # fit 부분만 저장
 # 2개의 결과가 동일함.
 
 #4. 평가, 예측
