@@ -62,12 +62,12 @@ model.summary()
 #3. 컴파일, 훈련
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
-modelpath = './modelCheckpoint/k45_mnist_{epoch:02d}-{val_loss:.4f}.hdf5'
+modelpath = '../data/modelcheckpoint/k47_mnist_{epoch:02d}-{val_loss:.4f}.hdf5'
 #epoch:02d 정수형으로 2자리까지 표현, .4f는 소수 4번째자리까지 나온다.
 es = EarlyStopping(monitor='val_loss', patience=20, mode='min')
 cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
 # filepath :  최저점마다 파일을 생성하는데 파일 안에 그 지점의 w값이 들어간다. predict, evaluate 할 때 파일에서 땡겨쓰면 좋다. 가장 마지막이 제일 값이 좋은 것.
-tb = TensorBoard(log_dir='graph',histogram_freq=0, write_graph=True, write_images=True)
+tb = TensorBoard(log_dir='../data/graph',histogram_freq=0, write_graph=True, write_images=True)
 #log_dir='graph' ='./graph'
 hist = model.fit(x_train,y_train, callbacks=[es,cp,tb], epochs=10, validation_split=0.2, batch_size=16)
 

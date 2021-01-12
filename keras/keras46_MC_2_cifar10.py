@@ -38,7 +38,7 @@ model.add(Dense(10, activation='softmax'))
 # 3. 컴파일, 훈련
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics='acc')
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
-modelpath = './modelCheckpoint/k46_cifar10_{epoch:02d}-{val_loss:.4f}.hdf5'
+modelpath = '../data/modelcheckpoint/k46_cifar10_{epoch:02d}-{val_loss:.4f}.hdf5'
 cp = ModelCheckpoint(filepath=modelpath, monito='val_loss', save_best_only=True, mode='auto')
 es = EarlyStopping(monitor='val_loss', patience=3, mode='min')
 model.fit(x_test, y_test, epochs=10, validation_split=0.2, callbacks=[es,cp],batch_size=16)

@@ -50,10 +50,9 @@ model.add(Dense(1))
 
 model.compile(loss = 'mse', optimizer = 'adam', metrics = ['mae'])
 from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint
-modelpath = './modelcheckpoint/k46_boston_{epoch:02d}-{val_loss:.4f}.hdf5'
+modelpath = '../data/modelcheckpoint/k46_boston_{epoch:02d}-{val_loss:.4f}.hdf5'
 cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
-early_stopping = EarlyStopping(monitor = 'loss', patience=20, mode='min') # mode에 acc면 'max' /loss면 최솟값이 나와야하니까 min. 헷갈려? 그럼 'auto'넣어
-
+early_stopping = EarlyStopping(monitor = 'loss', patience=20, mode='min')
 model.fit(x_train, y_train, batch_size = 8, callbacks=[early_stopping, cp], epochs=2000, validation_split=0.2)
 
 

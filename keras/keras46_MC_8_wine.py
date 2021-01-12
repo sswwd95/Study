@@ -56,12 +56,12 @@ model.add(Dense(100, activation= 'relu'))
 model.add(Dense(3, activation= 'softmax'))
 
 # 3. 컴파일, 훈련
-model.compile(loss = 'mse', optimizer = 'adam', metrics = ['mae'])
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics='acc')
 from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint
-modelpath = './modelcheckpoint/k46_wine_{epoch:02d}-{val_loss:.4f}.hdf5'
+modelpath = '../data/modelcheckpoint/k46_wine_{epoch:02d}-{val_loss:.4f}.hdf5'
 cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
 early_stopping = EarlyStopping(monitor = 'loss', patience=20, mode='min') 
-model.fit(x_train, y_train, batch_size = 8, callbacks=[early_stopping, cp], epochs=100, validation_split=0.2)
+model.fit(x_train, y_train, batch_size = 8, callbacks=[early_stopping, cp], epochs=1000, validation_split=0.2)
 
 
 #. 4. 평가, 예측

@@ -47,7 +47,7 @@ model.summary()
 #3. 컴파일, 훈련
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
-modelpath = './modelCheckpoint/k45_mnist_{epoch:02d}-{val_loss:.4f}.hdf5'
+modelpath = '../data/modelcheckpoint/k45_mnist_{epoch:02d}-{val_loss:.4f}.hdf5'
 #epoch:02d 정수형으로 2자리까지 표현, .4f는 소수 4번째자리까지 나온다.
 es = EarlyStopping(monitor='val_loss', patience=20, mode='min')
 cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
@@ -75,22 +75,22 @@ plt.plot(hist.history['loss'],marker='.', c='red', label='loss')
 plt.plot(hist.history['val_loss'],marker='.', c='blue', label='val_loss')
 plt.grid()
 # subplot은 두 개의 그림을 그린다는 것. plot은 도화지 하나라고 생각.
-plt.title('한글') # plt.title('손실비용')
+plt.title('손실비용') 
 plt.ylabel('loss')
 plt.xlabel('epoch')
-plt.legend(loc='upper right')
-
+plt.legend(loc='upper right') # 상단의 우측 부분에 라벨 명시를 해주는 것
+# legend는 표시해주는 거라 그래프 보고 알아서 위치 설정하기.
 
 plt.subplot(2,1,2) #(2행 2열 중 2번째)
-plt.plot(hist.history['acc'],marker='.', c='red', label='acc') #metrics의 이름과 똑같이 넣기
+plt.plot(hist.history['acc'],marker='.', c='red') #metrics의 이름과 똑같이 넣기
 # 그림보면 갱신되는 점은 그대로 두고 뒤에 값 올라간 점은 없어도 된다. 
-plt.plot(hist.history['val_acc'],marker='.', c='blue', label='val_acc')
+plt.plot(hist.history['val_acc'],marker='.', c='blue')
 plt.grid() # 격자. 모눈종이 형태. 바탕을 그리드로 하겠다는 것. 
 
-plt.title('accuracy') # plt.title('정확도')
+plt.title('정확도') 
 plt.ylabel('acc')
 plt.xlabel('epoch')
-plt.legend(loc='upper right')
+plt.legend(['acc','val_acc']) # 레전드에 직접 라벨명 넣어줄 수 있다. 위치 알아서 설정함
 
 plt.show()
 

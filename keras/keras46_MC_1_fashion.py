@@ -41,7 +41,7 @@ model.add(Dense(10, activation='softmax'))
 #3. 컴파일, 훈련
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics='acc')
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
-modelpath = './modelCheckpoint/k46_fashion_{epoch:02d}-{val_loss:.4f}.hdf5'
+modelpath = '../data/modelcheckpoint/k46_fashion_{epoch:02d}-{val_loss:.4f}.hdf5'
 cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True,mode='auto')
 es = EarlyStopping(monitor='val_loss', patience=20, mode='min')
 hist = model.fit(x_train,y_train, epochs=10, validation_split=0.2, batch_size=16, callbacks=[es,cp])
