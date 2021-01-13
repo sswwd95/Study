@@ -68,11 +68,14 @@ from tensorflow.keras.models import Sequential,load_model
 # 가중치_loss :  0.0892680361866951
 # 가중치_acc :  0.9729999899864197
 
-model=load_model('../data/modelcheckpoint/k52_1_mnist_checkpoint.hdf5')
+model=load_model('../data/modelcheckpoint/k52_1_mnist_checkpoint.hdf5') 
+# model=load_model('../data/modelcheckpoint/k52_1_mnist_checkpoint.h5') 
+
 result = model.evaluate(x_test, y_test, batch_size=16)
 print('로드체크포인트_loss : ', result[0])
 print('로드체크포인트_acc : ', result[1])
 # 로드체크포인트_loss :  0.07565636932849884
 # 로드체크포인트_acc :  0.9764999747276306
 
-# modelcheckpoint를 load하면 loss 값 찍은 부분을 불러오는거라 값의 변동없음. 
+# modelcheckpoint를 load하면 최소의 loss 값 찍은 부분을 불러오는거라 값의 변동없음. 
+# 
