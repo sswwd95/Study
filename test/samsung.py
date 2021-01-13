@@ -36,68 +36,87 @@ None
 
 # plt.show()
 
-df2 = df.iloc[:662, :4]
+df2 = df.iloc[:662,[0,1,2,3]]
 df2 = df2.loc[::-1]
 print(df2)
 print(df2.shape)
 
-x = df2.iloc[:662,:3]
-y = df2.iloc[:,-1:]
+ss = df2.values
+print(ss)
+np.save('../data/npy/samsung.npy',arr=ss)
+
+def split_x(seq, size):
+    aaa = []
+    for i in range(len(seq) - size +1):
+        subset = seq[i : (i+size)]
+        aaa.append(subset)
+    return np.array(aaa)
+size = 5
+data = np.load('../data/npy/samsung.npy')
+print(data.shape) #(662,4)
+data = split_x(data,size)
+
+x = data[:,[0,1,2]]
+y = data[:,[-1]]
 print(x)
 print(y)
-print(x.shape) #(662, 3)
-print(y.shape) #(662, 1)
-
-from tensorflow.keras.utils import to_categorical
-y = to_categorical(y)
-print(y)
+print(x.shape) #(658, 3, 4)
+print(y.shape)
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(
-    x, y, train_size = 0.8, random_state = 50)
+    x,y, train_size=0.8, random_state=10, shuffle=True
+)
+
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler()
+scaler.fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+
+x_train = x_train.reshape(x_train.shape[0],x_train.shape[1],1)
+x_test = x_test.reshape(x_test.shape[0],x_test.shape[1],1)
+
+#2 . 모델구성
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv1D, MaxPooling2D, Flatten, Dense, Dropout
+
+model = Sequential()
+model.add(Conv1D(500,3,input_shape=(x_train.shape[1],1)))
+model.add(Flatten())
+model.add(Dense(400, activation='relu'))
+model.add(Dropout(0.2)) 
+model.add(Dense(100, activation='relu'))
+model.add(Dense(100, activation='relu'))
+model.add(Dense(100, activation='relu'))
+model.add(Dense(100, activation='relu'))
+model.add(Dense(1))
 
 
-# from sklearn.preprocessing import MinMaxScaler
-# scaler = MinMaxScaler()
-# scaler.fit(x_train)
-# x_train = scaler.transform(x_train)
-# x_test = scaler.transform(x_test)
+# 3. 컴파일, 훈련
 
-# x_train = x_train.reshape(x_train.shape[0],x_train.shape[1],1)
-# x_test = x_test.reshape(x_test.shape[0],x_test.shape[1],1)
+model.compile(loss = 'mse', optimizer = 'adam', metrics = ['mae'])
 
-# print(x_train.shape, x_test.shape)
+from tensorflow.keras.callbacks import EarlyStopping
+es = EarlyStopping(monitor = 'loss', patience=20, mode='min') 
 
-# # 2. 모델구성
-# from tensorflow.keras.models import Sequential
-# from tensorflow.keras.layers import Dense,Conv1D,Flatten,Dropout
+model.fit(x_train, y_train, batch_size = 32, callbacks=[es], epochs=1000, validation_split=0.2)
 
-# model = Sequential()
-# model.add(Conv1D(300, 2, activation = 'relu', input_shape=(3,1)))
-# model.add(Conv1D(200,2))
-# model.add(Flatten())
-# model.add(Dense(200, activation= 'relu'))
-# model.add(Dropout(0.2))
-# model.add(Dense(100, activation= 'relu'))
-# model.add(Dense(100, activation= 'relu'))
-# model.add(Dense(100, activation= 'relu'))
-# model.add(Dense(100, activation= 'relu'))
-# model.add(Dense(100, activation= 'relu'))
-# model.add(Dense(100, activation= 'relu'))
-# model.add(Dense(3, activation= 'softmax'))
 
-# # 3. 컴파일, 훈련
-# model.compile(loss='categorical_crossentropy', optimizer='adam', metrics='acc')
+# 4. 평가 예측
+loss,mae = model.evaluate(x_test, y_test, batch_size=32)
+print("loss, mae : ", loss, mae)
 
-# from tensorflow.keras.callbacks import EarlyStopping
-# early_stopping = EarlyStopping(monitor = 'acc', patience = 20, mode='max')
+y_predict = model.predict(x_pred)
+print("y_predict : ",y_predict)
 
-# model.fit(x_train, y_train, callbacks=[early_stopping], validation_split=0.2, batch_size=8, epochs=1000)
+# RMSE, R2 = 회귀모델 지표
+from sklearn.metrics import mean_squared_error
+def RMSE(y_test, y_predict) : 
+    return np.sqrt(mean_squared_error(y_test, y_predict))
+print("RMSE : ", RMSE(y_test, y_predict))
 
-# #. 4. 평가, 예측
-# loss, acc = model.evaluate(x_test, y_test, batch_size=8)
-# print('loss, acc : ', loss,acc)
+from sklearn.metrics import r2_score
+r2 = r2_score(y_test, y_predict)
+print("R2 : ", r2)
 
-# y_predict = model.predict(x_test)
-# print(y_predict)
-# print(np.argmax(y_predict,axis=-1))
