@@ -3,7 +3,7 @@
 # sklearn과 중복되면 sklearn으로 한다.
 
 # 이름 바꿔주는 이유 :  파일 안에서 이름 중복이라서. 각 파일로 만들면 상관없음.
-# numpy save하는 이유? csv로 받으면 엑셀파일로 받음. numpy로 저장하면 훨씬 빠르게 불러올 수 있다. 
+# numpy save하는 이유? csv로 받으면 엑셀파일로 받아서 너무 느리다. numpy로 저장하면 훨씬 빠르게 불러올 수 있다. 
 
 from sklearn.datasets import load_boston, load_diabetes, load_breast_cancer, load_iris, load_wine
 from tensorflow.keras.datasets import mnist, fashion_mnist, cifar10, cifar100
