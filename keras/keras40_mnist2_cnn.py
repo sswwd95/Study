@@ -40,7 +40,6 @@ model.add(Flatten())
 model.add(Dense(40,activation='relu'))
 model.add(Dense(10,activation='softmax'))
 
-
 model.summary()
 
 

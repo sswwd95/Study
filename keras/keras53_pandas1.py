@@ -262,7 +262,7 @@ plt.title('petal_length')
 plt.subplot(2,2,4)
 plt.hist(x='petal_width', data=df)
 plt.title('petal_width')
-# plt.grid(True) # 줄 격자 표시
+# plt.grid(True) # 줄 격자 표시 -> heatmap 주석처리 안하면 뒤에 예쁘게 줄 생김
 plt.show()
 
 # 그래프의 x축은 min~max 값 , y축은 x축의 값에 몇개가 속해있는지 보여줌. 다 합치면 150개

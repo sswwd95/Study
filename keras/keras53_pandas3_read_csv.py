@@ -42,8 +42,10 @@ print(df) # 헤더가 자동으로 표시됨. 헤더 없는 데이터면 데이�
 '''
 
 df = pd.read_csv('../data/csv/iris_sklearn.csv', index_col=0, header=0)
-# 기본값 : index_col = none, header = 1 / 헤더가 없으면 0으로 표시
+# 기본값 : index_col = None, header = 1 / header=None 은 칼럼 이름이 없다는 뜻이며, 만약 1번째 행이 칼럼 이름이라면 header=0 으로 지정
 print(df) 
+
+
 
 
 
