@@ -63,25 +63,35 @@ y_predict = model.predict(x_pred)
 #conv1d
 # loss, mae :  0.38369080424308777 0.5462395548820496
 
-# summary
 '''
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv1D,Dense,Flatten
+
+model = Sequential()
+model.add(Conv1D(filters = 10, kernel_size = 2,strides=1,
+                 padding='same',input_shape=(10,1))) 
+model.add(Conv1D(9,2))
+model.add(Flatten()) 
+model.add(Dense(1))
+model.summary()
+
 Model: "sequential"
 _________________________________________________________________
 Layer (type)                 Output Shape              Param #
 =================================================================
-conv1d (Conv1D)              (None, 2, 128)            384
+conv1d (Conv1D)              (None, 10, 10)            30
 _________________________________________________________________
-dense (Dense)                (None, 2, 64)             8256
+conv1d_1 (Conv1D)            (None, 9, 9)              189
 _________________________________________________________________
-dense_1 (Dense)              (None, 2, 32)             2080
+flatten (Flatten)            (None, 81)                0
 _________________________________________________________________
-dense_2 (Dense)              (None, 2, 16)             528
-_________________________________________________________________
-dense_3 (Dense)              (None, 2, 8)              136
-_________________________________________________________________
-dense_4 (Dense)              (None, 2, 1)              9
+dense (Dense)                (None, 1)                 82
 =================================================================
-Total params: 11,393
-Trainable params: 11,393
+Total params: 301
+Trainable params: 301
 Non-trainable params: 0
+number_parameters = out_channels * (in_channels * kernel + 1)
+              conv1d  = 10*(1*2 +1) = 30
+              conv2d  = 9*(10*2 +1) = 189
 '''
+

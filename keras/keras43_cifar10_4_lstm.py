@@ -27,10 +27,10 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, LSTM, Dropout
 
 model = Sequential()
-model.add(LSTM(128, activation='relu', input_shape=(16*16,12)))
+model.add(LSTM(64, activation='relu', input_shape=(16*16,12)))
 model.add(Dropout(0.2))
-model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
+model.add(Dense(16, activation='relu'))
 model.add(Dense(8, activation='relu'))
 model.add(Dense(10, activation='softmax'))
 
@@ -38,7 +38,7 @@ model.add(Dense(10, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics='acc')
 from tensorflow.keras.callbacks import EarlyStopping
 es = EarlyStopping(monitor='acc', patience=3, mode='max')
-model.fit(x_test, y_test, epochs=10, validation_split=0.2, callbacks=[es],batch_size=32)
+model.fit(x_test, y_test, epochs=5, validation_split=0.2, callbacks=[es],batch_size=32)
 
 # 4. 평가, 예측
 loss,acc = model.evaluate(x_test,y_test, batch_size=32)
@@ -51,4 +51,4 @@ y_pred = model.predict(x_test)
 # dnn
 # loss, acc :  1.5606876611709595 0.45190000534057617
 
-#lstm
+# lstm
