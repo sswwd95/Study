@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-data = np.load('./samsung/samsung_data.npy')
+data = np.load('./samsung/npy/samsung_data.npy')
 
 def split_x(seq, size, col) : 
     dataset = []
@@ -76,10 +76,12 @@ model.add(Dense(8, activation='relu'))
 model.add(Dense(8, activation='relu'))
 model.add(Dense(1))
 
+model.save('../data/h5/samsung.h5')
+
 # 3. 컴파일, 훈련
 model.compile(loss = 'mse', optimizer = 'adam', metrics = ['mae'])
 from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint
-modelpath = '../data/modelcheckpoint/samsung_{epoch:02d}-{val_loss:.4f}.hdf5'
+modelpath = '../data/modelcheckpoint/samsung_{val_loss:.4f}.hdf5'
 cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
 es = EarlyStopping(monitor = 'loss', patience=20, mode='min')
 model.fit(x_train, y_train, batch_size = 16, callbacks=[es, cp], epochs=500, validation_data=(x_val,y_val))
@@ -102,7 +104,9 @@ pred = model.predict(x_pred)
 print('1월 14일 : ', pred)
 
 
-# loss, mae :  343391.90625 463.1109619140625
-# RMSE :  343392.0
-# R2 :  0.9977940947807811
-# 1월 14일 :  [[87791.8]]
+# loss, mae :  160698.953125 280.6548156738281
+# RMSE :  160698.95
+# R2 :  0.998967690863048
+# 1월 14일 :  [[87950.93]]
+
+# 1월 14일 실제 주가 : 89,700

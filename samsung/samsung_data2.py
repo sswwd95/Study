@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-df = pd.read_csv('./samsung/samsung.csv',encoding='cp949',thousands=',',index_col=0,header=0)
+df = pd.read_csv('./samsung/csv/samsung.csv',encoding='cp949',thousands=',',index_col=0,header=0)
 df1 = df.iloc[:662,[0,1,2,3,5,6]]
 df1= df1.sort_index(ascending=True) # 번호 오름차순
 y= df1.iloc[:,3:4]
@@ -19,7 +19,7 @@ df2 = df2.dropna(axis=0)
 df3 = pd.concat([df2,df1])
 
 
-data = pd.read_csv('./samsung/samsung2.csv',encoding='cp949',thousands=',',index_col=0,header=0)
+data = pd.read_csv('./samsung/csv/samsung2.csv',encoding='cp949',thousands=',',index_col=0,header=0)
 data = data.iloc[[0],[0,1,2,3,7,8]]
 y= data.iloc[:,3:4]
 del data['종가']
