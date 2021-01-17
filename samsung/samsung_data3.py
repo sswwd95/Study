@@ -33,11 +33,12 @@ f_data = pd.concat([df3,df4])
 print(f_data)  
 print(f_data.isnull().sum())
 
-f_df = f_data.to_numpy()
-print(f_df)
-print(type(f_df)) #<class 'numpy.ndarray'>
-print(f_df.shape) #(664, 6)
+f_data= f_data.to_numpy()
 
-np.save('./samsung/npy/samsung3_data.npy', arr = f_df)
+print(f_data)
+print(type(f_data)) #<class 'numpy.ndarray'>
+print(f_data.shape) #(664, 6)
+
+np.save('./samsung/npy/samsung3_data.npy', arr = f_data)
 
 

@@ -15,6 +15,7 @@ def split_x(seq, size):
 dataset = split_x(a, size)
 print("=======================")
 print(dataset)
+print(dataset.shape)
 
 x = dataset[:,:4]
 y = dataset[:,4] # [:,-1] #[:,4:] -> (6,1)

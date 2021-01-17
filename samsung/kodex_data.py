@@ -13,6 +13,8 @@ print(ko.isnull().sum())
 ko = ko.dropna(axis=0)
 print(ko)
 
+ko = ko.to_numpy()
+print(type(ko)) #<class 'numpy.ndarray'>
 # print(ko.corr())
 
 # import matplotlib.pyplot as plt

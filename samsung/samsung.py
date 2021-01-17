@@ -19,7 +19,7 @@ print(dataset.shape) #(2395, 5, 6)
 x = dataset[:-1,:,:7]
 print(x.shape) #(2394, 5, 6)
 print(x)
-y = dataset[1:,:1,-1:]
+y = dataset[1:,:1,-1:] # 왜 1부터? 전날의 값을 받아서 y값 나왔기 때문. 다음날 예측하려면 1부터 시작
 print(y.shape) #(2394, 1, 1)
 print(y)
 x_pred = dataset[-1:,:,:]
