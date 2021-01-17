@@ -13,30 +13,37 @@ print(x_train.shape)
 x1_train=np.load('./samsung/npy/ko.npy',allow_pickle=True)[0]
 x1_test=np.load('./samsung/npy/ko.npy',allow_pickle=True)[1]
 x1_val=np.load('./samsung/npy/ko.npy',allow_pickle=True)[2]
-x1_pred=np.load('./samsung/npy/ko.npy',allow_pickle=True)[3]
+x1_pred=np.load('./samsung/npy/ko.npy',allow_pickle=True)[6]
 
 
 #2. 모델구성
 from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Dense, LSTM, concatenate,Dropout,Input
+from tensorflow.keras.layers import Dense,Conv1D,concatenate,Dropout,Flatten,Input
 
 #samsung
 input1 = Input(shape=(x_train.shape[1],x_train.shape[2]))
-dense1 = LSTM(64, activation='relu')(input1)
-dense1 = Dense(32, activation='relu')(dense1)
-dense1 = Dense(32, activation='relu')(dense1)
-dense1 = Dense(16, activation='relu')(dense1)
-dense1 = Dense(8, activation='relu')(dense1)
+c1 = Conv1D(128,2,padding='same', activation='relu')(input1)
+c1 = Conv1D(128,2,padding='same', activation='relu')(c1)
+c1 = Conv1D(64,2,padding='same', activation='relu')(c1)
+c1 = Flatten()(c1)
+c1 = Dense(32, activation='relu')(c1)
+c1 = Dense(32, activation='relu')(c1)
+c1 = Dense(32, activation='relu')(c1)
+c1 = Dense(32, activation='relu')(c1)
 
 #kodex
 input2 = Input(shape=(x_train.shape[1],x_train.shape[2]))
-dense2 = LSTM(64, activation='relu')(input2)
-dense2 = Dense(32, activation='relu')(dense2)
-dense2 = Dense(32, activation='relu')(dense2)
-dense2 = Dense(16, activation='relu')(dense2)
+c2 = Conv1D(128,2,padding='same', activation='relu')(input1)
+c2 = Conv1D(128,2,padding='same', activation='relu')(c2)
+c2 = Conv1D(64,2,padding='same', activation='relu')(c2)
+c2 = Flatten()(c2)
+c2 = Dense(32, activation='relu')(c2)
+c2 = Dense(32, activation='relu')(c2)
+c2 = Dense(32, activation='relu')(c2)
+c2 = Dense(32, activation='relu')(c2)
 
 # 합치기
-merge1 = concatenate([dense1, dense2])
+merge1 = concatenate([c1, c2])
 middle1 = Dense(20, activation='relu')(merge1)     
 middle1 = Dense(16, activation='relu')(middle1)
 middle1 = Dense(8, activation='relu')(middle1)
@@ -49,10 +56,10 @@ model = Model(inputs=[input1, input2],
 # 3. 컴파일, 훈련
 model.compile(loss = 'mse', optimizer = 'adam', metrics = ['mae'])
 from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint
-modelpath = '../data/modelcheckpoint/s_k_{val_loss:.4f}.hdf5'
+modelpath = '../data/modelcheckpoint/s_k_cov_{val_loss:.4f}.hdf5'
 cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
 es = EarlyStopping(monitor = 'val_loss', patience=20, mode='min')
-model.fit([x_train,x1_train], y_train, batch_size = 16, callbacks=[es, cp], epochs=500, validation_data=([x_val,x1_val],y_val))
+model.fit([x_train,x1_train], y_train, batch_size = 16, callbacks=[es, cp], epochs=1000, validation_data=([x_val,x1_val],y_val))
 
 # 4. 평가 예측
 loss,mae = model.evaluate([x_test,x1_test], y_test, batch_size=16)
