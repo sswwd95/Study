@@ -17,7 +17,7 @@ model = Sequential()
 model.add(Dense(5, input_dim=1, activation='relu'))
 model.add(Dense(3, activation='relu'))
 model.add(Dense(4))
-model.add(Dense(1))
+model.add(Dense(1))                                 
 
 #3. 컴파일, 훈련
 # model.compile(loss='mse', optimizer='adam', metrics=['accuracy'])

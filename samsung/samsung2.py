@@ -58,7 +58,7 @@ x_val =  x_val.reshape(x_val.shape[0], 5,6)
 y_train = y_train.reshape(y_train.shape[0],1)
 y_test = y_test.reshape(y_test.shape[0],1)
 
-np.save('../data/npy/samsung2.npy',arr=[x_train, x_test, x_val, y_train, y_test,y_val,x_pred])
+np.save('./samsung/npy/samsung2.npy',arr=[x_train, x_test, x_val, y_train, y_test,y_val,x_pred])
 
 #2 . 모델구성
 from tensorflow.keras.models import Sequential

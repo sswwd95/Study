@@ -5,7 +5,7 @@ import numpy as np
 x = np.array([[1,2,3,4,5,6,7,8,9,10],
              [11,12,13,14,15,16,17,18,19,20]]) # (2, 10) -> 2행 10열
 y = np.array([1,2,3,4,5,6,7,8,9,10])
-print(x.shape)   # (10,) -> 스칼라가 10개
+print(x.shape)   
                   
 x = np.transpose(x)    
 print(x)

@@ -30,17 +30,17 @@ df3 = pd.concat([df2,df1])
 print(df3)
 print(df3.info())
 print(df3.corr())
-# import matplotlib.pyplot as plt
-# import seaborn as sns
-# sns.set(font_scale=0.9) # 폰트크기 0.9
-# sns.heatmap(data=df3.corr(), square=True, annot=True, cbar=True)
-# plt.show()
-f_df = df3.to_numpy()
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set(font_scale=0.9) # 폰트크기 0.9
+sns.heatmap(data=df1.corr(), square=True, annot=True, cbar=True)
+plt.show()
+f_df = df1.to_numpy()
 print(f_df)
 print(type(f_df)) #<class 'numpy.ndarray'>
 print(f_df.shape) #(2397, 6)
 
-np.save('./samsung/samsung_data.npy', arr = f_df)
+np.save('./samsung/npy/samsung_data.npy', arr = f_df)
 
 
 # 분할 x

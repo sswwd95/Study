@@ -50,15 +50,15 @@ print(x_test.shape) # (479, 25)
 print(x_pred.shape) #(1,25)
 print(x_val.shape)
 
-x_train = x_train.reshape(x_train.shape[0],5,6)
-x_test = x_test.reshape(x_test.shape[0], 5,6)
-x_pred = x_pred.reshape(x_pred.shape[0],5,6)
-x_val =  x_val.reshape(x_val.shape[0], 5,6)
+x_train = x_train.reshape(x_train.shape[0],size, col)
+x_test = x_test.reshape(x_test.shape[0], size,col)
+x_pred = x_pred.reshape(x_pred.shape[0],size,col)
+x_val =  x_val.reshape(x_val.shape[0], size,col)
 
 y_train = y_train.reshape(y_train.shape[0],1)
 y_test = y_test.reshape(y_test.shape[0],1)
 
-np.save('../data/npy/samsung.npy',arr=[x_train, x_test, x_val, y_train, y_test,y_val,x_pred])
+np.save('./samsung/npy/samsung.npy',arr=[x_train, x_test, x_val, y_train, y_test,y_val,x_pred])
 
 #2 . 모델구성
 from tensorflow.keras.models import Sequential
@@ -76,7 +76,6 @@ model.add(Dense(8, activation='relu'))
 model.add(Dense(8, activation='relu'))
 model.add(Dense(1))
 
-model.save('../data/h5/samsung.h5')
 
 # 3. 컴파일, 훈련
 model.compile(loss = 'mse', optimizer = 'adam', metrics = ['mae'])
@@ -110,3 +109,4 @@ print('1월 14일 : ', pred)
 # 1월 14일 :  [[87950.93]]
 
 # 1월 14일 실제 주가 : 89,700
+
