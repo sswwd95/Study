@@ -13,7 +13,7 @@ print(x_train.shape)
 x1_train=np.load('./samsung/npy/ko.npy',allow_pickle=True)[0]
 x1_test=np.load('./samsung/npy/ko.npy',allow_pickle=True)[1]
 x1_val=np.load('./samsung/npy/ko.npy',allow_pickle=True)[2]
-x1_pred=np.load('./samsung/npy/ko.npy',allow_pickle=True)[6]
+x1_pred=np.load('./samsung/npy/ko.npy',allow_pickle=True)[3]
 
 
 #2. 모델구성
@@ -24,30 +24,24 @@ from tensorflow.keras.layers import Dense,Conv1D,concatenate,Dropout,Flatten,Inp
 input1 = Input(shape=(x_train.shape[1],x_train.shape[2]))
 c1 = Conv1D(128,2,padding='same', activation='relu')(input1)
 c1 = Conv1D(128,2,padding='same', activation='relu')(c1)
-c1 = Conv1D(64,2,padding='same', activation='relu')(c1)
+c1 = Conv1D(32,2,padding='same', activation='relu')(c1)
 c1 = Flatten()(c1)
-c1 = Dense(32, activation='relu')(c1)
-c1 = Dense(32, activation='relu')(c1)
-c1 = Dense(32, activation='relu')(c1)
-c1 = Dense(32, activation='relu')(c1)
+c1 = Dense(8, activation='relu')(c1)
 
 #kodex
 input2 = Input(shape=(x_train.shape[1],x_train.shape[2]))
 c2 = Conv1D(128,2,padding='same', activation='relu')(input1)
 c2 = Conv1D(128,2,padding='same', activation='relu')(c2)
-c2 = Conv1D(64,2,padding='same', activation='relu')(c2)
+c2 = Conv1D(32,2,padding='same', activation='relu')(c2)
 c2 = Flatten()(c2)
-c2 = Dense(32, activation='relu')(c2)
-c2 = Dense(32, activation='relu')(c2)
-c2 = Dense(32, activation='relu')(c2)
-c2 = Dense(32, activation='relu')(c2)
+c2 = Dense(10, activation='relu')(c2)
 
 # 합치기
 merge1 = concatenate([c1, c2])
-middle1 = Dense(20, activation='relu')(merge1)     
-middle1 = Dense(16, activation='relu')(middle1)
-middle1 = Dense(8, activation='relu')(middle1)
-middle1 = Dense(8, activation='relu')(middle1)
+middle1 = Dense(10, activation='relu')(merge1)     
+# middle1 = Dense(8, activation='relu')(middle1)
+# middle1 = Dense(8, activation='relu')(middle1)
+# middle1 = Dense(8, activation='relu')(middle1)
 output1 = Dense(2, activation='relu')(middle1)
 
 model = Model(inputs=[input1, input2],
@@ -78,4 +72,22 @@ print('R2 : ', r2)
 
 predict = model.predict([x_pred,x1_pred])
 print('1월 18일(시가), 1월 19일(시가): ', predict)
+
+# s_k_cov_420021.2812.hdf5
+# loss, mae :  582009.25 517.2100219726562
+# RMSE :  582009.25
+# R2 :  0.9907168382421194
+# 1월 18일(시가), 1월 19일(시가):  [[89458.805 89562.97 ]]
+
+# s_k_cov_347614.5938.hdf5
+# loss, mae :  491052.5625 494.7571105957031
+# RMSE :  491052.7
+# R2 :  0.9921571536105421
+# 1월 18일(시가), 1월 19일(시가):  [[88931.414 88908.35 ]]
+
+# s_k_cov_374025.5000.hdf5
+# loss, mae :  530065.625 505.1334533691406
+# RMSE :  530065.25
+# R2 :  0.9915368752439169
+# 1월 18일(시가), 1월 19일(시가):  [[88949.5  89530.48]]
 
