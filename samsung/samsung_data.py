@@ -19,28 +19,29 @@ df2= df2.sort_index(ascending=True) # 번호 오름차순
 y2= df2.iloc[:,3:4]
 del df2['종가']
 df2['종가'] = y2
-df2 = df2.dropna(axis=0)
+# df2 = df2.dropna(axis=0)
 print(df2)
 print(df2.shape)
 print(df2.corr())
+print(df2.isnull())
+print(df2.isnull().sum())
 
+# df3 = pd.concat([df2,df1])
 
-df3 = pd.concat([df2,df1])
+# print(df3)
+# print(df3.info())
+# print(df3.corr())
+# import matplotlib.pyplot as plt
+# import seaborn as sns
+# sns.set(font_scale=0.9) # 폰트크기 0.9
+# sns.heatmap(data=df1.corr(), square=True, annot=True, cbar=True)
+# plt.show()
+# f_df = df1.to_numpy()
+# print(f_df)
+# print(type(f_df)) #<class 'numpy.ndarray'>
+# print(f_df.shape) #(2397, 6)
 
-print(df3)
-print(df3.info())
-print(df3.corr())
-import matplotlib.pyplot as plt
-import seaborn as sns
-sns.set(font_scale=0.9) # 폰트크기 0.9
-sns.heatmap(data=df1.corr(), square=True, annot=True, cbar=True)
-plt.show()
-f_df = df1.to_numpy()
-print(f_df)
-print(type(f_df)) #<class 'numpy.ndarray'>
-print(f_df.shape) #(2397, 6)
-
-np.save('./samsung/npy/samsung_data.npy', arr = f_df)
+# np.save('./samsung/npy/samsung_data.npy', arr = f_df)
 
 
 # 분할 x
