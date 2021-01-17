@@ -49,7 +49,7 @@ model = Model(inputs=[input1, input2],
 # 3. 컴파일, 훈련
 model.compile(loss = 'mse', optimizer = 'adam', metrics = ['mae'])
 from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint
-modelpath = '/content/drive/My Drive/data/modelcheckpoint/s_k_{val_loss:.4f}.hdf5'
+modelpath = '../data/modelcheckpoint/s_k_{val_loss:.4f}.hdf5'
 cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
 es = EarlyStopping(monitor = 'loss', patience=20, mode='min')
 model.fit([x_train,x1_train], y_train, batch_size = 16, callbacks=[es, cp], epochs=1000, validation_data=([x_val,x1_val],y_val))
