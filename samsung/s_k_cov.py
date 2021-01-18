@@ -26,7 +26,7 @@ c1 = Conv1D(128,2,padding='same', activation='relu')(input1)
 c1 = Conv1D(128,2,padding='same', activation='relu')(c1)
 c1 = Conv1D(32,2,padding='same', activation='relu')(c1)
 c1 = Flatten()(c1)
-c1 = Dense(8, activation='relu')(c1)
+c1 = Dense(50, activation='relu')(c1)
 
 #kodex
 input2 = Input(shape=(x_train.shape[1],x_train.shape[2]))
@@ -34,11 +34,11 @@ c2 = Conv1D(128,2,padding='same', activation='relu')(input1)
 c2 = Conv1D(128,2,padding='same', activation='relu')(c2)
 c2 = Conv1D(32,2,padding='same', activation='relu')(c2)
 c2 = Flatten()(c2)
-c2 = Dense(10, activation='relu')(c2)
+c2 = Dense(50, activation='relu')(c2)
 
 # 합치기
 merge1 = concatenate([c1, c2])
-middle1 = Dense(10, activation='relu')(merge1)     
+middle1 = Dense(50, activation='relu')(merge1)     
 # middle1 = Dense(8, activation='relu')(middle1)
 # middle1 = Dense(8, activation='relu')(middle1)
 # middle1 = Dense(8, activation='relu')(middle1)
@@ -48,11 +48,13 @@ model = Model(inputs=[input1, input2],
               outputs = output1)
 
 # 3. 컴파일, 훈련
-model.compile(loss = 'mse', optimizer = 'adam', metrics = ['mae'])
-from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint
+from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint,ReduceLROnPlateau
 modelpath = '../data/modelcheckpoint/s_k_cov_{val_loss:.4f}.hdf5'
 cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
 es = EarlyStopping(monitor = 'val_loss', patience=20, mode='min')
+
+reduce_lr = ReduceLROnPlateau(monitor = 'val_loss', patience=5, factor=0.5, verbose=1)
+model.compile(loss = 'mse', optimizer = 'adam', metrics = ['mae'])
 model.fit([x_train,x1_train], y_train, batch_size = 16, callbacks=[es, cp], epochs=1000, validation_data=([x_val,x1_val],y_val))
 
 # 4. 평가 예측
@@ -90,4 +92,13 @@ print('1월 18일(시가), 1월 19일(시가): ', predict)
 # RMSE :  530065.25
 # R2 :  0.9915368752439169
 # 1월 18일(시가), 1월 19일(시가):  [[88949.5  89530.48]]
+
+
+# lr 하기 전 
+# s_k_cov_388846.9688.hdf5
+# loss, mae :  544370.75 523.5440673828125
+# RMSE :  544371.0
+# R2 :  0.9912770307606085
+# 1월 18일(시가), 1월 19일(시가):  [[89452.52 89700.46]]
+
 
