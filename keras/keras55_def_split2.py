@@ -38,8 +38,18 @@ print(x.shape)
 print(y.shape)
 
 '''
-
+'''
 ################# x와 y의 행,열을 다르게 자르고 싶을 때 ####################
+import numpy as np
+dataset = np.array([[1,2,3,4,5,6,7,8,9,10],
+                   [11,12,13,14,15,16,17,18,19,20],
+                   [21,22,23,24,25,26,27,28,29,30]])
+print('dataset.shape : ' , dataset.shape)
+
+dataset = np.transpose(dataset)
+print(dataset)
+print('dataset.shape : ', dataset.shape)
+
 def split_xy(dataset,x_row,x_col,y_row,y_col):
     x,y = [],[]
     for i in range(len(dataset)):
@@ -101,3 +111,34 @@ print("y.shape : ", y.shape)
 #  [[20 30]]]
 # x.shape :  (7, 3, 2)
 # y.shape :  (7, 1, 2)
+
+'''
+################# x와 y의 행,열을 다르게 자르고 싶을 때 ####################
+import numpy as np
+dataset = np.array([[1,2,3,4,5,6,7,8,9,10],
+                   [11,12,13,14,15,16,17,18,19,20],
+                   [21,22,23,24,25,26,27,28,29,30],
+                   [31,32,33,34,35,36,37,38,39,40]])
+print('dataset.shape : ' , dataset.shape)
+
+dataset = np.transpose(dataset)
+print(dataset)
+print('dataset.shape : ', dataset.shape)
+
+def split_xy(dataset,x_row,x_col,y_row,y_col):
+    x,y = [],[]
+    for i in range(len(dataset)):
+        x_end = i + x_row    # x_row = x의 행을 몇개로 자를건지 + i(횟수) => x의 끝번호
+        y_end = x_end   # y의 끝번호는 x의 끝번호에 y 행을 몇개로 자를건지 더한다. 
+        if y_end>len(dataset):
+            break
+        x_tmp = dataset[i:x_end,:x_col]   
+        y_tmp = dataset[x_end-1:y_end,-2:]
+        x.append(x_tmp)
+        y.append(y_tmp) 
+    return np.array(x), np.array(y)
+x, y = split_xy(dataset, 3, 2, 1,2) 
+
+print(x, "\n", y)
+print("x.shape : ", x.shape) 
+print("y.shape : ", y.shape) 
