@@ -27,8 +27,8 @@ def preprocess_data(data, is_train=True):
         temp['Target1'] = temp['TARGET'].shift(-48).fillna(method='ffill')
         temp['Target2'] = temp['TARGET'].shift(-48*2).fillna(method='ffill')
         temp = temp.dropna()
-
         return temp.iloc[:-96]
+
     elif is_train==False:
         temp = temp[['TARGET','DHI', 'DNI', 'WS', 'RH', 'T']]
         return temp.iloc[-48:,:]
@@ -50,10 +50,53 @@ print(X_test.head(48))
 ####################################
 
 from sklearn.model_selection import train_test_split
-x1_train, x1_val, y1_train, y1_val = train_test_split(
+X_train_1, X_val_1, Y_train_1, Y_val_1 = train_test_split(
     df_train.iloc[:,:-2],df_train.iloc[:,-2], test_size=0.2, random_state=0)
-x2_train, x2_val, y2_train, y2_val = train_test_split(
+X_train_2, X_val_2, Y_train_2, Y_val_2 = train_test_split(
     df_train.iloc[:,:-2],df_train.iloc[:,-1], test_size=0.2, random_state=0)
 
 quantiles = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
 
+from lightgbm import LGBMRegressor
+
+def LGBM(q, X_train, Y_train, X_valid, Y_valid, X_test):
+    
+    # (a) Modeling  
+    model = LGBMRegressor(objective='quantile', alpha=q,
+                         n_estimators=20000, bagging_fraction=0.8, learning_rate=0.01, subsample=0.7)                   
+    # bagging_fraction = 데이터를 랜덤 샘플링하여 학습에 사용                     
+                         
+    model.fit(X_train, Y_train, eval_metric = ['quantile'], 
+          eval_set=[(X_valid, Y_valid)], early_stopping_rounds=300, verbose=200)
+
+    # (b) Predictions
+    pred = pd.Series(model.predict(X_test).round(2))
+    return pred, model
+
+def train_data(X_train, Y_train, X_val, Y_val, X_test):
+    LGBM_models=[]
+    LGBM_actual_pred = pd.DataFrame()
+    for q in quantiles:
+        print(q)
+        pred, model = LGBM(q, X_train, Y_train, X_val, Y_val, X_test)
+        LGBM_models.append(model)
+        LGBM_actual_pred = pd.concat([LGBM_actual_pred,pred], axis=1)
+    LGBM_actual_pred.columns=quantiles
+    return LGBM_models, LGBM_actual_pred
+
+####DAY7####
+models_1, results_1 = train_data(X_train_1, Y_train_1, X_val_1, Y_val_1, X_test)
+# print(results_1.sort_index()[:48])
+
+####DAY8####
+models_2, results_2 = train_data(X_train_2, Y_train_2, X_val_2, Y_val_2, X_test)
+# print(results_2.sort_index()[:48])
+
+print(results_1.shape,results_2.shape) #(3888, 9) (3888, 9)
+
+##### sub 파일에 q0.1~0.9까지 값 넣기 ######
+sub.loc[sub.id.str.contains('Day7'), 'q_0.1':] = results_1.sort_index().values
+sub.loc[sub.id.str.contains('Day8'), 'q_0.1':] = results_2.sort_index().values
+print(sub.iloc[:48])
+
+sub.to_csv('./solar/csv/sub_1.csv', index=False)
