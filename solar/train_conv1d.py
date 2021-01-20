@@ -7,23 +7,12 @@ import random # 난수 만들어준다
 import warnings
 warnings.filterwarnings('ignore') # 경고 메세지 무시
 train = pd.read_csv('../solar/train/train.csv')
-submission = pd.read_csv('./solar/csv/sample_submission.csv')
 print(train)
 print(train.shape) #(52560, 9)
 print(train.columns)
 print(train.index)
 # Index(['Day', 'Hour', 'Minute', 'DHI', 'DNI', 'WS', 'RH', 'T', 'TARGET'], dtype='object')
 # RangeIndex(start=0, stop=52560, step=1)
-print(submission.tail())
-'''
-                      id  q_0.1  q_0.2  q_0.3  q_0.4  q_0.5  q_0.6  q_0.7  q_0.8  q_0.9
-7771  80.csv_Day8_21h30m    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0
-7772  80.csv_Day8_22h00m    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0
-7773  80.csv_Day8_22h30m    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0
-7774  80.csv_Day8_23h00m    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0
-7775  80.csv_Day8_23h30m    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0
-'''
-# train = train.set_index(['Day','Hour','Minute'])
 print(train)
 print(train.index)
 print(type(train))
@@ -129,26 +118,37 @@ for q in q_list :
     model.add(Dense(16, activation='relu'))
     model.add(Dense(2))
 
-model.summary()
+    model.summary()
 
-# 컴파일, 훈련
-from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint,ReduceLROnPlateau
-modelpath = '../solar/check/solar2_{epoch:02d}_{val_loss:.4f}.hdf5'
-cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
-es = EarlyStopping(monitor = 'val_loss', patience=10, mode='min')
-lr = ReduceLROnPlateau(monitor='val_loss', patience=5, factor=0.5)
+    # 컴파일, 훈련
+    from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint,ReduceLROnPlateau
+    modelpath = '../solar/check/solar2_{epoch:02d}_{val_loss:.4f}.hdf5'
+    cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
+    es = EarlyStopping(monitor = 'val_loss', patience=10, mode='min')
+    lr = ReduceLROnPlateau(monitor='val_loss', patience=5, factor=0.5)
 
-model.compile(loss=lambda x_train, y_train:quantile_loss(q,x_train, y_train), optimizer='adam')
-hist = model.fit(x_train,y_train, batch_size = 16, callbacks=[es, cp, lr], epochs=2, validation_split=0.2)
+    model.compile(loss=lambda x_train, y_train:quantile_loss(q,x_train, y_train), optimizer='adam')
+    hist = model.fit(x_train,y_train, batch_size = 32, callbacks=[es, cp, lr], epochs=100, validation_split=0.2)
 
 
-#평가, 예측
-loss = model.evaluate(x_test,y_test, batch_size=16)
-print('loss : ',loss)
+    #평가, 예측
+    loss = model.evaluate(x_test,y_test, batch_size=32)
+    print('loss : ',loss)
 
-y_pred = model.predict(target)
-print(y_pred)
-y_pred = pd.DataFrame(y_pred)
+    y_pred = model.predict(target)
+    print(y_pred)
+    y_pred = pd.DataFrame(y_pred)
 
-file_path='./solar/q_loss'+str(q) + '.csv'
-y_pred.to_csv(file_path)
+    sub = pd.read_csv('./solar/csv/sample_submission.csv')
+    for i in range(1,10):
+        column_name = 'q_0.'+ str(i)
+        sub.loc[sub.id.str.contains('Day7'), column_name] = y_pred[:,0]
+    for i in range(1,10):
+        column_name = 'q_0.'+ str(i)
+        sub.loc[sub.id.str.contains('Day8'), column_name] = y_pred[:,1]
+
+
+    file_path='./solar/q_loss'+str(q) + '.csv'
+    y_pred.to_csv(file_path)
+
+    sub.to_csv('./solar/csv/submission_2.csv',index=False)
