@@ -98,7 +98,8 @@ print(y_test.shape) #(10484, 1, 2)
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, LSTM, Dropout, Conv1D,Flatten
 from tensorflow.keras.backend import mean, maximum
-q_list = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
+# q_list = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
+q_list = [0.1]
 
 def quantile_loss(q,y, pred):
     err = (y-pred)
@@ -128,27 +129,25 @@ for q in q_list :
     lr = ReduceLROnPlateau(monitor='val_loss', patience=5, factor=0.5)
 
     model.compile(loss=lambda x_train, y_train:quantile_loss(q,x_train, y_train), optimizer='adam')
-    hist = model.fit(x_train,y_train, batch_size = 32, callbacks=[es, cp, lr], epochs=100, validation_split=0.2)
+    hist = model.fit(x_train,y_train, batch_size = 16, callbacks=[es, cp, lr], epochs=1, validation_split=0.2)
 
 
     #평가, 예측
-    loss = model.evaluate(x_test,y_test, batch_size=32)
+    loss = model.evaluate(x_test,y_test, batch_size=16)
     print('loss : ',loss)
 
     y_pred = model.predict(target)
     print(y_pred)
+    result1 = y_pred[-2]
+    print(result1)
+'''  
     y_pred = pd.DataFrame(y_pred)
 
-    sub = pd.read_csv('./solar/csv/sample_submission.csv')
-    for i in range(1,10):
-        column_name = 'q_0.'+ str(i)
-        sub.loc[sub.id.str.contains('Day7'), column_name] = y_pred[:,0]
-    for i in range(1,10):
-        column_name = 'q_0.'+ str(i)
-        sub.loc[sub.id.str.contains('Day8'), column_name] = y_pred[:,1]
-
-
-    file_path='./solar/q_loss'+str(q) + '.csv'
+    file_path='./solar/q_loss/q_'+str(q) + '.csv'
     y_pred.to_csv(file_path)
 
-    sub.to_csv('./solar/csv/submission_2.csv',index=False)
+sub = pd.read_csv('./solar/csv/sample_submission.csv')
+
+sub.to_csv('./solar/csv/submission_2.csv',index=False)
+
+'''
