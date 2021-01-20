@@ -7,14 +7,23 @@ import random # 난수 만들어준다
 import warnings
 warnings.filterwarnings('ignore') # 경고 메세지 무시
 train = pd.read_csv('../solar/train/train.csv')
+submission = pd.read_csv('./solar/csv/sample_submission.csv')
 print(train)
 print(train.shape) #(52560, 9)
 print(train.columns)
 print(train.index)
 # Index(['Day', 'Hour', 'Minute', 'DHI', 'DNI', 'WS', 'RH', 'T', 'TARGET'], dtype='object')
 # RangeIndex(start=0, stop=52560, step=1)
-
-train = train.set_index(['Day','Hour','Minute'])
+print(submission.tail())
+'''
+                      id  q_0.1  q_0.2  q_0.3  q_0.4  q_0.5  q_0.6  q_0.7  q_0.8  q_0.9
+7771  80.csv_Day8_21h30m    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0
+7772  80.csv_Day8_22h00m    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0
+7773  80.csv_Day8_22h30m    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0
+7774  80.csv_Day8_23h00m    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0
+7775  80.csv_Day8_23h30m    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0
+'''
+# train = train.set_index(['Day','Hour','Minute'])
 print(train)
 print(train.index)
 print(type(train))
@@ -39,10 +48,29 @@ def preprocess_data(data, is_train = True) :
         return temp.iloc[-48:, :]
 
 train = preprocess_data(train)
+df_train = train.to_numpy()
+print('===================')
+print(df_train)
+print(type(df_train))
+print(df_train.shape) #(52464, 8)
 
-print(type(train))
-print(train.shape) #(52464, 8)
+df_test = []  #test 파일 81개 전체를 불러오기
+for i in range(81):
+    file_path = '../solar/test/' + str(i) +'.csv' #str = 문자열
+    temp = pd.read_csv(file_path)
+    temp = preprocess_data(temp, is_train=False)
+    df_test.append(temp)
 
+df_test = pd.concat(df_test) # test파일 하나로 합치기
+
+print(df_test)
+print(df_test.shape) #(3888, 6)
+
+x_test = df_test.to_numpy()
+target=x_test.reshape(81,48,6)
+
+print(target.shape)
+# print(type(x_pred))
 train= train.to_numpy()
 
 def split_xy(train,x_row,x_col,y_row,y_col):
@@ -61,74 +89,66 @@ x, y = split_xy(train, 48, 6, 1, 2)
 
 print(x, "\n", y)
 print(x)
-print(y)
 print("x.shape : ", x.shape) #(52417, 48, 6)
 print("y.shape : ", y.shape) #(52417, 1, 2)
+
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(
     x, y, train_size = 0.8, shuffle = True, random_state = 0)
 
-x_train, x_val, y_train, y_val = train_test_split(
-    x_train, y_train, train_size = 0.8, shuffle = True, random_state = 0)
-
 print(x_train)
 print(y_train)
-print(x_train.shape) #(33546, 48, 6)
-print(y_train.shape) #(33546, 1, 2)
+print(x_train.shape) #(41933, 48, 6)
+print(x_test.shape) #(10484, 48, 6)
+print(y_train.shape) #(41933, 1, 2)
+print(y_test.shape) #(10484, 1, 2)
 
-df_test = []  #test 파일 81개 전체를 불러오기
-for i in range(81):
-    file_path = '../solar/test/' + str(i) +'.csv' #str = 문자열
-    temp = pd.read_csv(file_path)
-    temp = preprocess_data(temp, is_train=False)
-    df_test.append(temp)
-
-df_test = pd.concat(df_test) # test파일 하나로 합치기
-
-print(df_test)
-print(df_test.shape) #(3888, 6)
-
-X_test = df_test.to_numpy()
-x_pred=X_test.reshape(81,48,6)
-
-print(x_pred.shape)
 
 #2. 모델구성
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, LSTM, Dropout, Conv1D
+from tensorflow.keras.layers import Dense, LSTM, Dropout, Conv1D,Flatten
+from tensorflow.keras.backend import mean, maximum
+q_list = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
 
-model = Sequential()
-model.add(LSTM(64,activation='relu', input_shape=(48,6)))
-model.add(Dropout(0.2))
-model.add(Dense(64,activation='relu'))
-model.add(Dense(32,activation='relu'))
-model.add(Dense(16, activation='relu'))
-model.add(Dense(16, activation='relu'))
-model.add(Dense(8, activation='relu'))
-model.add(Dense(2))
+def quantile_loss(q,y, pred):
+    err = (y-pred)
+    return mean(maximum(q*err, (q-1)*err),axis=-1)
+
+for q in q_list : 
+    model = Sequential()
+    model.add(Conv1D(500,2,activation='relu', input_shape=(48,6)))
+    model.add(Dropout(0.2))
+    model.add(Conv1D(300,2,activation='relu'))
+    model.add(Conv1D(200,2,activation='relu'))
+    model.add(Flatten())
+    model.add(Dense(100,activation='relu'))
+    model.add(Dense(80,activation='relu'))
+    model.add(Dense(50, activation='relu'))
+    model.add(Dense(32, activation='relu'))
+    model.add(Dense(16, activation='relu'))
+    model.add(Dense(2))
 
 model.summary()
 
 # 컴파일, 훈련
 from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint,ReduceLROnPlateau
-modelpath = '../solar/check/solar_{epoch:02d}_{val_loss:.4f}.hdf5'
+modelpath = '../solar/check/solar2_{epoch:02d}_{val_loss:.4f}.hdf5'
 cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
 es = EarlyStopping(monitor = 'val_loss', patience=10, mode='min')
 lr = ReduceLROnPlateau(monitor='val_loss', patience=5, factor=0.5)
 
-model.compile(loss='mse', optimizer='adam')
-hist = model.fit(x_train,y_train, batch_size = 16, callbacks=[es, cp, lr], epochs=20, validation_data=(x_val,y_val))
+model.compile(loss=lambda x_train, y_train:quantile_loss(q,x_train, y_train), optimizer='adam')
+hist = model.fit(x_train,y_train, batch_size = 16, callbacks=[es, cp, lr], epochs=2, validation_split=0.2)
 
 
 #평가, 예측
 loss = model.evaluate(x_test,y_test, batch_size=16)
 print('loss : ',loss)
 
-y_pred = y_pred.reshape(3888, 6)
-
-
-y_pred = model.predict(x_pred)
+y_pred = model.predict(target)
 print(y_pred)
+y_pred = pd.DataFrame(y_pred)
 
-y_pred.to_csv('./solar/csv/submission_2.csv', sep=',')
+file_path='./solar/q_loss'+str(q) + '.csv'
+y_pred.to_csv(file_path)
