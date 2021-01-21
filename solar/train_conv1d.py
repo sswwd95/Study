@@ -93,17 +93,18 @@ print(x_test.shape) #(10484, 48, 6)
 print(y_train.shape) #(41933, 1, 2)
 print(y_test.shape) #(10484, 1, 2)
 
+def quantile_loss(q,y, pred):
+    err = (y-pred)
+    return mean(maximum(q*err, (q-1)*err),axis=-1)
+
+q_list = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
+
+
 
 #2. 모델구성
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, LSTM, Dropout, Conv1D,Flatten
 from tensorflow.keras.backend import mean, maximum
-# q_list = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
-q_list = [0.1]
-
-def quantile_loss(q,y, pred):
-    err = (y-pred)
-    return mean(maximum(q*err, (q-1)*err),axis=-1)
 
 for q in q_list : 
     model = Sequential()
