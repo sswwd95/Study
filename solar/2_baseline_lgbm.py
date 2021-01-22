@@ -24,7 +24,7 @@ def preprocess_data(data, is_train=True):
     data.insert(1, 'GHI', data['DNI']*data['cos']+data['DHI'])
 
     temp = data.copy()
-    temp = temp[['TARGET','GHI','DHI', 'DNI', 'WS', 'RH', 'T']]
+    temp = temp[['Hour','TARGET','GHI','DHI', 'DNI', 'WS', 'RH', 'T']]
 
     if is_train==True:
         temp['Target1'] = temp['TARGET'].shift(-48).fillna(method='ffill')
@@ -33,9 +33,10 @@ def preprocess_data(data, is_train=True):
         return temp.iloc[:-96]
 
     elif is_train==False:
-        temp = temp[['TARGET','GHI','DHI', 'DNI', 'WS', 'RH', 'T']]
+        temp = temp[['Hour','TARGET','GHI','DHI', 'DNI', 'WS', 'RH', 'T']]
         return temp.iloc[-48:,:]
 df_train = preprocess_data(train)
+x_train = df_train.to_numpy()
 
 ###### test파일 합치기############
 df_test = []
@@ -66,13 +67,13 @@ def LGBM(q, X_train, Y_train, X_valid, Y_valid, X_test):
     
     # (a) Modeling  
     model = LGBMRegressor(objective='quantile', alpha=q,
-                         n_estimators=20000, bagging_fraction=0.8, learning_rate=0.001, subsample=0.7)  
+                         n_estimators=30000, bagging_fraction=0.7, learning_rate=0.001, subsample=0.7)  
     # LGBMRegressor 회귀모델              
-    # bagging_fraction = 데이터를 랜덤 샘플링하여 학습에 사용 
+    # bagging_fraction, subsample = 데이터를 랜덤 샘플링하여 학습에 사용 
     # alpha = q -> 제공되는 값 넣는 것.                 
                          
     model.fit(X_train, Y_train, eval_metric = ['quantile'], 
-          eval_set=[(X_valid, Y_valid)], early_stopping_rounds=300, verbose=200)
+          eval_set=[(X_valid, Y_valid)], early_stopping_rounds=300, verbose=100)
 
     # (b) Predictions
     pred = pd.Series(model.predict(X_test).round(2))
@@ -102,6 +103,6 @@ print(results_1.shape,results_2.shape) #(3888, 9) (3888, 9)
 ##### sub 파일에 q0.1~0.9까지 값 넣기 ######
 sub.loc[sub.id.str.contains('Day7'), 'q_0.1':] = results_1.sort_index().values
 sub.loc[sub.id.str.contains('Day8'), 'q_0.1':] = results_2.sort_index().values
-print(sub.iloc[:48])
+# print(sub.iloc[:48])
 
 sub.to_csv('./solar/csv/lgbm_sub_2.csv', index=False)
