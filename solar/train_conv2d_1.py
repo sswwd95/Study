@@ -40,6 +40,7 @@ for i in range(81):
 X_test = pd.concat(df_test)
 print(X_test.shape) #(3888, 9)
 
+
 # 직관적인 GHI 피처 추가
 def Add_features(data):
     data['cos'] = np.cos(np.pi/2 - np.abs(data['Hour']%12 - 6)/6*np.pi/2)
@@ -83,9 +84,9 @@ print(X_test.columns)
 print(X_test.shape) #(3888, 7)
 
 # print('===================')
-# train = train.to_numpy()
+train = train.to_numpy()
+# train = train.values
 X_test = X_test.to_numpy()
-train = train.values
 
 X_test = X_test.reshape(81, 48, 7)
 
@@ -149,7 +150,7 @@ quantiles = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 
 #2. 모델구성
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout, Conv2D, Flatten
+from tensorflow.keras.layers import Dense, Dropout, Conv2D, Flatten,Reshape
 from tensorflow.keras.backend import mean, maximum
 
 def Model():
@@ -162,9 +163,10 @@ def Model():
     model.add(Flatten())
     model.add(Dense(32, activation='relu'))
     model.add(Dense(32, activation='relu'))
-    model.add(Dense(16, activation='relu'))
-    model.add(Dense(16, activation='relu'))
-    model.add(Dense(8, activation='relu'))
+    model.add(Dense(100, activation='relu'))
+    model.add(Dense(100, activation='relu'))
+    model.add(Dense(96))
+    model.add(Reshape((48,2)))
     model.add(Dense(2, activation='relu'))
     return model
 
@@ -172,18 +174,19 @@ for q in quantiles:
     # 컴파일, 훈련
     from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
     model = Model()
+    modelpath = '../solar/check/solar0122_{epoch:02d}_{val_loss:.4f}.hdf5'
+    cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
+    es = EarlyStopping(monitor = 'val_loss', patience=10, mode='min')
+    lr = ReduceLROnPlateau(monitor='val_loss', patience=5, factor=0.5)
+
     model.compile(loss = lambda y_true, y_pred: quantile_loss(q, y_true, y_pred), optimizer='adam')
-    es = EarlyStopping(monitor ='val_loss', patience=10, mode='min')
-    rl = ReduceLROnPlateau(monitor='val_loss', patience=5, factor=0.5)
-    filepath = '../solar/check/solar_conv2d_{epoch:02d}_{val_loss:.4f}.hdf5'
-    check = ModelCheckpoint(filepath = filepath, monitor = 'val_loss', save_best_only=True, mode='min') 
-    hist = model.fit(x_train, y_train, epochs=1, batch_size=16, validation_split=0.2, callbacks=[es,rl])
+    model.fit(x_train, y_train, epochs=1, batch_size=16, validation_split=0.2, callbacks=[es,lr])
 
 
     #평가, 예측
-    result = model.evaluate(x_test, y_test, batch_size=16)
-    print('loss: ', result[0])
-    print('mae: ', result[1])
+    loss = model.evaluate(x_test, y_test, batch_size=16)
+    print('loss: ', loss)
+  
     y_pred = model.predict(X_test)
    
     print(y_pred.shape)
@@ -194,8 +197,8 @@ for q in quantiles:
     df_y_pred = df_y_pred.to_numpy()
         
     print(str(q)+'번째 지정')
-    subfile.loc[subfile.id.str.contains('Day7'), 'q_' + str(q)] = df_y_pred[:,0].round(2)
-    subfile.loc[subfile.id.str.contains('Day8'), 'q_' + str(q)] = df_y_pred[:,1].round(2)
+    sub.loc[sub.id.str.contains('Day7'), 'q_' + str(q)] = df_y_pred[:,0].round(2)
+    sub.loc[sub.id.str.contains('Day8'), 'q_' + str(q)] = df_y_pred[:,1].round(2)
 
 
 sub.to_csv('./solar/csv/sub_conv2d.csv',index=False)
