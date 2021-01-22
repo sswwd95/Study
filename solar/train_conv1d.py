@@ -172,7 +172,7 @@ for q in quantiles:
     # 컴파일, 훈련
     from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
     model = Model()
-    model.compile(loss = lambda y_true, y_pred: quantile_loss(q, y_true, y_pred), optimizer='adam', metrics=['mse'])
+    model.compile(loss = lambda y_true, y_pred: quantile_loss(q, y_true, y_pred), optimizer='adam')
     es = EarlyStopping(monitor ='val_loss', patience=10, mode='min')
     rl = ReduceLROnPlateau(monitor='val_loss', patience=5, factor=0.5)
     filepath = '../solar/check/solar_conv2d_{epoch:02d}_{val_loss:.4f}.hdf5'
