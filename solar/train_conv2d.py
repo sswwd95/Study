@@ -57,7 +57,7 @@ def split_xy(train,x_row,x_col,y_row,y_col):
         x.append(x_tmp)
         y.append(y_tmp) 
     return np.array(x), np.array(y)
-x, y = split_xy(train, 48, 6, 1, 2) 
+x, y = split_xy(train, 48, 6, 8, 2) 
 
 print(x, "\n", y)
 print(x)

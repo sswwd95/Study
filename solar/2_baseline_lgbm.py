@@ -106,3 +106,6 @@ sub.loc[sub.id.str.contains('Day8'), 'q_0.1':] = results_2.sort_index().values
 # print(sub.iloc[:48])
 
 sub.to_csv('./solar/csv/lgbm_sub_2.csv', index=False)
+
+
+# 점수 : 1.9507407941 

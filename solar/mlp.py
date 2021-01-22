@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-submission = pd.read_csv('./solar/csv/lgbm_sub_2.csv')
+submission = pd.read_csv('./solar/csv/submission_2.csv')
 
 
 ranges = 336

@@ -176,36 +176,11 @@ WindowGenerator.val = val
 WindowGenerator.test = test
 WindowGenerator.example = example
 
-def plot(self, model=None, plot_col='TARGET', max_subplots=3):
-    inputs, labels = self.example
-    plt.figure(figsize=(12,8))
-    plot_col_index = self.column_indices[plot_col]
-    max_n = min(max_subplots, len(inputs))
-    for n in range(max_n):
-        plt.subplot(3, 1, n+1)
-        plt.ylabel(f'{plot_col} [normed]')
-        plt.plot(self.input_indices, inputs[n, :, plot_col_index],
-            label='Inputs', marker='.',zorder=-10)
-        if self.label_columns:
-            label_col_index = self.label_columns_indices.get(plot_col, None)
-        else : 
-            label_col_index = plot_col_index
-        if label_col_index is None:
-            continue 
-        plt.scatter(self.label_indices, labels[n, :, label_col_index],
-            edgecolors='k', label='Labels', c='#2ca02c', s=64)
-        if model is not None:
-            predictions = model(inputs)
-            plt.scatter(self.label_indices, predictions[n, :, label_col_index], marker='X', edgecolors='k', label='Predictions',  c='#ff7f0e', s=64)
-    if n == 0:
-        plt.legend()
-    plt.xlabel('Time[30m]')
-WindowGenerator.plot = plot
+
 #Set the data-set 24 hours input -> 48 hours output
 w1 = WindowGenerator(input_width=48, label_width=96, shift = 96)
-w1.plot()
-# print(plt.show())
-print(w1.train.element_spec)
+
+print(w1.train.element_spec) # dataset 요소의 유형
 # (TensorSpec(shape=(None, 48, 7), dtype=tf.float32, name=None), TensorSpec(shape=(None, 96, 7), dtype=tf.float32, name=None))
 
 for example_inputs, example_labels in w1.train.take(1):
@@ -290,7 +265,7 @@ Dense_actual_pred_denorm = Dense_actual_pred*train_std['TARGET'] + train_mean['T
 Dense_actual_pred_nn = np.where(Dense_actual_pred_denorm<0, 0, Dense_actual_pred_denorm)
 
 sub.iloc[:,1:] = Dense_actual_pred_nn
-sub.to_csv('.solar/csv/sub_0122_dense.csv',index=False)
+sub.to_csv('./solar/csv/sub_0122_dense.csv',index=False)
 
 
 '''
