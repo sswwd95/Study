@@ -59,6 +59,13 @@ X_train_1, X_val_1, Y_train_1, Y_val_1 = train_test_split(
 X_train_2, X_val_2, Y_train_2, Y_val_2 = train_test_split(
     df_train.iloc[:,:-2],df_train.iloc[:,-1], test_size=0.2, random_state=0)
 
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X_train_1 = sc.fit_transform(X_train_1)
+X_train_2 = sc.fit_transform(X_train_2)
+X_val_1 = sc.transform(X_val_1)
+X_val_2 = sc.transform(X_val_2)
+
 quantiles = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
 
 from lightgbm import LGBMRegressor
@@ -67,13 +74,13 @@ def LGBM(q, X_train, Y_train, X_valid, Y_valid, X_test):
     
     # (a) Modeling  
     model = LGBMRegressor(objective='quantile', alpha=q,
-                         n_estimators=30000, bagging_fraction=0.7, learning_rate=0.001, subsample=0.7)  
+                         n_estimators=20000, bagging_fraction=0.9, learning_rate=0.001, subsample=0.8)  
     # LGBMRegressor 회귀모델              
     # bagging_fraction, subsample = 데이터를 랜덤 샘플링하여 학습에 사용 
     # alpha = q -> 제공되는 값 넣는 것.                 
                          
     model.fit(X_train, Y_train, eval_metric = ['quantile'], 
-          eval_set=[(X_valid, Y_valid)], early_stopping_rounds=300, verbose=100)
+          eval_set=[(X_valid, Y_valid)], early_stopping_rounds=300, verbose=300)
 
     # (b) Predictions
     pred = pd.Series(model.predict(X_test).round(2))

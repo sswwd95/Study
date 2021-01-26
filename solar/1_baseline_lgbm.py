@@ -48,6 +48,10 @@ print(X_test.shape) #(3888, 6)
 print(X_test.head(48))
 
 ##################################
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X_train[:,:-2] = sc.fit_transform(X_train[:,:-2])
+X_test= sc.fit_transform(X_test)
 
 from sklearn.model_selection import train_test_split
 X_train_1, X_val_1, Y_train_1, Y_val_1 = train_test_split(

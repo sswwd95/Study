@@ -24,11 +24,17 @@ sub = pd.read_csv('./solar/csv/sample_submission.csv')
 # 1. 데이터
 
 #DHI, DNI 보다 더 직관적인 GHI 열 추가.
+
 def preprocess_data(data, is_train=True):
-    data['cos'] = np.cos(np.pi/2 - np.abs(data['Hour']%12-6)/6*np.pi/2) 
-    data.insert(1, 'GHI', data['DNI']*data['cos']+data['DHI'])
+    c = 243.12
+    b = 17.62
+    gamma = (b * (data['T']) / (c + (data['T']))) + np.log(data['RH'] / 100)
+    dp = ( c * gamma) / (b - gamma)
+    data.insert(1,'Td',dp)
+    data.insert(1,'T-Td',data['T']-data['Td'])
+    data.insert(1,'GHI',data['DNI']+data['DHI'])
     temp = data.copy()
-    temp = temp[['Hour','TARGET','GHI','DHI', 'DNI', 'WS', 'RH', 'T']]
+    temp = temp[['TARGET','GHI','DHI', 'DNI', 'RH', 'T','T-Td']]
 
     if is_train==True:
         temp['Target1'] = temp['TARGET'].shift(-48).fillna(method='ffill') # day7
@@ -37,7 +43,7 @@ def preprocess_data(data, is_train=True):
         return temp.iloc[:-96] # day8에서 2일치 땡겨서 올라갔기 때문에 마지막 2일 빼주기
 
     elif is_train==False:
-        temp = temp[['Hour','TARGET','GHI','DHI', 'DNI', 'WS', 'RH', 'T']]
+        temp = temp[['TARGET','GHI','DHI', 'DNI',  'RH', 'T','T-Td']]
         return temp.iloc[-48:,:] # 트레인데이터가 아니면 마지막 하루(day6)만 리턴시킴
 
 df_train = preprocess_data(train)
@@ -75,7 +81,7 @@ scaler.fit(x_train[:,:-2])  # day7,8일을 빼고 나머지 컬럼들을 train
 x_train[:,:-2] = scaler.transform(x_train[:,:-2])
 x_test = scaler.transform(x_test)
 
-x_test = x_test.reshape(81,48,8)
+x_test = x_test.reshape(81,48,7)
 
 ######## train데이터 분리 ###########
 def split_xy(data,timestep):
@@ -85,7 +91,7 @@ def split_xy(data,timestep):
         if x_end>len(data):
             break
         tmp_x = data[i:x_end,:-2]  # x_train 
-        tmp_y = data[x_end-1:x_end,-2:]  # day7 / x_end-1:x_end => i:x_end와 같은 위치로 맞춰주기
+        tmp_y = data[i:x_end,-2:]  # day7 / x_end-1:x_end => i:x_end와 같은 위치로 맞춰주기
         x.append(tmp_x)
         y.append(tmp_y)
     return(np.array(x), np.array(y))
@@ -110,9 +116,9 @@ print(y_val.shape)
 # (41933, 1, 2)
 # (10484, 1, 2)
 
-x_train = x_train.reshape(x_train.shape[0],1,48,8)
-x_test = x_test.reshape(x_test.shape[0], 1,48,8)
-x_val = x_val.reshape(x_val.shape[0], 1,48,8)
+x_train = x_train.reshape(x_train.shape[0],1,48,7)
+x_test = x_test.reshape(x_test.shape[0], 1,48,7)
+x_val = x_val.reshape(x_val.shape[0], 1,48,7)
 
 # y_train = y_train.reshape(y_train.shape[0],48,2 )
 # y_val = y_val.reshape(y_val.shape[0],48,2 )
@@ -130,20 +136,20 @@ def quantile_loss(q, y_true, y_pred):
 quantiles = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
 
 # 2. 모델구성
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense, Conv2D, Conv1D, Flatten, Dropout, Reshape
 
 # relu 넣으면 값 더 떨어짐
 def Model():
     model = Sequential()
-    model.add(Conv2D(128, 2,activation='relu', padding='same',input_shape=(x_train.shape[1], x_train.shape[2], x_train.shape[3])))
+    model.add(Conv2D(100, 2, padding='same',input_shape=(x_train.shape[1], x_train.shape[2], x_train.shape[3])))
     model.add(Conv2D(64, 2, padding='same'))
     # model.add(Conv2D(64, 2, padding='same'))
     model.add(Flatten())
     model.add(Dense(96))
     model.add(Reshape((48,2)))
     model.add(Dense(64))
-    model.add(Dense(64))
+    # model.add(Dense(64))
     model.add(Dense(32))
     model.add(Dense(16))
     model.add(Dense(2))
@@ -151,31 +157,33 @@ def Model():
     
 
 from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint,ReduceLROnPlateau
-es = EarlyStopping(monitor = 'val_loss', patience=10, mode='min')
-lr = ReduceLROnPlateau(monitor='val_loss', patience=5, factor=0.5)
+es = EarlyStopping(monitor = 'val_loss', patience=6, mode='min')
+lr = ReduceLROnPlateau(monitor='val_loss', patience=3, factor=0.5)
 
-bs = 64
-epochs = 1
+bs = 128
+epochs = 100
 
 
 ############
-for q in quantiles:
-    model = Model()
-    modelpath = '../solar/check/_conv2d_3_{epoch:02d}_{val_loss:.4f}.hdf5'
-    cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
-    model.compile(loss=lambda y_true,y_pred: quantile_loss(q,y_true, y_pred), optimizer='adam')
-    model.fit(x_train,y_train, batch_size = bs, callbacks=[es, cp, lr], epochs=epochs, validation_data=(x_val, y_val))
-    
-    target = model.predict(x_test)
-    
-
-    target = pd.DataFrame(target.reshape(target.shape[0]*target.shape[1],target.shape[2]))
-    target1 = pd.concat([target], axis=1)
-    target1[target<0] = 0
-    target2 = target1.to_numpy()
+for k in range(5):
+    for q in quantiles:
+        modelpath = f'../solar/dacon{k+1}/conv2d_1{q}.hdf5'
+        model = load_model(modelpath, compile = False)
+        cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
+        model.compile(loss=lambda y_true,y_pred: quantile_loss(q,y_true, y_pred), optimizer='adam')
+        # model.fit(x_train,y_train, batch_size = bs, callbacks=[es, cp, lr], epochs=epochs, validation_data=(x_val, y_val))
         
-    print(str(q)+'번째 지정')
-    sub.loc[sub.id.str.contains('Day7'), 'q_' + str(q)] = target2[:,0].round(2)
-    sub.loc[sub.id.str.contains('Day8'), 'q_' + str(q)] = target2[:,1].round(2)
+        target = model.predict(x_test)
+        
 
-sub.to_csv('./solar/csv/sub_conv2d_11.csv',index=False)
+        target = pd.DataFrame(target.reshape(target.shape[0]*target.shape[1],target.shape[2]))
+        target1 = pd.concat([target], axis=1)
+        target1[target<0] = 0
+        target2 = target1.to_numpy()
+            
+        print(str(q)+'번째 지정')
+        sub.loc[sub.id.str.contains('Day7'), 'q_' + str(q)] = target2[:,0].round(2)
+        sub.loc[sub.id.str.contains('Day8'), 'q_' + str(q)] = target2[:,1].round(2)
+
+    sub.to_csv(f'./solar/csv/best_{k}.csv',index=False)
+

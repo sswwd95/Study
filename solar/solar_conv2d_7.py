@@ -38,7 +38,7 @@ def preprocess_data(data, is_train=True):
     data.insert(1,'GHI',data['DNI']+data['DHI'])
 
     temp = data.copy()
-    temp = temp[['Hour','TARGET','GHI','DHI', 'DNI', 'WS', 'T']]
+    temp = temp[['Hour','TARGET','GHI','DHI', 'DNI', 'WS', 'RH','T']]
 
     if is_train==True:
         temp['Target1'] = temp['TARGET'].shift(-48).fillna(method='ffill') # day7
@@ -47,7 +47,7 @@ def preprocess_data(data, is_train=True):
         return temp.iloc[:-96] # day8에서 2일치 땡겨서 올라갔기 때문에 마지막 2일 빼주기
 
     elif is_train==False:
-        temp = temp[['Hour','TARGET','GHI','DHI', 'DNI', 'WS', 'T']]
+        temp = temp[['Hour','TARGET','GHI','DHI', 'DNI', 'WS','RH', 'T']]
         return temp.iloc[-48:,:] # 트레인데이터가 아니면 마지막 하루(day6)만 리턴시킴
 
 df_train = preprocess_data(train)
@@ -155,10 +155,10 @@ from tensorflow.keras.layers import Dense, Conv2D, Conv1D, Flatten, Dropout, Res
 # relu 넣으면 값 더 떨어짐
 def Model():
     model = Sequential()
-    model.add(Conv2D(200, 2,activation='relu', padding='same',input_shape=(x_train.shape[1], x_train.shape[2], x_train.shape[3])))
+    model.add(Conv2D(128, 2,activation='relu', padding='same',input_shape=(x_train.shape[1], x_train.shape[2], x_train.shape[3])))
     model.add(Dropout(0.2))
-    model.add(Conv2D(150, 2, activation='relu',padding='same'))
-    model.add(Conv2D(100, 2, activation='relu',padding='same'))
+    # model.add(Conv2D(110, 2, activation='relu',padding='same'))
+    model.add(Conv2D(96, 2, activation='relu',padding='same'))
     model.add(Flatten())
     model.add(Dense(96))
     model.add(Reshape((48,2)))
@@ -174,7 +174,7 @@ es = EarlyStopping(monitor = 'val_loss', patience=10, mode='min')
 lr = ReduceLROnPlateau(monitor='val_loss', patience=5, factor=0.5)
 
 bs = 64
-epochs = 300
+epochs = 1
 
 loss_list = list()
 ############
@@ -214,3 +214,5 @@ print('loss_mean : ', loss_mean)
 # loss_mean :  2.187175730864207 (relu추가)
 
 # epoch 1 = 2.09 / 17:20시작
+
+# loss_mean :  1.6421703298886616 -> 점수 2.35
