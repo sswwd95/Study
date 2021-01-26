@@ -85,7 +85,7 @@ def split_xy(data,timestep):
         if x_end>len(data):
             break
         tmp_x = data[i:x_end,:-2]  # x_train 
-        tmp_y = data[i:x_end,-2:]  # day7 / x_end-1:x_end => i:x_end와 같은 위치로 맞춰주기
+        tmp_y = data[x_end-1:x_end,-2:]  # day7 / x_end-1:x_end => i:x_end와 같은 위치로 맞춰주기
         x.append(tmp_x)
         y.append(tmp_y)
     return(np.array(x), np.array(y))
@@ -114,8 +114,8 @@ x_train = x_train.reshape(x_train.shape[0],1,48,8)
 x_test = x_test.reshape(x_test.shape[0], 1,48,8)
 x_val = x_val.reshape(x_val.shape[0], 1,48,8)
 
-y_train = y_train.reshape(y_train.shape[0],48,2 )
-y_val = y_val.reshape(y_val.shape[0],48,2 )
+# y_train = y_train.reshape(y_train.shape[0],48,2 )
+# y_val = y_val.reshape(y_val.shape[0],48,2 )
 
 print(x_train.shape)
 print(x_val.shape)
@@ -136,8 +136,8 @@ from tensorflow.keras.layers import Dense, Conv2D, Conv1D, Flatten, Dropout, Res
 # relu 넣으면 값 더 떨어짐
 def Model():
     model = Sequential()
-    model.add(Conv2D(128, 2, padding='same',input_shape=(x_train.shape[1], x_train.shape[2], x_train.shape[3])))
-    # model.add(Conv2D(64, 2, padding='same'))
+    model.add(Conv2D(128, 2,activation='relu', padding='same',input_shape=(x_train.shape[1], x_train.shape[2], x_train.shape[3])))
+    model.add(Conv2D(64, 2, padding='same'))
     # model.add(Conv2D(64, 2, padding='same'))
     model.add(Flatten())
     model.add(Dense(96))
@@ -145,6 +145,7 @@ def Model():
     model.add(Dense(64))
     model.add(Dense(64))
     model.add(Dense(32))
+    model.add(Dense(16))
     model.add(Dense(2))
     return model
     
@@ -154,7 +155,7 @@ es = EarlyStopping(monitor = 'val_loss', patience=10, mode='min')
 lr = ReduceLROnPlateau(monitor='val_loss', patience=5, factor=0.5)
 
 bs = 64
-epochs = 300
+epochs = 1
 
 
 ############
@@ -167,7 +168,7 @@ for q in quantiles:
     
     target = model.predict(x_test)
     
-    # 예측값을 submission에 넣기
+
     target = pd.DataFrame(target.reshape(target.shape[0]*target.shape[1],target.shape[2]))
     target1 = pd.concat([target], axis=1)
     target1[target<0] = 0
@@ -177,4 +178,4 @@ for q in quantiles:
     sub.loc[sub.id.str.contains('Day7'), 'q_' + str(q)] = target2[:,0].round(2)
     sub.loc[sub.id.str.contains('Day8'), 'q_' + str(q)] = target2[:,1].round(2)
 
-sub.to_csv('./solar/csv/sub_conv2d_3.csv',index=False)
+sub.to_csv('./solar/csv/sub_conv2d_11.csv',index=False)

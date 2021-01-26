@@ -153,6 +153,7 @@ def split_x(data, timestep) :
     return(np.array(x))
 x_test = split_x(x_test,1)
 ######################################################
+print(x_test.shape) #(2888,1,8)
 
 from sklearn.model_selection import train_test_split
 x_train, x_val, y1_train, y1_val, y2_train, y2_val = train_test_split(
@@ -229,7 +230,6 @@ sub.to_csv('./solar/csv/test1_0121.csv', index=False)
 
 # epoch = 200
 # 7시 45분 시작- 8시 끝
-
 
 
 

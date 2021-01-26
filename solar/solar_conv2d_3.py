@@ -1,6 +1,5 @@
-# 새로운 피처 추가 (그래프는 더 좋아보인다...?)
-# 30분 단위로 했을 때 그래프 더 튄다. 1일로 하면 더 안정적
-# td제거
+# td,rh 제거
+# 점수 : 2.0774143574
 
 import pandas as pd
 import numpy as np
@@ -45,7 +44,7 @@ def preprocess_data(data, is_train=True):
     data.insert(1,'GHI',data['DNI']+data['DHI'])
 
     temp = data.copy()
-    temp = temp[['TARGET','GHI','DHI', 'DNI', 'WS','RH', 'T']]
+    temp = temp[['TARGET','GHI','DHI', 'DNI', 'WS', 'T','T-Td']]
 
     if is_train==True:
         temp['Target1'] = temp['TARGET'].shift(-48).fillna(method='ffill') # day7
@@ -54,7 +53,7 @@ def preprocess_data(data, is_train=True):
         return temp.iloc[:-96] # day8에서 2일치 땡겨서 올라갔기 때문에 마지막 2일 빼주기
 
     elif is_train==False:
-        temp = temp[['TARGET','GHI','DHI', 'DNI', 'WS','RH', 'T']]
+        temp = temp[['TARGET','GHI','DHI', 'DNI', 'WS', 'T','T-Td']]
         return temp.iloc[-48:,:] # 트레인데이터가 아니면 마지막 하루(day6)만 리턴시킴
 
 df_train = preprocess_data(train)
@@ -68,7 +67,6 @@ sns.set(font_scale=0.9) # 폰트크기 0.9
 sns.heatmap(data=df_train.corr(), square=True, annot=True, cbar=True)
 # sns.heatmap(data=df.corr(), square=정사각형으로, annot=글씨 , cbar=오른쪽에 있는 bar)
 # plt.show()
-# 상관계수 낮은 RH, Td 제거
 
 x_train = df_train.to_numpy()
 
@@ -166,8 +164,8 @@ from tensorflow.keras.layers import Dense, Conv2D, Conv1D, Flatten, Dropout, Res
 # relu 넣으면 값 더 떨어짐
 def Model():
     model = Sequential()
-    model.add(Conv2D(100, 2,activation='relu', padding='same',input_shape=(x_train.shape[1], x_train.shape[2], x_train.shape[3])))
-    model.add(Conv2D(96, 2, padding='same'))
+    model.add(Conv2D(128, 2, padding='same',input_shape=(x_train.shape[1], x_train.shape[2], x_train.shape[3])))
+    model.add(Conv2D(64, 2, padding='same'))
     # model.add(Conv2D(64, 2, padding='same'))
     model.add(Flatten())
     model.add(Dense(96))
@@ -184,7 +182,7 @@ es = EarlyStopping(monitor = 'val_loss', patience=10, mode='min')
 lr = ReduceLROnPlateau(monitor='val_loss', patience=5, factor=0.5)
 
 bs = 64
-epochs = 300
+epochs = 200
 
 
 ############
@@ -206,4 +204,4 @@ for q in quantiles:
     sub.loc[sub.id.str.contains('Day7'), 'q_' + str(q)] = target2[:,0].round(2)
     sub.loc[sub.id.str.contains('Day8'), 'q_' + str(q)] = target2[:,1].round(2)
 
-sub.to_csv('./solar/csv/sub_conv2d_2.csv',index=False)
+sub.to_csv('./solar/csv/sub_conv2d_3.csv',index=False)
