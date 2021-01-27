@@ -24,14 +24,6 @@ print(dataset.feature_names)
 print(np.max(x[0]))
 
 
-# scaler = MinMaxScaler()
-# scaler.fit(x)     # -> 이렇게 하면 전체에 전처리 들어가서 예측 값이 범위 벗어나면 값 엉망. x train만 전처리.
-# x = scaler.transform(x)
-
-# print(np.max(x), np.min(x)) # 711.0  0,0 => 1.0  0.0
-# print(np.max(x[0]))  #0.99999999
-
-
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(
     x, y, train_size = 0.7, random_state = 66

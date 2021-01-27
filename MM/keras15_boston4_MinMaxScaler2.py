@@ -15,22 +15,8 @@ print(x[:5])  # 0~4까지  -> x 1개당 [6.3200e-03 1.8000e+01 2.3100e+00 0.0000
 print(y[:10])
 print(np.max(x), np.min(x)) # 711.0  0,0
 print(dataset.feature_names)
-# print(dataset.DESCR)
-
-# 데이터 전처리(MinMax)
-# x = x / 711  # 최댓값으로만 나눈다. x의 값이 0~711이면 float형인데  711.하면 실수형으로 된다. 정수면 .안찍어도 상관없지만 형변환
-# x = (x - 최소) / (최대 - 최소)
-#   = (x - np.min(x)) / (np.max(x) - np.min(x)) 식 자체가 이렇게 되어있다는 것을 이해하기
-print(np.max(x[0]))
 
 from sklearn.preprocessing import MinMaxScaler
-
-# scaler = MinMaxScaler()
-# scaler.fit(x)     # -> 이렇게 하면 전체에 전처리 들어가서 예측 값이 범위 벗어나면 값 엉망. x train만 전처리.
-# x = scaler.transform(x)
-
-# print(np.max(x), np.min(x)) # 711.0  0,0 => 1.0  0.0
-# print(np.max(x[0]))  #0.99999999
 
 
 from sklearn.model_selection import train_test_split
@@ -42,7 +28,6 @@ scaler = MinMaxScaler()
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
-
 
 #2 . 모델구성
 from tensorflow.keras.models import Sequential
