@@ -36,11 +36,12 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Conv2D, MaxPooling2D, Flatten
 
 model = Sequential()
-model.add(Conv2D(500,3, padding='same', input_shape=(10,1,1)))
+model.add(Conv2D(500,2, padding='same', input_shape=(10,1,1)))
+# model.add(Conv2D(400,2, padding='same', input_shape=(10,1,1)))
 # model.add(MaxPooling2D(pool_size=2)) 이미지를 분류할 때는 쓰는게 좋지만, 아니면 안쓰는 게 좋다. 
 model.add(Flatten())
-model.add(Dense(300, activation='relu'))
-model.add(Dropout(0.2))
+model.add(Dense(200, activation='relu'))
+# model.add(Dropout(0.2))
 model.add(Dense(100, activation='relu'))
 model.add(Dense(100, activation='relu'))
 model.add(Dense(100, activation='relu'))
@@ -53,11 +54,11 @@ model.compile(loss='mse', optimizer='adam', metrics=['mae'])
 
 from tensorflow.keras.callbacks import EarlyStopping
 es = EarlyStopping(monitor = 'loss', patience = 20, mode = 'min')
-model.fit(x_train, y_train, validation_split=0.2, callbacks=[es], epochs= 300, batch_size=32)
+model.fit(x_train, y_train, validation_split=0.2, callbacks=[es], epochs= 500, batch_size=16)
 
 #3. 평가, 예측
 
-loss,mae = model.evaluate(x_test, y_test, batch_size=32)
+loss,mae = model.evaluate(x_test, y_test, batch_size=16)
 print("loss, mae : ", loss, mae)
 
 y_predict = model.predict(x_test)

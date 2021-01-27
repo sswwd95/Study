@@ -31,7 +31,7 @@ cancer_x = cancer_dataset.data
 cancer_y = cancer_dataset.target
 
 np.save('../data/npy/cancer_x.npy', arr = cancer_x)
-np.save('../data/npy/./data/cancer_y.npy', arr = cancer_y)
+np.save('../data/npy/cancer_y.npy', arr = cancer_y)
 
 # 4. iris
 iris_dataset = load_iris()

@@ -29,11 +29,12 @@ print(x.shape) #(569, 30)
 print(y.shape) # (569, 2) -> reshape됨
 
 #2. 모델
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential,load_model
 from tensorflow.keras.layers import Dense
 
 model = Sequential()
 model.add(Dense(128, activation='relu', input_shape=(30,)))
+model.add(Dense(128, activation='relu'))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(16, activation='relu'))
@@ -41,21 +42,24 @@ model.add(Dense(8, activation='relu'))
 model.add(Dense(2, activation='softmax'))
 
 # 3. 컴파일, 훈련
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
-modelpath = '../data/modelcheckpoint/k50_cancer_{epoch:02d}-{val_loss:.4f}.hdf5'
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint,ReduceLROnPlateau
+modelpath = '../data/modelcheckpoint/k50_cancer.hdf5'
 es = EarlyStopping(monitor='val_loss', patience=20, mode='min')
 cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', mode='auto', save_best_only=True)
-model.fit(x_train,y_train, epochs=50,callbacks=[es,cp], validation_data=(x_val, y_val), batch_size=8)
+lr = ReduceLROnPlateau(monitor='val_loss', patience=5, factor=0.5, verbose=1)
 
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
+model.fit(x_train,y_train, epochs=1000,callbacks=[es,cp,lr], validation_data=(x_val, y_val), batch_size=8)
+
+# model =load_model('../data/modelcheckpoint/k50_cancer.hdf5')
 #4. 평가, 예측
 loss, acc = model.evaluate(x_test,y_test, batch_size=8)
 print('loss, acc : ', loss, acc)
 
-y_predict = model.predict(x_test[-5:-1])
-print(y_predict)
-print(y_test[-5:-1])
-print(np.argmax(y_predict,axis=-1))
+y_predict = model.predict(x_test)
+# print(y_predict)
+# print(y_test)
+# print(np.argmax(y_predict,axis=-1))
 
 # loss, acc :  0.16521701216697693 0.9649122953414917
 # [[8.9435693e-05 9.9991059e-01]

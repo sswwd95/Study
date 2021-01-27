@@ -25,8 +25,9 @@ from tensorflow.keras.layers import Dense
 
 
 model = Sequential()
-model.add(Dense(64, activation='relu', input_shape=(10, )))
-model.add(Dense(32, activation='relu'))
+model.add(Dense(128, activation='relu', input_shape=(10, )))
+model.add(Dense(64, activation='relu'))
+model.add(Dense(64, activation='relu'))
 model.add(Dense(16, activation='relu'))
 model.add(Dense(8, activation='relu'))
 model.add(Dense(1))
@@ -37,7 +38,7 @@ from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint
 modelpath = '../data/modelcheckpoint/k50_diabetes_{epoch:02d}-{val_loss:.4f}.hdf5'
 cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
 early_stopping = EarlyStopping(monitor = 'loss', patience=20, mode='min') 
-model.fit(x_train, y_train, batch_size = 8, callbacks=[early_stopping, cp], epochs=200, validation_split=0.2)
+model.fit(x_train, y_train, batch_size = 8, callbacks=[early_stopping, cp], epochs=500, validation_split=0.2)
 
 #4. 평가, 예측
 

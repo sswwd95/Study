@@ -48,7 +48,7 @@ model.summary()
 
 import datetime # 컴퓨터에서 제공되는 시간과 동일. 클라우드에서 쓰면 미국시간으로 된다. 한국시간으로 바꿔서 잡아주기. 코랩은 영국시간 기준
 # 덮어쓰기 할 경우 구분하기 좋다. ..?
-date_now = datetime.datetime.now() # 문제점  : 여기 시간으로 고정된다.
+date_now = datetime.datetime.now() # 문제점  : 여기 시간으로 고정된다. 분이 넘어가도 수정안됨.
                                    # 체크포인트 내로 now()를 넣어서 수정
 print(date_now)
 date_time = date_now.strftime('%m%d_%H%M') #strttime = startime # 월, 일, 시간, 분
@@ -70,30 +70,31 @@ print(modelpath) #../data/modelcheckpoint/k45_0127_1018_{epoch:02d}-{val_loss:.4
 
 import datetime # 컴퓨터에서 제공되는 시간과 동일. 클라우드에서 쓰면 미국시간으로 된다. 한국시간으로 바꿔서 잡아주기. 코랩은 영국시간 기준
 # 덮어쓰기 할 경우 구분하기 좋다. ..?
-date_now = datetime.datetime.now() # 문제점  : 여기 시간으로 고정된다.
-                                   # 체크포인트 내로 now()를 넣어서 수정
-print(date_now)
-date_time = date_now.strftime('%m%d_%H%M') #strttime = startime # 월, 일, 시간, 분
+
+                            
+
+date_time = datetime.datetime.now().strftime('%m_%d_%H_%M_%S') #strttime = startime # 월, 일, 시간, 분
 print(date_time)
 
 
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+
 filepath = '../data/modelcheckpoint/' # 경로 변수만들기
 filename = '_{epoch:02d}-{val_loss:.4f}.hdf5' # 파일 이름 변수 만들기
 # stirng끼리 합치기 ("". join은 빈 공백 안에 넣는다는 것)
-modelpath = "".join([filepath,"k45_",date_time, filename])
+modelpath = "".join([filepath,"k45_",date_time,filename])
 print(modelpath) #../data/modelcheckpoint/k45_0127_1018_{epoch:02d}-{val_loss:.4f}.hdf5
 
 # modelpath = '../data/modelcheckpoint/k45_mnist_{epoch:02d}-{val_loss:.4f}.hdf5'(기존의 시간 포함 안한 경로)
 
 #########################################################################################################################################
 es = EarlyStopping(monitor='val_loss', patience=20, mode='min')
-cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True, mode='auto')
+cp = ModelCheckpoint(filepath=modelpath , monitor='val_loss', save_best_only=True, mode='auto')
 
 #3. 컴파일, 훈련
 
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
-hist = model.fit(x_train,y_train, callbacks=[es,cp], epochs=2, validation_split=0.2, batch_size=16)
+hist = model.fit(x_train,y_train, callbacks=[es,cp], epochs=1000, validation_split=0.2, batch_size=16)
 
 
 #4. 평가, 예측
