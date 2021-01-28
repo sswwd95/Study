@@ -1,5 +1,4 @@
 
-
 # train, test 나눈 다음에 train만 val 하지말고, 
 # kfold 한 후에 train_test_split 사용
 
@@ -30,8 +29,8 @@ print(x.shape,y.shape)
 
 kfold = KFold(n_splits=5,shuffle=True) # train만 5조각으로 나눈다
 
-x_train,x_test,y_train,y_test = train_test_split(
-    x, y, random_state=77, shuffle=True, train_size=0.6
+x_train,x_val,y_train,y_val = train_test_split(
+    x, y, random_state=77, shuffle=True, train_size=0.8
 )
 
 
@@ -66,3 +65,4 @@ print('accuracy_score : ',acc)
 
 # result = model.score(x_test,y_test) == acc = accuracy_score(y_test, y_predict) 값이 동일함.
 '''
+# scores : [0.875 1.    1.    1.    1.   ]

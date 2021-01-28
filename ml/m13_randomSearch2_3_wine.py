@@ -1,10 +1,10 @@
 # 모델 RandomForestClassifier
 
 import numpy as np
-from sklearn.datasets import load_breast_cancer
+from sklearn.datasets import load_wine
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.model_selection import train_test_split, KFold, cross_val_score
-from sklearn.model_selection import GridSearchCV # 격자형으로 찾는데 CV까지 하는것
+from sklearn.model_selection import GridSearchCV,RandomizedSearchCV # 격자형으로 찾는데 CV까지 하는것
 from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier #훈련 과정에서 구성한 다수의 결정 트리들을 랜덤하게 학습시켜 분류 또는 회귀의 결과도출에 사용
 
@@ -19,7 +19,7 @@ start = time.time()
 
 #1. 데이터
 
-dataset = load_breast_cancer()
+dataset = load_wine()
 x = dataset.data
 y = dataset.target
 
@@ -40,7 +40,7 @@ parameters = [
 ]
 
 # 2. 모델구성 
-model = GridSearchCV(RandomForestClassifier(), parameters, cv=kfold) 
+model = RandomizedSearchCV(RandomForestClassifier(), parameters, cv=kfold) 
 
 # 3. 훈련
 model.fit(x_train, y_train)
@@ -50,15 +50,25 @@ print('최적의 매개변수 : ', model.best_estimator_)
 y_pred = model.predict(x_test) 
 print('최종정답률 : ', accuracy_score(y_test, y_pred))
 
-# 최적의 매개변수 :  RandomForestClassifier()
-# 최종정답률 :  0.956140350877193
+# 최적의 매개변수 :  RandomForestClassifier(n_estimators=200)
+# 최종정답률 :  0.9722222222222222
 
-# 최적의 매개변수 :  RandomForestClassifier(min_samples_split=5)
-# 최종정답률 :  0.9473684210526315
+# 최적의 매개변수 :  RandomForestClassifier(min_samples_leaf=3)
+# 최종정답률 :  0.9722222222222222
 
 # a = model.score(x_test,y_test)
 # print(a)
+
 sec = time.time()-start
 times = str(datetime.timedelta(seconds=sec)).split(".")
 times = times[0]
-print("작업 시간 : ", times) # 작업 시간 :  0:00:09
+print("작업 시간 : ", times) 
+# 그리드
+# 최적의 매개변수 :  RandomForestClassifier(max_depth=12)
+# 최종정답률 :  1.0
+# 작업 시간 :  0:00:08
+
+# 랜덤
+# 최적의 매개변수 :  RandomForestClassifier(max_depth=8)
+# 최종정답률 :  1.0
+# 작업 시간 :  0:00:05

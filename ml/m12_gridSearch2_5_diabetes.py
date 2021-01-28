@@ -11,6 +11,13 @@ from sklearn.ensemble import RandomForestRegressor #훈련 과정에서 구성�
 import warnings
 warnings.filterwarnings('ignore')
 
+####코드 실행시간 표시####
+import datetime
+import time
+start = time.time()
+#########################
+
+
 #1. 데이터
 
 dataset = load_diabetes()
@@ -49,3 +56,12 @@ print('최종정답률 : ', r2_score(y_test, y_pred))
 
 # a = model.score(x_test,y_test)
 # print(a)
+
+sec = time.time()-start
+times = str(datetime.timedelta(seconds=sec)).split(".")
+times = times[0]
+print("작업 시간 : ", times)
+
+# 최적의 매개변수 :  RandomForestRegressor(min_samples_leaf=10)
+# 최종정답률 :  0.4881293028719462
+# 작업 시간 :  0:00:10

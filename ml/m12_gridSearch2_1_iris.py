@@ -11,6 +11,12 @@ from sklearn.ensemble import RandomForestClassifier #훈련 과정에서 구성�
 import warnings
 warnings.filterwarnings('ignore')
 
+####코드 실행시간 표시####
+import datetime
+import time
+start = time.time()
+#########################
+
 #1. 데이터
 
 dataset = load_iris()
@@ -65,3 +71,7 @@ print('최종정답률 : ', accuracy_score(y_test, y_pred))
 
 # a = model.score(x_test,y_test)
 # print(a)
+sec = time.time()-start
+times = str(datetime.timedelta(seconds=sec)).split(".")
+times = times[0]
+print("작업 시간 : ", times) #작업 시간 :  0:01:03
