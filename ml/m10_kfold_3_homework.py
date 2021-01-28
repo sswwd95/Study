@@ -29,6 +29,30 @@ print(x.shape,y.shape)
 
 kfold = KFold(n_splits=5,shuffle=True) # train만 5조각으로 나눈다
 
+models = [LinearSVC, SVC, KNeighborsClassifier,DecisionTreeClassifier, RandomForestClassifier]
+
+#train_idx와 val_idx를 생성
+for train_idx, val_idx in kfold.split(x): 
+    # train fold, val fold 분할
+    x_train = x[train_idx]
+    x_test = x[train_idx]
+    y_train = y[train_idx]
+    y_test = y[train_idx]
+
+for algorithm in models :  
+    model = algorithm()
+    scores = cross_val_score(model,x_train, y_train, cv=kfold) 
+    print('scores :', scores) 
+
+
+# scores : [0.83333333 1.         0.95833333 0.91666667 1.        ]
+# scores : [0.95833333 0.83333333 0.91666667 0.95833333 1.        ]
+# scores : [0.95833333 0.83333333 0.91666667 0.91666667 1.        ]
+# scores : [0.875      0.95833333 0.95833333 0.91666667 0.95833333]
+# scores : [0.91666667 0.91666667 0.95833333 0.95833333 1.        ]
+
+
+'''
 x_train,x_val,y_train,y_val = train_test_split(
     x, y, random_state=77, shuffle=True, train_size=0.8
 )
@@ -42,11 +66,10 @@ model = LinearSVC()
 # model = DecisionTreeClassifier()
 # model = RandomForestClassifier()  
 
-scores = cross_val_score(model,x_train, y_train, cv=kfold) # 모델과 데이터를 엮어준다.
 # fit과 scores 다 돌려진 것
-print('scores :', scores) 
 # scores : [0.93333333 0.86666667 0.96666667 1.         0.93333333] -> x,y를 kfold 했을 때
 # scores : [0.95833333 1.         0.95833333 1.         0.91666667] -> x_train, y_train을 kfold 했을 때
+'''
 '''
 # 3. 훈련
 model.fit(x,y)

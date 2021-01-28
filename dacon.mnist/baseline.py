@@ -20,11 +20,13 @@ from torch.utils.data import DataLoader, Dataset
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") # 디바이스 설정
 
+
+
 # 2. Dataset 구성
-dirty_mnist_answer = pd.read_csv("dirty_mnist_answer.csv")
+dirty_mnist_answer = pd.read_csv("../dacon/dirty_mnist_answer.csv")
 # dirty_mnist라는 디렉터리 속에 들어있는 파일들의 이름을 
 # namelist라는 변수에 저장
-namelist = os.listdir('./dirty_mnist/')
+namelist = os.listdir('../dacon/dirty_mnist/')
 
 # unmpy를 tensor로 변환하는 ToTensor 정의
 class ToTensor(object):

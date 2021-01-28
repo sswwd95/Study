@@ -51,7 +51,7 @@ scores = cross_val_score(model,x_train, y_train, cv=kfold) # 모델과 데이터
 # fit과 scores 다 돌려진 것
 print('scores :', scores) 
 # scores : [0.93333333 0.86666667 0.96666667 1.         0.93333333] -> x,y를 kfold 했을 때
-# scores : [0.95833333 1.         0.95833333 1.         0.91666667] -> x_train, y_train을 kfold 했을 때
+# scores : [0.95833333 0.875      1.         1.         1.        ] -> x_train, y_train을 kfold 했을 때
 '''
 # 3. 훈련
 model.fit(x,y)
