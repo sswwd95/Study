@@ -24,14 +24,25 @@ x_train,x_test,y_train,y_test = train_test_split(
 )
 
 kfold = KFold(n_splits=5,shuffle=True)
-
+'''
 parameters = [
-    {'n_estimatiors' : [100,200]},
+    {'n_estimators' : [100,200]},
     {'max_depth' : [6,8,10,12]},
     {'min_samples_leaf' : [3,5,7,10]},
     {'min_samples_split' : [2,3,5,10]},
-    {'n__jobs' : [-1]},
+    {'n_jobs' : [-1]}
 ]
+'''
+# 다 모아서 연결
+parameters = [
+    {'n_estimators' : [100,200],
+    'max_depth' : [6,8,10,12],
+    'min_samples_leaf' : [3,5,7,10],
+    'min_samples_split' : [2,3,5,10],
+    'n_jobs' : [-1]}
+]
+
+
 
 # 2. 모델구성 
 model = GridSearchCV(RandomForestClassifier(), parameters, cv=kfold) 
@@ -44,8 +55,13 @@ print('최적의 매개변수 : ', model.best_estimator_)
 y_pred = model.predict(x_test) 
 print('최종정답률 : ', accuracy_score(y_test, y_pred))
 
-# 최적의 매개변수 :  SVC(C=10, kernel='linear')
-# 최종정답률 :  0.9333333333333333
+# 최적의 매개변수 :  RandomForestClassifier(max_depth=6)
+# 최종정답률 :  0.8666666666666667
 
-a = model.score(x_test,y_test)
-print(a)
+# 한꺼번에 연결
+# 최적의 매개변수 :  RandomForestClassifier(
+#                   max_depth=6, min_samples_leaf=5, n_estimators=200,n_jobs=-1)
+# 최종정답률 :  0.8666
+
+# a = model.score(x_test,y_test)
+# print(a)
