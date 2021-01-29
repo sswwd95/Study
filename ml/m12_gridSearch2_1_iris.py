@@ -45,7 +45,7 @@ parameters = [
     'max_depth' : [6,8,10,12],
     'min_samples_leaf' : [3,5,7,10],
     'min_samples_split' : [2,3,5,10],
-    'n_jobs' : [-1]}
+    'n_jobs' : [-1]} # n_jobs => cpu를 몇개쓰나? -1이면 다 쓰고, 2는 2개만 쓴다는 것
 ]
 
 

@@ -48,6 +48,8 @@ model = LinearSVC()
 # model = RandomForestClassifier()  
 
 scores = cross_val_score(model,x_train, y_train, cv=kfold) # 모델과 데이터를 엮어준다.
+# scores = cross_val_score(model,x_train, y_train, cv=5) # 이렇게 해도 된다. 
+
 # fit과 scores 다 돌려진 것
 print('scores :', scores) 
 # scores : [0.93333333 0.86666667 0.96666667 1.         0.93333333] -> x,y를 kfold 했을 때

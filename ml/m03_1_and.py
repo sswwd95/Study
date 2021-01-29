@@ -7,7 +7,7 @@
 또한 영국의 라이트힐 경은 영국의회에 “폭발적인 조합증가(Combinational explosion)를 인공지능이 다룰(Intractability)수 없다” 라고 보고함으로써, 
 사실상 인공지능에 대한 대규모 연구는 중단되어 다시 한번 암흑기에 접어들게 된다.
 '''
-
+# 최초의 linear형태
 from sklearn.svm import LinearSVC # 머신러닝 모델 중 하나. 선형모델
 import numpy as np
 from sklearn.metrics import accuracy_score # 회귀에서 r2와 같은 역할. 분류에서는 accuracy_score 사용

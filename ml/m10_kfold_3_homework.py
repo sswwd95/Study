@@ -2,6 +2,8 @@
 # train, test 나눈 다음에 train만 val 하지말고, 
 # kfold 한 후에 train_test_split 사용
 
+# test 부분을 사용 안했다. 
+
 import numpy as np
 from sklearn.datasets import load_iris
 from sklearn.preprocessing import MinMaxScaler, StandardScaler

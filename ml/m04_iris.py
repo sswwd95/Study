@@ -15,7 +15,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.svm import LinearSVC, SVC
 from sklearn.neighbors import KNeighborsClassifier  # 단순한 데이터를 대상으로 분류할 때 사용 =KNN
 from sklearn.linear_model import LogisticRegression # 회귀일 것 같지만 분류모델이다.
-from sklearn.tree import DecisionTreeClassifier #scaling의 영향을 받지 않는다.
+from sklearn.tree import DecisionTreeClassifier #scaling의 영향을 받지 않는다. 트리계열
 from sklearn.ensemble import RandomForestClassifier #훈련 과정에서 구성한 다수의 결정 트리들을 랜덤하게 학습시켜 분류 또는 회귀의 결과도출에 사용
 
 
