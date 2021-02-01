@@ -51,7 +51,7 @@ parameters = [
 
 # model = GridSearchCV(pipe, parameters, cv=5)
 # model = RandomizedSearchCV(pipe, parameters, cv=5)
-
+'''
 for train_index, test_index in kfold.split(x): 
     
     x_train, x_test = x[train_index], x[test_index]
@@ -63,15 +63,29 @@ for train_index, test_index in kfold.split(x):
 
     print('교차검증 : ', score)
 
+# RandomizedSearchCV
 # 교차검증 :  [0.470607   0.372101   0.52796428 0.41738518 0.32867812]
 # 교차검증 :  [0.32693694 0.50482199 0.53110705 0.40981443 0.31425523]
 # 교차검증 :  [0.51342637 0.41034808 0.4306179  0.35459798 0.50706389]
 # 교차검증 :  [0.49142923 0.43733077 0.48308057 0.43521548 0.45395464]
 # 교차검증 :  [0.54322705 0.40000956 0.55938155 0.37600591 0.26503874]
+'''
+for train_index, test_index in kfold.split(x): 
+    
+    x_train, x_test = x[train_index], x[test_index]
+    y_train, y_test = y[train_index], y[test_index]
+
+    pipe = make_pipeline(StandardScaler(),RandomForestRegressor())
+    model = GridSearchCV(pipe, parameters, cv=kfold)
+    score = cross_val_score(model, x_train, y_train, cv=kfold) 
+
+    print('교차검증 : ', score)
 
 
-# MinMaxScaler() <class 'sklearn.model_selection._search.RandomizedSearchCV'> : 0.9024578811293587
-# MinMaxScaler() <class 'sklearn.model_selection._search.GridSearchCV'> : 0.8960755941843481
-# StandardScaler() <class 'sklearn.model_selection._search.RandomizedSearchCV'> : 0.8990478006656303
-# StandardScaler() <class 'sklearn.model_selection._search.GridSearchCV'> : 0.9013484214460155
+# GridSearchCV
+# 교차검증 :  [0.4038614  0.45566136 0.36605281 0.55119388 0.27901721]
+# 교차검증 :  [0.49801878 0.42074426 0.38914752 0.31385674 0.56460067]
+# 교차검증 :  [0.44857155 0.5860617  0.60337355 0.26512796 0.46557078]
+# 교차검증 :  [0.38723964 0.35008587 0.37860854 0.37138784 0.54681022]
+# 교차검증 :  [0.47230264 0.33645205 0.51310974 0.31008308 0.526323  ]
 
