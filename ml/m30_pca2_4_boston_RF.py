@@ -2,11 +2,18 @@
 # rf로 모델링하기
 
 import numpy as np
-from sklearn.datasets import load_diabetes
+from sklearn.datasets import load_boston
 from sklearn.decomposition import PCA
 # deomposition 분해
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.model_selection import train_test_split, KFold, cross_val_score, GridSearchCV
+from sklearn.metrics import accuracy_score
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor 
+import warnings
+warnings.filterwarnings('ignore')
 
-datasets = load_diabetes()
+
+datasets = load_boston()
 x = datasets.data
 y = datasets.target
 print(x.shape, y.shape) #(442, 10) (442,)
@@ -36,12 +43,24 @@ print(cumsum)
 
 d = np.argmax(cumsum>=0.95)+1
 print('cumsum >=0.95', cumsum >=0.95)
-print('d : ', d)
+print('선택할 차원 수 :', d)
 
 # cumsum >=0.95 [False False False False False False False  True  True  True]
 # d :  8
+ 
+#2. 모델
+model = RandomForestRegressor()
+
+# 3.훈련
+model.fit(x, y)
+
+# 4. 평가, 예측
+acc = model.score(x, y)
+print('acc : ', acc)
 
 import matplotlib.pyplot as plt
 plt.plot(cumsum)
 plt.grid()
 plt.show()
+
+# acc :  0.9828073421427419

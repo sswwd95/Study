@@ -31,11 +31,12 @@ x_train,x_test,y_train,y_test = train_test_split(dataset.data,dataset.target,tra
 start = time.time()
 
 #2. 모델
-model = XGBClassifier(n_jobs=8) #n_jobs = -1 => cpu 자원을 모두 쓰겠다.
-
+model = XGBClassifier(n_jobs=8, use_label_encoder=False) #n_jobs = -1 => cpu 자원을 모두 쓰겠다.
+# use_label_encoder=False warning 안뜨게 하는 법
 
 #3. 훈련
-model.fit(x_train, y_train)
+model.fit(x_train, y_train,eval_metric='logloss')
+# eval_metric='logloss' warning 안뜨게 하는 법
 
 #4. 평가 예측
 acc = model.score(x_test,y_test)

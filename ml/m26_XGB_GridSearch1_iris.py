@@ -12,7 +12,7 @@ n_jobs =-1
 import numpy as np
 from sklearn.datasets import load_iris
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
-from sklearn.model_selection import train_test_split, KFold, cross_val_score, GridSearchCV
+from sklearn.model_selection import train_test_split, KFold, cross_val_score, GridSearchCV,RandomizedSearchCV
 from sklearn.metrics import accuracy_score
 from xgboost import XGBClassifier,XGBRegressor, plot_importance
 from sklearn.pipeline import Pipeline, make_pipeline 
@@ -40,7 +40,7 @@ parameters = [
 pipe = Pipeline([('scaler', MinMaxScaler()),('a', XGBClassifier(n_jobs=-1))])
 
 # 2. 모델구성
-model = GridSearchCV(pipe, parameters, cv=5)
+model = RandomizedSearchCV(pipe, parameters, cv=5)
 
 # 3. 훈련
 model.fit(x_train, y_train)
@@ -52,4 +52,4 @@ print('기존 acc:', acc)
 # plot_importance(model)
 # plt.show()
 
-# 기존 acc: 0.8666666666666667
+# 기존 acc: 0.8333333333333334

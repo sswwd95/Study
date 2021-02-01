@@ -10,7 +10,7 @@ n_jobs =-1
 '''
 
 import numpy as np
-from sklearn.datasets import load_boston
+from sklearn.datasets import load_breast_cancer
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.model_selection import train_test_split, KFold, cross_val_score, GridSearchCV
 from sklearn.metrics import accuracy_score
@@ -22,7 +22,7 @@ warnings.filterwarnings('ignore')
 
 
 # 1. 데이터
-dataset = load_boston()
+dataset = load_breast_cancer()
 x = dataset.data
 y = dataset.target
 
@@ -37,7 +37,7 @@ parameters = [
     'a__max_depth' : [6,8,10], 'a__colsample_bylevel' : [0.6,0.8,1]}
 ]
 
-pipe = Pipeline([('scaler', MinMaxScaler()),('a', XGBRegressor(n_jobs=-1))])
+pipe = Pipeline([('scaler', MinMaxScaler()),('a', XGBClassifier(n_jobs=-1))])
 
 # 2. 모델구성
 model = GridSearchCV(pipe, parameters, cv=5)
@@ -52,4 +52,4 @@ print('기존 acc:', acc)
 # plot_importance(model)
 # plt.show()
 
-#기존 acc: 0.8947844251085385
+# 기존 acc: 0.9649122807017544
