@@ -3,6 +3,8 @@ import tensorflow as tf
 import numpy as np
 import pandas as pd
 import os
+import matplotlib.pyplot as plt
+
 from tensorflow.keras.optimizers import RMSprop
 # from tensorflow.keras.applications.efficientnet import EfficientNetB7
 from tensorflow.keras.models import Sequential
@@ -39,12 +41,15 @@ train_224=np.zeros([2048,300,300,3],dtype=np.float32)
 for i, s in enumerate(x_train):
     converted = cv2.cvtColor(s, cv2.COLOR_GRAY2RGB)
     resized = cv2.resize(converted,(300,300),interpolation = cv2.INTER_CUBIC)
-    del converted
-    train_224[i] = resized
+    del converted 
+    train_224[1] = resized
     del resized
     bek.clear_session()
     gc.collect()
-
+    plt.imshow(train_224[1])        
+    plt.show() 
+   
+'''
 from tensorflow.python.keras.callbacks import ModelCheckpoint
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 from sklearn import metrics
@@ -97,7 +102,7 @@ def create_model() :
               metrics=['accuracy'])
   return model
 
-initial_learningrate=2e-3  
+initial_learningrate=2e-3 
 from sklearn.model_selection import RepeatedKFold
 from sklearn.model_selection import KFold
 kfold = RepeatedKFold(n_splits=5, n_repeats=10, random_state=40)
@@ -189,3 +194,4 @@ submission.to_csv('../dacon7/sub/MY1.csv', index=False)
 # submission['digit'] = np.argmax(results, axis=1)
 # submission.head()
 # submission.to_csv('/content/MyDrive/My Drive/Colab Notebooks/kfold_effi_5.csv', index=False) 
+'''

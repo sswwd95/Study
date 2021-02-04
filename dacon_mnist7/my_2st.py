@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from tensorflow.keras import optimizers
 from tensorflow.keras.optimizers import Adam, RMSprop
 from tensorflow.keras.models import Sequential
@@ -31,8 +32,11 @@ x_train = np.where((x_train<=20)&(x_train!=0),0.,x_train)
 # 흑백 이미지 : 대부분 8bit(화소 하나의 색 표현에 8bit 사용), 각 화소의 화소값은 2**8=256개의 값들 중 하나의 값.
 # 즉, 0과 255사이의 값들 중 하나의 값이 된다.(0 = 검정색, 255 흰색)
 # RGB : 2**8*2**8*2**8 = 2**24 = 16,777,216가지
-x_train = x_train/255.
-# == x_train = x_train.astype('float32') 실수형으로 바꾸기
+x_train = x_train/255
+x_train = x_train.astype('float32')
+# x_train/255. 하면 float64라서 오류난다.->'depth' is 6 (CV_64F)
+
+print(type(x_train.data))
 
 y = train['digit']
 y_train = np.zeros((len(y),len(y.unique()))) # 총 행의수 , 10(0~9)
@@ -52,20 +56,25 @@ for i, digit in enumerate(y):
 
 
 # 300x300의 grayscale 이미지로 리사이즈
-train_224 = np.zeros([2048,100,100,3],dtype=np.float32) 
+train_224=np.zeros([2048,300,300,3],dtype=np.float32)
+
 
 for i, s in enumerate(x_train):
+
     converted = cv2.cvtColor(s, cv2.COLOR_GRAY2RGB)
-    # converted =  변환 , gray색으로 변환
-    resized = cv2.resize(converted,(100,100),interpolation=cv2.INTER_CUBIC)
+    # converted =  변환 , 컬러색으로 변환(특성 강조)
+    resized = cv2.resize(converted,(300,300),interpolation = cv2.INTER_CUBIC)
     # 원본이미지, 결과 이미지 크기, 보간법(cv2.INTER_CUBIC, cv2.INTER_LINEAR 이미지 확대할 때 사용/cv2.INTER_AREA는 사이즈 줄일 때 사용)
     # 보간법(interpolation)이란 통계적 혹은 실험적으로 구해진 데이터들(xi)로부터, 
     # 주어진 데이터를 만족하는 근사 함수(f(x))를 구하고,  이 식을 이용하여 주어진 변수에 대한 함수 값을 구하는 일련의 과정을 의미
-    del converted
+    del converted # 변수 초기화 (삭제 x)
     train_224[i]=resized
     del resized
     bek.clear_session()
     gc.collect()
+
+    plt.imshow(train_224[i])        
+    plt.show() 
 
 from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau, LearningRateScheduler
 # ReduceLROnPlateau에서 lr는 이전 epoch가 끝날 때 변경되고, LearningRateScheduler에서 lr는 현재 epoch가 시작될 때 변경된다.
@@ -136,5 +145,4 @@ for i,s in enumerate(x_test):
 bek.clear_session()
 gc.collect()
 
-
-
+'''
