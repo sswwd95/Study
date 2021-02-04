@@ -159,9 +159,9 @@ for train, val in kfold.split(train_224):
     model = create_model()
 
 
-    training_generator = datagen.flow(X_train, Y_train, batch_size=8,seed=7,shuffle=True)
-    validation_generator = valgen.flow(X_val, Y_val, batch_size=8,seed=7,shuffle=True)
-    model.fit(training_generator,epochs=100,callbacks=[LearningRateScheduler(lr_decay),es,checkpoint_val_acc],
+    training_generator = datagen.flow(X_train, Y_train, batch_size=4,seed=7,shuffle=True)
+    validation_generator = valgen.flow(X_val, Y_val, batch_size=4,seed=7,shuffle=True)
+    model.fit(training_generator,epochs=150,callbacks=[LearningRateScheduler(lr_decay),es,checkpoint_val_acc],
                shuffle=True,
                validation_data=validation_generator,
                steps_per_epoch =len(X_train)//32
