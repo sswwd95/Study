@@ -1,6 +1,13 @@
 # xgboost
 # plot_importance 제공된다. 대신 f score 기준으로 나온다. 
 
+# f score?
+# f1 score이라고 하며, dataset에서 모델의 정확도를 측정한 것이다. 
+# '양성'또는 '음성'으로 분류하는 이진 분류 시스템을 평가하는데 사용된다. 
+# 모델의 정밀도와 재현율을 결합하는 방법이며, 이 둘의 조화 평균으로 정의된다. 
+
+
+
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier,RandomForestRegressor
 from sklearn.ensemble import GradientBoostingClassifier,GradientBoostingRegressor
