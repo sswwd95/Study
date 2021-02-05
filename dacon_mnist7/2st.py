@@ -49,7 +49,7 @@ for i, s in enumerate(x_train):
     plt.imshow(train_224[1])        
     plt.show() 
    
-'''
+
 from tensorflow.python.keras.callbacks import ModelCheckpoint
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 from sklearn import metrics
@@ -194,4 +194,3 @@ submission.to_csv('../dacon7/sub/MY1.csv', index=False)
 # submission['digit'] = np.argmax(results, axis=1)
 # submission.head()
 # submission.to_csv('/content/MyDrive/My Drive/Colab Notebooks/kfold_effi_5.csv', index=False) 
-'''

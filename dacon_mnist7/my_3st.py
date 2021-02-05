@@ -37,7 +37,7 @@ train2 = train2/255.0
 test2 = test2/255.0
 
 # imagedatagenerator로 data 늘리기,부풀리기
-idg = ImageDataGenerator(height_shift_range=(-1,1),width_shift_range=(-1,1),rotation_range=5)
+idg = ImageDataGenerator(height_shift_range=(-1,1),width_shift_range=(-1,1))
 '''
 idg = ImageDataGenerator(rotation_range=회전하는 범위(단위: degree),
                             width_shift_range=수평 이동하는 범위(이미지 가로폭에 대한 비율),
@@ -59,7 +59,7 @@ idg = ImageDataGenerator(rotation_range=회전하는 범위(단위: degree),
 
 '''
 idg2 = ImageDataGenerator()
-
+'''
 # show augmented image data 
 sample_data = train2[100].copy()
 sample = expand_dims(sample_data,0)
@@ -73,11 +73,11 @@ for i in range(9) :
     sample_batch = sample_generator.next()
     sample_image=sample_batch[0]
     plt.imshow(sample_image.reshape(28,28))
-
+'''
 # Validation
 
 # cross validation
-skf = StratifiedKFold(n_splits=40, random_state=42, shuffle=True)
+skf = StratifiedKFold(n_splits=80, random_state=42, shuffle=True)
 
 # Modeling
 # %%time
@@ -91,14 +91,14 @@ nth = 0
 
 for train_index, valid_index in skf.split(train2,train['digit']) :
     
-    mc = ModelCheckpoint('best_cvision.h5',save_best_only=True, verbose=1)
+    mc = ModelCheckpoint('../dacon7/check/best_cvision.h5',save_best_only=True, verbose=1)
     
     x_train = train2[train_index]
     x_valid = train2[valid_index]    
     y_train = train['digit'][train_index]
     y_valid = train['digit'][valid_index]
     
-    train_generator = idg.flow(x_train,y_train,batch_size=8)
+    train_generator = idg.flow(x_train,y_train,batch_size=16,seed=7)
     valid_generator = idg2.flow(x_valid,y_valid)
     test_generator = idg2.flow(test2,shuffle=False)
     
@@ -137,6 +137,10 @@ for train_index, valid_index in skf.split(train2,train['digit']) :
     model.add(Dropout(0.2))
     model.add(Dense(64,activation='relu'))
     model.add(BatchNormalization())
+    model.add(Dense(32,activation='relu'))
+    model.add(BatchNormalization())
+    model.add(Dense(16,activation='relu'))
+    model.add(BatchNormalization())
     model.add(Dropout(0.2))
 
     model.add(Dense(10,activation='softmax'))
@@ -145,11 +149,11 @@ for train_index, valid_index in skf.split(train2,train['digit']) :
     #sparse_categorical_crossentropy : 다중분류 손실 함수. categorical_crossentropy와 동일하지만 원핫인코딩안해도 된다. 
     # epsilon : 0으로 나누어지는 것을 방지
 
-    learning_history = model.fit_generator(train_generator,epochs=2000, validation_data=valid_generator, callbacks=[es,mc,reLR])
+    learning_history = model.fit_generator(train_generator,epochs=1000, validation_data=valid_generator, callbacks=[es,mc,reLR])
     
     # predict
-    model.load_weights('best_cvision.h5')
-    result += model.predict_generator(test_generator,verbose=True)/40
+    model.load_weights('../dacon7/check/best_cvision.h5')
+    result += model.predict_generator(test_generator,verbose=True)/80
     
     # save val_loss
     hist = pd.DataFrame(learning_history.history)
@@ -165,10 +169,26 @@ model.summary()
 # Submission
 
 sub['digit'] = result.argmax(1)
-sub.to_csv('Dacon_cvision_0914_40_epsNone.csv',index=False)
+sub.to_csv('../dacon7/sub/my_last.csv',index=False)
 
 
-
+# [0.0018692457815632224, 0.22330547869205475, 0.22682319581508636, 0.1364862024784088, 0.1243099793791771, 
+# .0013704715529456735, 0.11754651367664337, 0.11301590502262115, 0.20533983409404755, 0.04607833921909332, 
+# 0.23159566521644592, 0.06503696739673615, 0.07219216972589493, 0.0027585176285356283, 0.0035736015997827053, 
+# 0.04797627404332161, 0.26872676610946655, 0.0016134700272232294, 8.60580439621117e-06, 0.18866358697414398, 
+# 0.0006911106174811721, 0.01920921728014946, 0.07500430941581726, 0.016810225322842598, 0.05403481051325798, 
+# 0.0015547852963209152, 0.1442171037197113, 0.177638441324234, 0.22273430228233337, 0.053504034876823425,
+#  0.10526036471128464, 0.00010383558401372284, 2.86098702417803e-06, 0.18142269551753998, 0.3452763557434082,
+#  0.08483167737722397, 0.08852493762969971, 0.07368792593479156, 0.14506791532039642, 0.07617022097110748,
+#  0.2802917957305908, 0.24388617277145386, 3.433772508287802e-05, 0.15745480358600616, 0.24472159147262573,
+#  0.06629257649183273, 0.0009186813258565962, 0.13506601750850677, 8.456425712211058e-05, 0.07034020870923996,
+#  0.08151176571846008, 0.06635554134845734, 0.0012418099213391542, 0.03519897535443306, 0.011998157948255539, 
+# 0.000503463321365416, 0.03487606346607208, 0.0008711389382369816, 0.41332998871803284, 9.665128345659468e-06,
+#  1.730908707031631e-06, 0.1333596557378769, 0.002676163800060749, 0.023635411635041237, 0.0027228640392422676,
+#  0.2863043546676636, 9.069227962754667e-05, 0.1966668665409088, 0.0016968795098364353, 0.04442853108048439,
+#  0.11156415194272995, 0.014731531031429768, 0.31445151567459106, 0.34944072365760803, 0.37953007221221924, 
+# 0.01418767124414444, 0.00048405781853944063, 0.06805093586444855, 0.1739005297422409, 0.19765827059745789] 
+# 0.1013075981261153
 
 '''
 # validation 생성

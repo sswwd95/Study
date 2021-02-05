@@ -34,7 +34,7 @@ x_train = np.where((x_train<=20)&(x_train!=0),0.,x_train)
 # RGB : 2**8*2**8*2**8 = 2**24 = 16,777,216가지
 x_train = x_train/255
 x_train = x_train.astype('float32')
-# x_train/255. 하면 float64라서 오류난다.->'depth' is 6 (CV_64F)
+# x_train/255. 하면 float64라서 오류난다.->'depth' is 6 (CV_64F) 통상적으로 이미지는 float32라서 그냥 넣어보고 오류나면 64로 바꾸기
 
 print(type(x_train.data))
 
@@ -56,14 +56,14 @@ for i, digit in enumerate(y):
 
 
 # 300x300의 grayscale 이미지로 리사이즈
-train_224=np.zeros([2048,300,300,3],dtype=np.float32)
+train_224=np.zeros([2048,100,100,3],dtype=np.float32)
 
 
 for i, s in enumerate(x_train):
 
     converted = cv2.cvtColor(s, cv2.COLOR_GRAY2RGB)
     # converted =  변환 , 컬러색으로 변환(특성 강조)
-    resized = cv2.resize(converted,(300,300),interpolation = cv2.INTER_CUBIC)
+    resized = cv2.resize(converted,(100,100),interpolation = cv2.INTER_CUBIC)
     # 원본이미지, 결과 이미지 크기, 보간법(cv2.INTER_CUBIC, cv2.INTER_LINEAR 이미지 확대할 때 사용/cv2.INTER_AREA는 사이즈 줄일 때 사용)
     # 보간법(interpolation)이란 통계적 혹은 실험적으로 구해진 데이터들(xi)로부터, 
     # 주어진 데이터를 만족하는 근사 함수(f(x))를 구하고,  이 식을 이용하여 주어진 변수에 대한 함수 값을 구하는 일련의 과정을 의미
@@ -73,8 +73,8 @@ for i, s in enumerate(x_train):
     bek.clear_session()
     gc.collect()
 
-    plt.imshow(train_224[i])        
-    plt.show() 
+    # plt.imshow(train_224[i])        
+    # plt.show() 
 
 from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau, LearningRateScheduler
 # ReduceLROnPlateau에서 lr는 이전 epoch가 끝날 때 변경되고, LearningRateScheduler에서 lr는 현재 epoch가 시작될 때 변경된다.
@@ -118,7 +118,7 @@ from sklearn.model_selection import RepeatedKFold
 # 폴드를 한번만 나누는 것이 아니고 지정한 횟수(n_repeats)만큼 반복해서 나누게 되고 교차 검증 점수도 반복한 만큼 얻을 수 있습니다. 
 # 이때 기본적으로 랜덤하게 나누므로 분할기에 자동으로 Shuffle=True 옵션이 적용됩니다. n_repeats의 기본값은 10입니다.
 from sklearn.model_selection import KFold
-KFold = RepeatedKFold(n_splits=5, n_repeats=10, random_state=40)
+kfold = RepeatedKFold(n_splits=5, n_repeats=10, random_state=40)
 cvscores = []
 Fold = 1
 results = np.zeros((20480,10))
@@ -126,12 +126,13 @@ def lr_decay(epoch):
     #lr_decay 감소
     return initial_learningrate * 0.99 ** epoch
     # 0.002 * 0.99 **epoch ??
-test = pd.read_csv('../dacon7/test/csv')
+test = pd.read_csv('../dacon7/test.csv')
 
 x_test = test.drop(['id', 'letter'],axis = 1).values
 x_test = x_test.reshape(-1,28,28,1)
 x_test = np.where((x_test<=20)&(x_test!=0) ,0.,x_test)
-x_test = x_test/255.
+x_test = x_test/255
+x_test = x_test.astype('float32')
 
 test_224 = np.zeros([20480,100,100,3],dtype=np.float32)
 
@@ -145,4 +146,56 @@ for i,s in enumerate(x_test):
 bek.clear_session()
 gc.collect()
 
-'''
+results = np.zeros((20480,10),dtype=np.float32)
+
+for train,val in kfold.split(train_224):
+    initial_learningrate=2e-3
+    es = EarlyStopping(monitor='val_loss', verbose=1, patience=50)
+    filepath_val_acc="../dacon7/check/effi_model2_aug"+str(Fold)+".ckpt"
+    checkpoint_val_acc = ModelCheckpoint(filepath_val_acc, monitor='val_acc',
+                                      verbose=1, save_best_only=True, mode='max', save_weights_only=True)
+    gc.collect()
+    bek.clear_session()
+    print('Fold: ',Fold)
+
+    X_train = train_224[train]
+    X_val = train_224[val]
+    X_train = X_train.astype('float32')
+    X_val = X_val.astype('float32')
+    Y_train = y_train[train]
+    Y_val = y_train[val]
+
+    model = create_model()
+
+    training_generator = datagen.flow(X_train, Y_train, batch_size=4, seed=7,shuffle=True)
+    validation_generator = valgen.flow(X_val, Y_val, batch_size=4, seed= 7, shuffle=True)
+    # seed = 난수 기준 잡아주는 것
+    model.fit(training_generator,epochs=150,
+            callbacks=[LearningRateScheduler(lr_decay),es,checkpoint_val_acc],
+            shuffle=True,
+            validation_data=validation_generator,
+            steps_per_epoch=len(X_train)//4) # 배치사이즈 값과 동일하게 나눠줄 것
+            # generator로부터 얼마나 많은 샘플을 뽑을 것인지
+            # // 나누기 연산 후 소수점 이하의 수를 버리고, 정수 부분의 수만 구함
+    del X_train
+    del X_val
+    del Y_train
+    del Y_val
+
+    gc.collect()
+    bek.clear_session()
+    model.load_weights(filepath_val_acc)
+    results = results + model.predict(test_224)
+    
+    Fold = Fold +1
+
+submission = pd.read_csv('../dacon7/submission.csv')
+submission['digit'] = np.argmax(results, axis=1)
+# model.predict(x_test)
+submission.head()
+submission.to_csv('../dacon7/sub/my_2st.csv', index=False)
+
+
+
+
+# 8시 28분 시작
