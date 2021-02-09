@@ -20,10 +20,10 @@ def run():
         
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") # 디바이스 설정
 
-dirty_mnist_answer = pd.read_csv("../dacon/dirty_mnist_answer.csv")
+dirty_mnist_answer = pd.read_csv("../dacon12/dirty_mnist_answer.csv")
 # dirty_mnist라는 디렉터리 속에 들어있는 파일들의 이름을 
 # namelist라는 변수에 저장
-namelist = os.listdir('../dacon/dirty_mnist/')
+namelist = os.listdir('../dacon12/dirty_mnist/')
 
 # numpy를 tensor로 변환하는 ToTensor 정의
 class ToTensor(object):
@@ -97,7 +97,6 @@ class MultiLabelResnet(nn.Module):
 
         # resnet18을 추가
         x = F.relu(self.resnet(x))
-
         # 마지막 출력에 nn.Linear를 추가
         # multilabel을 예측해야 하기 때문에
         # softmax가 아닌 sigmoid를 적용
@@ -110,7 +109,7 @@ model = MultiLabelResnet()
     
 # cross validation을 적용하기 위해 KFold 생성
 from sklearn.model_selection import KFold
-kfold = KFold(n_splits=5, shuffle=True, random_state=0)
+kfold = KFold(n_splits=7, shuffle=True, random_state=0)
 
 if __name__ == '__main__':
     run()
@@ -127,8 +126,8 @@ if __name__ == '__main__':
         test_answer  = dirty_mnist_answer.iloc[val_idx]
 
         #Dataset 정의
-        train_dataset = DatasetMNIST("../data_2/dirty_mnist/", train_answer)
-        valid_dataset = DatasetMNIST("../data_2/dirty_mnist/", test_answer)
+        train_dataset = DatasetMNIST("../dacon12/dirty_mnist/", train_answer)
+        valid_dataset = DatasetMNIST("../dacon12/dirty_mnist/", test_answer)
 
         #DataLoader 정의
         train_data_loader = DataLoader(
@@ -139,7 +138,7 @@ if __name__ == '__main__':
         )
         valid_data_loader = DataLoader(
             valid_dataset,
-            batch_size = 32,
+            batch_size = 128,
             shuffle = False,
             num_workers = 3
         )
@@ -150,15 +149,15 @@ if __name__ == '__main__':
 
         # 훈련 옵션 설정
         optimizer = torch.optim.Adam(model.parameters(),
-                                    lr = 0.001)
+                                    lr = 0.002)
         lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer,
-                                                    step_size = 5,
+                                                    step_size = 7,
                                                     gamma = 0.75)
         criterion = torch.nn.BCELoss()
 
         # 훈련 시작
         valid_acc_max = 0
-        for epoch in range(1):
+        for epoch in range(15):
             # 1개 epoch 훈련
             train_acc_list = []
             with tqdm(train_data_loader,#train_data_loader를 iterative하게 반환
@@ -242,72 +241,72 @@ if __name__ == '__main__':
                 best_model = model
                 MODEL = "resnet18"
                 # 모델을 저장할 구글 드라이브 경로
-                path = "../Dacon_MNIST_model/"
+                path = "../dacon12/model/"
                 torch.save(best_model, f'{path}{fold_index}_{MODEL}_{valid_loss.item():2.4f}_epoch_{epoch}.pth')
 
         # 폴드별로 가장 좋은 모델 저장
         best_models.append(best_model)
     
-    # # gpu에 올라가 있는 tensor -> cpu로 이동 -> numpy array로 변환
-    # sample_images = images.cpu().detach().numpy()
-    # sample_prob = probs
-    # sample_labels = labels
+    # gpu에 올라가 있는 tensor -> cpu로 이동 -> numpy array로 변환
+    sample_images = images.cpu().detach().numpy()
+    sample_prob = probs
+    sample_labels = labels
 
-    # idx = 1
-    # plt.imshow(sample_images[idx][0])
-    # plt.title("sample input image")
-    # plt.show()
+    idx = 1
+    plt.imshow(sample_images[idx][0])
+    plt.title("sample input image")
+    plt.show()
 
-    # print('예측값 : ',dirty_mnist_answer.columns[1:][sample_prob[idx] > 0.5])
-    # print('정답값 : ', dirty_mnist_answer.columns[1:][sample_labels[idx] > 0.5])
+    print('예측값 : ',dirty_mnist_answer.columns[1:][sample_prob[idx] > 0.5])
+    print('정답값 : ', dirty_mnist_answer.columns[1:][sample_labels[idx] > 0.5])
 
-    # #test Dataset 정의
-    # sample_submission = pd.read_csv("sample_submission.csv")
-    # test_dataset = DatasetMNIST("test_dirty_mnist/", sample_submission)
-    # batch_size = 128
-    # test_data_loader = DataLoader(
-    #     test_dataset,
-    #     batch_size = batch_size,
-    #     shuffle = False,
-    #     num_workers = 3,
-    #     drop_last = False
-    # )
+    #test Dataset 정의
+    sample_submission = pd.read_csv("../dacon12/sample_submission.csv")
+    test_dataset = DatasetMNIST("../dacon12/test_dirty_mnist/", sample_submission)
+    batch_size = 128
+    test_data_loader = DataLoader(
+        test_dataset,
+        batch_size = batch_size,
+        shuffle = False,
+        num_workers = 3,
+        drop_last = False
+    )
 
-    # predictions_list = []
-    # # 배치 단위로 추론
-    # prediction_df = pd.read_csv("sample_submission.csv")
+    predictions_list = []
+    # 배치 단위로 추론
+    prediction_df = pd.read_csv("../dacon12/sample_submission.csv")
 
-    # # 5개의 fold마다 가장 좋은 모델을 이용하여 예측
-    # for model in best_models:
-    #     # 0으로 채워진 array 생성
-    #     prediction_array = np.zeros([prediction_df.shape[0],
-    #                                 prediction_df.shape[1] -1])
-    #     for idx, sample in enumerate(test_data_loader):
-    #         with torch.no_grad():
-    #             # 추론
-    #             model.eval()
-    #             images = sample['image']
-    #             images = images.to(device)
-    #             probs  = model(images)
-    #             probs = probs.cpu().detach().numpy()
-    #             preds = (probs > 0.5)
+    # 5개의 fold마다 가장 좋은 모델을 이용하여 예측
+    for model in best_models:
+        # 0으로 채워진 array 생성
+        prediction_array = np.zeros([prediction_df.shape[0],
+                                    prediction_df.shape[1] -1])
+        for idx, sample in enumerate(test_data_loader):
+            with torch.no_grad():
+                # 추론
+                model.eval()
+                images = sample['image']
+                images = images.to(device)
+                probs  = model(images)
+                probs = probs.cpu().detach().numpy()
+                preds = (probs > 0.5)
 
-    #             # 예측 결과를 
-    #             # prediction_array에 입력
-    #             batch_index = batch_size * idx
-    #             prediction_array[batch_index: batch_index + images.shape[0],:]\
-    #                         = preds.astype(int)
+                # 예측 결과를 
+                # prediction_array에 입력
+                batch_index = batch_size * idx
+                prediction_array[batch_index: batch_index + images.shape[0],:]\
+                            = preds.astype(int)
                             
-    #     # 채널을 하나 추가하여 list에 append
-    #     predictions_list.append(prediction_array[...,np.newaxis])
+        # 채널을 하나 추가하여 list에 append
+        predictions_list.append(prediction_array[...,np.newaxis])
     
-    # # axis = 2를 기준으로 평균
-    # predictions_array = np.concatenate(predictions_list, axis = 2)
-    # predictions_mean = predictions_array.mean(axis = 2)
+    # axis = 2를 기준으로 평균
+    predictions_array = np.concatenate(predictions_list, axis = 2)
+    predictions_mean = predictions_array.mean(axis = 2)
 
-    # # 평균 값이 0.5보다 클 경우 1 작으면 0
-    # predictions_mean = (predictions_mean > 0.5) * 1
+    # 평균 값이 0.5보다 클 경우 1 작으면 0
+    predictions_mean = (predictions_mean > 0.5) * 1
 
-    # sample_submission = pd.read_csv("sample_submission.csv")
-    # sample_submission.iloc[:,1:] = predictions_mean
-    # sample_submission.to_csv("baseline_prediction.csv", index = False)
+    sample_submission = pd.read_csv("../dacon12/sample_submission.csv")
+    sample_submission.iloc[:,1:] = predictions_mean
+    sample_submission.to_csv("../dacon12/sub/baseline_prediction.csv", index = False)

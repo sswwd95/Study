@@ -4,6 +4,7 @@
 
 # 61 카피해서 model.cv_results를 붙여서 완성
 
+######### pickle 저장 #############
 import numpy as np
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Dense, Dropout, Input
@@ -24,11 +25,11 @@ x_test = x_test.reshape(10000,28*28).astype('float32')/255.
 #2. 모델
 def build_model(drop=0.5, optimizer='adam'):
     inputs = Input(shape = (28*28,),name='input')
-    x = Dense(512,activation='relu', name='hidden1')(inputs)
+    x = Dense(128,activation='relu', name='hidden1')(inputs)
     x = Dropout(drop)(x)
-    x = Dense(256,activation='relu', name='hidden2')(x)
+    x = Dense(64,activation='relu', name='hidden2')(x)
     x = Dropout(drop)(x)
-    x = Dense(128,activation='relu', name='hidden3')(x)
+    x = Dense(32,activation='relu', name='hidden3')(x)
     x = Dropout(drop)(x)
     outputs = Dense(10,activation='softmax', name='outputs')(x)
     model = Model(inputs=inputs, outputs=outputs)
@@ -36,9 +37,9 @@ def build_model(drop=0.5, optimizer='adam'):
     return model
 
 def create_hyperparameters():
-    batches = [32,64,128]
-    optimizers = ['rnsprop','adam', 'adadelta']
-    dropout = [0.1,0.2,0.3]
+    batches = [32,64]
+    optimizers = ['adam', 'adadelta']
+    dropout = [0.1,0.2]
     return{'batch_size' : batches, 'optimizer' : optimizers, 'drop':dropout}
 hyperparameters = create_hyperparameters()
 model2 = build_model()
@@ -52,38 +53,29 @@ cp = ModelCheckpoint(filepath=modelpath, monitor='val_loss', save_best_only=True
 
 #######################################################################
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
-model2 = KerasClassifier(build_fn=build_model, verbose=1,epochs=100,validation_split=0.2) # calssifier 여기에 넣어도 된다. 
+model2 = KerasClassifier(build_fn=build_model, verbose=1,epochs=50,validation_split=0.2) # calssifier 여기에 넣어도 된다. 
 ################ 함수형 모델을 랩핑해야한다. #############################
 
 
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 # search = RandomizedSearchCV(model2,hyperparameters,cv=3)
-search = GridSearchCV(model2,hyperparameters,cv=3)
+search = GridSearchCV(model2,hyperparameters,cv=2)
 
-# search.fit(x_train, y_train, verbose=1,eopchs=2,validation_split=0.2) 
-search.fit(x_train, y_train, verbose=1,callbacks = [es,lr,cp])
-
-best_pars = search.best_params_
-print(search.best_params_) # 내가 선택한 파라미터 중 제일 좋은 것
-# {'optimizer': 'adam', 'drop': 0.1, 'batch_size': 64}
 import pickle
-pickle.dump(search.best_params_, open('../data/pickle/k64.pickle.data', 'wb'))
-print('저장')
-print(search.best_estimator_) # 전체 추정기 중에서 가장 좋은 것
-# <tensorflow.python.keras.wrappers.scikit_learn.KerasClassifier object at 0x0
-# 둘 중 하나만 먹힌다. 
-print(model2.cv_reusults)
-print(search.best_score_) # acc스코어와는 다르다. 
-# 0.9572333296140035
+# pickle.dump(model2, open('../data/pickle/keras64.pickle.data', 'wb')) # 저장
 
-acc = search.score(x_test,y_test)
-print('최종 스코어 : ',acc)
-# 최종 스코어 :  0.9822999835014343
+model4 = pickle.load(open('../data/pickle/keras64.pickle.data', 'rb')) # 불러오기
 
-# search.save('../data/h5/k64.h5') 그냥 save하면 에러뜬다.
-# 'RandomizedSearchCV' object has no attribute 'save'
- 
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+search = RandomizedSearchCV(model2, hyperparameters, cv=3)
 
+search.fit(x_train,y_train, verbose=1)
 
- 
+search.best_estimator_.model.save('../data/h5/k64_modelbest.h5')
 
+print(search.best_params_)
+
+print(search.best_score_)
+
+acc = search.score(x_test, y_test)
+print("최종 스코어 : ", acc)
