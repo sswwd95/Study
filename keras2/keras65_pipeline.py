@@ -34,10 +34,10 @@ model2 = build_model()
 
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
 model2 = KerasClassifier(build_fn=build_model, verbose=1, batch_size=32, epochs=1)
-
-# 파이프라인 정의
+'''
+################################# 파이프라인 정의 #######################################
+#pipeline(파라미터에 설정한 이름 써주기)
 pipeline = Pipeline([('scaler', MinMaxScaler()), ('clf', model2)])
-# pipeline = make_pipeline(MinMaxScaler(),model2)
 
 def create_hyperparameters():
     batches = [10, 20, 30, 40, 50]
@@ -52,11 +52,31 @@ search = RandomizedSearchCV(pipeline, hyperparameters, cv = 3)
 search.fit(x_train, y_train)
 
 print('best_params_: ', search.best_params_)
-# best_params_:  {'clf__optimizer': 'adam', 'clf__drop': 0.2, 'clf__batch_size': 30}
-# ----------------------------------------------------------------
+
 acc = search.score(x_test, y_test)
 print('최종 스코어: ', acc)
 
 # best_params_:  {'clf__optimizer': 'adam', 'clf__drop': 0.2, 'clf__batch_size': 40}
 # 250/250 [==============================] - 0s 1ms/step - loss: 0.0990 - acc: 0.9681
 # 최종 스코어:  0.9681000113487244
+'''
+#########################################################################################
+# make pipeline (파라미터에 모델명 붙여서 써주기)
+pipeline = make_pipeline(MinMaxScaler(),model2)
+
+def create_hyperparameters():
+    batches = [10, 20, 30, 40, 50]
+    optimizers = ['rmsprop', 'adam', 'adadelta']
+    dropouts = [0.1, 0.2, 0.3]
+    return {'KerasClassifier__batch_size' : batches, 'KerasClassifier__optimizer' : optimizers, 'KerasClassifier__drop' : dropouts}
+hyperparameters = create_hyperparameters()
+
+from sklearn.model_selection import RandomizedSearchCV, GridSearchCV
+search = RandomizedSearchCV(pipeline, hyperparameters, cv = 3)
+
+search.fit(x_train, y_train)
+
+print('best_params_: ', search.best_params_)
+
+acc = search.score(x_test, y_test)
+print('최종 스코어: ', acc)
