@@ -8,11 +8,13 @@ from keras.layers import Conv2D, MaxPooling2D, Flatten, Dropout, \
     BatchNormalization, Activation, Dense
 from keras.optimizers import Adam
 from sklearn.model_selection import train_test_split
-
+from PIL import Image
+from numpy import asarray
 x_train = np.load('../data/image/gender/npy/keras67_train_x.npy')
 y_train = np.load('../data/image/gender/npy/keras67_train_y.npy')
 x_val = np.load('../data/image/gender/npy/keras67_val_x.npy')
 y_val = np.load('../data/image/gender/npy/keras67_val_y.npy')
+
 
 print(x_train.shape, y_train.shape)
 print(x_val.shape, y_val.shape)
