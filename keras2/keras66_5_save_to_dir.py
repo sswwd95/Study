@@ -27,7 +27,7 @@ test_datagen=ImageDataGenerator(rescale=1./255)
 xy_train = train_datagen.flow_from_directory(
     '../data/image/brain/train',
     target_size=(150,150),  
-    batch_size=5,
+    batch_size=200,
     class_mode='binary'
     , save_to_dir='../data/image/brain_generator/train/'
 )
@@ -39,3 +39,14 @@ xy_test = test_datagen.flow_from_directory(
     batch_size=5, 
     class_mode='binary'
 )
+
+# 변수를 건드려줘야 저장된다. 
+print(xy_train[0][0])
+print(xy_train[0][1])
+print(xy_train[0][0].shape)
+print(xy_train[0][1].shape)
+
+# batch_size = 5로 하면 5*4 = 20개 이미지 저장된다.
+# batch_size = 200으로 하면 160*(프린트)4=640개 이미지 저장된다.
+
+
