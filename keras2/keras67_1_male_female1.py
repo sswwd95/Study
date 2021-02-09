@@ -96,3 +96,10 @@ print('acc : ', history.history['acc'][-1])
 
 # loss :  0.07028840482234955
 # acc :  0.9786293506622314
+
+loss, acc = model.evaluate_generator(val_gen)
+print('loss, acc : ', loss, acc)
+# loss, acc :  0.5986067652702332 0.7838616967201233
+
+pred = model.predict_generator(val_gen,verbose=True)
+print('pred : ',pred)
