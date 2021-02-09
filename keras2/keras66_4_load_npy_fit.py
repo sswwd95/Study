@@ -37,3 +37,12 @@ lr = ReduceLROnPlateau(moniort='val_loss',factor=0.5,patience=10)
 
 model.compile(loss ='binary_crossentropy', optimizer='adam',metrics=['acc'])
 model.fit(x_train, y_train, epochs=1000, callbacks=[es,lr], validation_data=(x_val, y_val) )
+
+loss, acc = model.evaluate(x_test, y_test, batch_size=16)
+print('loss, acc : ', loss, acc)
+# loss, acc :  0.6761921048164368 0.574999988079071
+
+y_predict = model.predict(x_test)
+print(y_predict[0])
+print(y_predict.shape)
+

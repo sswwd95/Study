@@ -21,7 +21,7 @@ train_datagen = ImageDataGenerator(
                         # 0으로하면 빈자리를 0으로 채워준다(padding과 같은 개념)? -> 넣어보고 체크하기
 )
 
-test_datagen=ImageDataGenerator(rescale=1./255)
+test_datagen=ImageDataGenerator(rescale=1./255) # 하나를 255로 나눈다는 것
 
 #train_generater
 xy_train = train_datagen.flow_from_directory(
