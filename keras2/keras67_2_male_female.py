@@ -10,6 +10,8 @@ from keras.optimizers import Adam
 from sklearn.model_selection import train_test_split
 from PIL import Image
 from numpy import asarray
+import matplotlib.pyplot as plt
+
 x_train = np.load('../data/image/gender/npy/keras67_train_x.npy')
 y_train = np.load('../data/image/gender/npy/keras67_train_y.npy')
 x_val = np.load('../data/image/gender/npy/keras67_val_x.npy')
@@ -20,6 +22,9 @@ print(x_train.shape, y_train.shape)
 print(x_val.shape, y_val.shape)
 # (1389, 128, 128, 3) (1389,)
 # (347, 128, 128, 3) (347,)
+print(x_train[0].shape)
+# plt.imshow(x_train[0])
+# plt.show()
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(
@@ -59,13 +64,18 @@ model.compile(
     metrics=['acc']
 )
 
-from keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from keras.callbacks import EarlyStopping, ReduceLROnPlateau,ModelCheckpoint
 es=EarlyStopping(patience=20, verbose=1, monitor='loss')
 rl=ReduceLROnPlateau(patience=10, verbose=1, monitor='loss')
+filepath = ('../data/modelcheckpoint/fit_gender-{val_acc:.4f}.hdf5')
+cp = ModelCheckpoint(filepath=filepath, save_best_only=True, verbose=1)
 
 history= model.fit(x_train, y_train, epochs=1000, callbacks=[es,rl], validation_data=(x_val, y_val) )
 print('loss : ', history.history['loss'][-1])
 print('acc : ', history.history['acc'][-1])
+
+model.save('../data/h5/fit.h5')
+
 
 loss, acc = model.evaluate(x_test, y_test, batch_size=16)
 print('loss, acc : ', loss, acc)

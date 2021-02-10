@@ -40,10 +40,12 @@ val_gen=datagen.flow_from_directory(
     subset="validation"
 )
 
+
+
 print(train_gen[0][0].shape, val_gen[0][0].shape)
 # (1389, 128, 128, 3) (347, 128, 128, 3)
 
-# 저장은 batch_size 전체로 맞춰서 하기!
+
 np.save('../data/image/gender/npy/keras67_train_x.npy', arr=train_gen[0][0])
 np.save('../data/image/gender/npy/keras67_train_y.npy', arr=train_gen[0][1])
 np.save('../data/image/gender/npy/keras67_val_x.npy', arr=val_gen[0][0])
@@ -79,9 +81,11 @@ model.compile(
     metrics=['acc']
 )
 
-from keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from keras.callbacks import EarlyStopping, ReduceLROnPlateau,ModelCheckpoint
 es=EarlyStopping(patience=20, verbose=1, monitor='loss')
 rl=ReduceLROnPlateau(patience=10, verbose=1, monitor='loss')
+filepath = ('../data/modelcheckpoint/fitgen_gender-{val_acc:.4f}.hdf5')
+cp = ModelCheckpoint(filepath=filepath, save_best_only=True, verbose=1)
 
 history = model.fit_generator(
     train_gen,
@@ -96,6 +100,9 @@ print('acc : ', history.history['acc'][-1])
 
 # loss :  0.07028840482234955
 # acc :  0.9786293506622314
+
+model.save('../data/h5/fitgen.h5')
+
 
 loss, acc = model.evaluate_generator(val_gen)
 print('loss, acc : ', loss, acc)
