@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from tensorflow.keras.datasets import mnist
+# 하나하나는 모듈. 전체는 폴더 구조 자체로 되어있는 것을 패키지
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
