@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+# https://enjoyso.tistory.com/119
+
 def sigmoid(x) :
     return 1/ (1+np.exp(-x))
 
