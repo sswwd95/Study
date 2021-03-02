@@ -27,7 +27,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Conv2D, Flatten
 
 VGG16 = VGG16(weights='imagenet', include_top=False, input_shape=(32,32,3))
-VGG16.trainable = False
+VGG16.trainable = True
 
 model = Sequential()
 model.add(VGG16)
@@ -64,5 +64,31 @@ y_pred = model.predict(x_test)
 
 # epoch = 100
 # loss, acc :  1.0346275568008423 0.8866999745368958
+
+
+################################### trainable = True ######################################
+# VGG16
+
+# VGG19
+
+# Xception
+
+# ResNet50
+
+# ResNet101
+
+# InceptionV3
+
+# InceptionResNetV2
+
+# DenseNet121
+
+# MobileNetV2
+
+# NASNetMobile
+
+# EfficientNetB0
+
+
 
 
