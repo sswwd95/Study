@@ -30,7 +30,7 @@ model.add(Dense(10, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics='acc')
 from tensorflow.keras.callbacks import EarlyStopping
 es = EarlyStopping(monitor='acc', patience=10, mode='max')
-model.fit(x_test, y_test, epochs=100, validation_split=0.2, callbacks=[es],batch_size=16)
+model.fit(x_train, y_train, epochs=100, validation_split=0.2, callbacks=[es],batch_size=16)
 
 # 4. 평가, 예측
 loss,acc = model.evaluate(x_test,y_test, batch_size=16)
@@ -62,4 +62,4 @@ y_pred = model.predict(x_test)
 # loss, acc :  0.8928781151771545 0.906000018119812
 
 # MobileNetV2
-# loss, acc :  2.1688077449798584 0.7903000116348267
+# loss, acc :  7.910558700561523 0.28610000014305115

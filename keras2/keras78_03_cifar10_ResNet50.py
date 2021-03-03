@@ -30,21 +30,38 @@ model.add(Dense(10, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics='acc')
 from tensorflow.keras.callbacks import EarlyStopping
 es = EarlyStopping(monitor='acc', patience=10, mode='max')
-model.fit(x_test, y_test, epochs=100, validation_split=0.2, callbacks=[es],batch_size=16)
+model.fit(x_train, y_train, epochs=100, validation_split=0.2, callbacks=[es],batch_size=16)
 
 # 4. 평가, 예측
 loss,acc = model.evaluate(x_test,y_test, batch_size=16)
 print('loss, acc : ', loss,acc)
 y_pred = model.predict(x_test)
 
+################################### trainable = False ######################################
 # VGG16
-# loss, acc :  1.0346275568008423 0.8866999745368958
+# loss, acc :  1.7574269771575928 0.35839998722076416
 
 # VGG19
-# loss, acc :  1.0713889598846436 0.904699981212616
+# loss, acc :  5.636412143707275 0.5525000095367432
 
 # Xception
-# Input size must be at least 71x71; got `input_shape=(32, 32, 3)
+# ValueError: Input size must be at least 71x71; got `input_shape=(32, 32, 3)`
 
 # ResNet50
-# loss, acc :  1.6861326694488525 0.3921999931335449
+
+# ResNet101
+
+# InceptionV3
+
+# InceptionResNetV2
+
+# DenseNet121
+
+# MobileNetV2
+
+# NASNetMobile
+
+# EfficientNetB0
+
+
+

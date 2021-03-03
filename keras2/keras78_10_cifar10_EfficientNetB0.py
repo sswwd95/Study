@@ -30,7 +30,7 @@ model.add(Dense(10, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics='acc')
 from tensorflow.keras.callbacks import EarlyStopping
 es = EarlyStopping(monitor='acc', patience=10, mode='max')
-model.fit(x_test, y_test, epochs=100, validation_split=0.2, callbacks=[es],batch_size=16)
+model.fit(x_train, y_train, epochs=100, validation_split=0.2, callbacks=[es],batch_size=16)
 
 # 4. 평가, 예측
 loss,acc = model.evaluate(x_test,y_test, batch_size=16)
@@ -39,19 +39,14 @@ y_pred = model.predict(x_test)
 
 ################################### trainable = False ######################################
 # VGG16
-# loss, acc :  1.0346275568008423 0.8866999745368958
 
 # VGG19
-# loss, acc :  1.0713889598846436 0.904699981212616
 
 # Xception
-# Input size must be at least 71x71; got `input_shape=(32, 32, 3)
 
 # ResNet50
-# loss, acc :  1.6861326694488525 0.3921999931335449
 
 # ResNet101
-# loss, acc :  1.7284802198410034 0.38089999556541443
 
 # InceptionV3
 # ValueError: Input size must be at least 75x75; got `input_shape=(32, 32, 3)`
@@ -60,10 +55,9 @@ y_pred = model.predict(x_test)
 # ValueError: Input size must be at least 75x75; got `input_shape=(32, 32, 3)`
 
 # DenseNet121
-# loss, acc :  0.8928781151771545 0.906000018119812
 
 # MobileNetV2
-# loss, acc :  2.1688077449798584 0.7903000116348267
+# loss, acc :  7.910558700561523 0.28610000014305115
 
 # NASNetMobile
 # ValueError: When setting `include_top=True` and loading `imagenet` weights, `input_shape` should be (224, 224, 3).

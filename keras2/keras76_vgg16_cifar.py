@@ -16,6 +16,10 @@ x_test = x_test.reshape(10000,32,32,3)/255.
 
 print(x_train.shape)
 
+from tensorflow.keras.applications.vgg16 import preprocess_input
+x_train = preprocess_input(x_train)
+x_test = preprocess_input(x_test)
+
 from tensorflow.keras.utils import to_categorical
 y_train = to_categorical(y_train)
 y_test = to_categorical(y_test)
@@ -27,7 +31,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Conv2D, Flatten
 
 VGG16 = VGG16(weights='imagenet', include_top=False, input_shape=(32,32,3))
-VGG16.trainable = True
+VGG16.trainable = False
 
 model = Sequential()
 model.add(VGG16)
@@ -40,7 +44,7 @@ model.add(Dense(10, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics='acc')
 from tensorflow.keras.callbacks import EarlyStopping
 es = EarlyStopping(monitor='acc', patience=10, mode='max')
-model.fit(x_test, y_test, epochs=100, validation_split=0.2, callbacks=[es],batch_size=16)
+model.fit(x_train, y_train, epochs=100, validation_split=0.2, callbacks=[es],batch_size=16)
 
 # 4. 평가, 예측
 loss,acc = model.evaluate(x_test,y_test, batch_size=16)
@@ -66,6 +70,30 @@ y_pred = model.predict(x_test)
 # loss, acc :  1.0346275568008423 0.8866999745368958
 
 
+################################### trainable = False ######################################
+# VGG16
+# loss, acc :  1.7574269771575928 0.35839998722076416
+
+# VGG19
+
+# Xception
+
+# ResNet50
+
+# ResNet101
+
+# InceptionV3
+
+# InceptionResNetV2
+
+# DenseNet121
+
+# MobileNetV2
+
+# NASNetMobile
+
+# EfficientNetB0
+
 ################################### trainable = True ######################################
 # VGG16
 
@@ -88,6 +116,7 @@ y_pred = model.predict(x_test)
 # NASNetMobile
 
 # EfficientNetB0
+
 
 
 

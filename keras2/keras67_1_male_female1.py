@@ -45,7 +45,6 @@ val_gen=datagen.flow_from_directory(
 print(train_gen[0][0].shape, val_gen[0][0].shape)
 # (1389, 128, 128, 3) (347, 128, 128, 3)
 
-
 np.save('../data/image/gender/npy/keras67_train_x.npy', arr=train_gen[0][0])
 np.save('../data/image/gender/npy/keras67_train_y.npy', arr=train_gen[0][1])
 np.save('../data/image/gender/npy/keras67_val_x.npy', arr=val_gen[0][0])

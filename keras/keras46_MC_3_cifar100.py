@@ -42,7 +42,7 @@ from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint
 modelpath = '../data/modelcheckpoint/k46_cifar100_{epoch:02d}-{val_loss:.4f}.hdf5'
 cp = ModelCheckpoint(filepath=modelpath, mode='auto', save_best_only=True, monitor='val_loss')
 es = EarlyStopping(monitor='acc', patience=10, mode='max')
-model.fit(x_test, y_test, epochs=50, validation_split=0.2, callbacks=[es,cp],batch_size=32)
+model.fit(x_train, y_train, epochs=50, validation_split=0.2, callbacks=[es,cp],batch_size=32)
 
 # 4. 평가, 예측
 loss,acc = model.evaluate(x_test,y_test, batch_size=32)
