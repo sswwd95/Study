@@ -54,7 +54,6 @@ if pred >0.5:
 else:
     print('당신은 여자입니다!')
 
-<<<<<<< Updated upstream:keras2/keras67_5_my.py
 # 나
 # pred :  [[0.00595943]]
 # 여자일 확률은  [[99.40405]] %
@@ -73,29 +72,3 @@ else:
 # 남자일 확률은  [[99.94415]] %
 # 당신은 남자입니다!
 
-=======
-def Dataization(img_path):
-    image_w = 64
-    image_h = 64
-    img = cv2.imread(img_path)
-    img = cv2.resize(img, None, fx=image_w/img.shape[1], fy=image_h/img.shape[0])
-    return (img/255)
- 
-src = []
-name = []
-test = []
-image_dir = "../project/test/"
-for file in os.listdir(image_dir):
-    if (file.find('.jpg') is not -1):      
-        src.append(image_dir + file)
-        name.append(file)
-        test.append(Dataization(image_dir + file))
- 
- 
-test = np.array(test)
-model = load_model('Gersang.h5')
-predict = model.predict_classes(test)
- 
-for i in range(len(test)):
-    print(name[i] + " : , Predict : "+ str(categories[predict[i]]))
->>>>>>> Stashed changes:pred.py
