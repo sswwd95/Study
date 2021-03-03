@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 (x_train, y_train), (x_test, y_test) = reuters.load_data(
-    num_words=30000, test_split=0.2)
+    num_words=1000, test_split=0.2)
 
 print(x_train[0],type(x_train[0]))
 '''
@@ -102,4 +102,62 @@ april 0 a after said from 1985 and from foreign 000 april 0 prices its account y
 home an states earlier and rise and revs vs 000 its 16 vs 000 a but 3 psbr oils several and shareholders
  and dividend vs 000 its all 4 vs 000 1 mln agreed largely april 0 are 2 states will billion total and against 000 pct dlrs
 '''
+
+# y카테고리 갯수 출력
+category = np.max(y_train) + 1 # 0부터 시작하니까 +1
+print('y 카테고리 갯수 : ' , category) #46
+
+# y의 유니크한 값 출력
+y_bunpo = np.unique(y_train)
+print(y_bunpo)
+# [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+#  24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45]
+
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+x_train = pad_sequences(x_train, maxlen=500,truncating='pre', padding='pre')
+x_test = pad_sequences(x_test, maxlen=500,truncating='pre', padding='pre')
+# maxlen은 뉴스 기사 길이 보며 적절하게 조절
+
+# from tensorflow.keras.utils import to_categorical
+# y_train = to_categorical(y_train)
+# y_test = to_categorical(y_test)
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Embedding, Dense, LSTM, Flatten, Conv1D
+
+model = Sequential()
+# model.add(Embedding(input_dim = 1000, output_dim=100, input_length = 500))
+# input_dim = num_words와 같게 한다.
+# input_length = maxlen
+model.add(Embedding(1000,100))
+model.add(LSTM(100))
+model.add(Dense(46,activation='softmax'))
+model.summary()
+
+
+from tensorflow.keras.callbacks import EarlyStopping
+es = EarlyStopping(monitor='val_loss',patience=20, mode='auto', verbose=1)
+model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['acc'])
+
+model.fit(x_train, y_train, batch_size=64, epochs=200, callbacks=[es], validation_split=0.2)
+
+results = model.evaluate(x_test, y_test)
+print('loss : ', results[0])
+print('acc : ', results[1])
+print('정확도 : %.4f' % (model.evaluate(x_test, y_test)[1]))
+# rmsprop(maxlen=500)
+# 정확도 : 0.7137
+
+# adam(maxlen=700)
+# 정확도 : 0.7462
+
+# adam(maxlen=500)
+# 정확도 : 0.7689
+
+# adam(maxlen=100)
+# 정확도 : 0.69
+
+
+# 다중분류 할 때 to_categorical 사용 안하고 loss에서 'sparse_categorical_crossentropy' 사용하면 같다.
+# 정확도 : 0.7556
 
