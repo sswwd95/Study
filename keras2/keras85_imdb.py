@@ -1,4 +1,7 @@
 from tensorflow.keras.datasets import reuters, imdb
+import numpy as np
+import matplotlib.pyplot as plt
+
 
 (x_train, y_train),(x_test, y_test) = imdb.load_data(
     num_words=5000)
@@ -8,6 +11,16 @@ print(y_train.shape, y_test.shape)
 # (25000,) (25000,)
 # (25000,) (25000,)
 
+print('뉴스기사 최대길이 : ', max(len(i) for i in x_train))
+print('뉴스기사 평균길이 : ', sum(map(len, x_train)) / len(x_train))
+
+unique_elements, counts_elements = np.unique(y_train, return_counts=True)
+print('y분포 : ', dict(zip(unique_elements, counts_elements)))
+
+plt.hist(y_train, bins=46)
+plt.show()
+
+'''
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 x_train = pad_sequences(x_train, maxlen=100)
 x_test = pad_sequences(x_test, maxlen=100)
@@ -32,3 +45,4 @@ print('acc : ', results[1])
 
 # loss :  1.1877137422561646
 # acc :  0.8255199790000916
+'''
