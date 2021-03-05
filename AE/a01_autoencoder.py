@@ -15,7 +15,7 @@ from tensorflow.keras.layers import Dense, Input
 
 input_img = Input(shape=(784,))
 encoded = Dense(64, activation='relu')(input_img) # 히든레이어가 1개인 모델
-decoded = Dense(784, activation='sigmoid')(encoded)
+decoded = Dense(784, activation='sigmoid')(encoded) # relu쓰면 마이너스 부분이 적용안되니까 제대로 결과가 안나온다.
 
 autoencoder = Model(input_img, decoded)
 
@@ -37,7 +37,10 @@ Non-trainable params: 0
 _________________________________________________________________
 '''
 
-autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
+# autoencoder.compile(optimizer='adam', loss='binary_crossentropy', metrics=['acc'])
+autoencoder.compile(optimizer='adam', loss='mse', metrics=['acc'])
+# 오토인코더는 loss를 기준으로 잡아라
+
 
 autoencoder.fit(x_train,x_train, epochs=30, batch_size=256, validation_split=0.2) # y는 x와 동일하기 때문에 x_train을 두 번 넣어준다
 
