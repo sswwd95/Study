@@ -17,6 +17,8 @@ input_img = Input(shape=(784,))
 encoded = Dense(64, activation='relu')(input_img) # 히든레이어가 1개인 모델
 decoded = Dense(784, activation='sigmoid')(encoded) # relu쓰면 마이너스 부분이 적용안되니까 제대로 결과가 안나온다.
 
+# input이랑 output의 노드를 같게 해라. 히든레이어는 동일하게 안해도 된다.
+
 autoencoder = Model(input_img, decoded)
 
 autoencoder.summary()

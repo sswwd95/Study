@@ -111,3 +111,5 @@ for row_num, row in enumerate(axes):
         ax.set_xticks([])
         ax.set_yticks([])
 plt.show()
+
+#pca했을 때 174가 95%
