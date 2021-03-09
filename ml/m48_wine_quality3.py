@@ -21,7 +21,7 @@ newlist = []
 for i in list(y):
     if i <= 4: # i는 0번째부터 들어간다. (3,4) => 0등급
         newlist +=[0]
-    elif i <= 6:  #(5,6,7) => 1등급
+    elif i <= 7:  #(5,6,7) => 1등급
         newlist +=[1]
     else :        # (8, 9) => 2등급 표본은 임의로 잡는다
         newlist +=[2]

@@ -67,7 +67,7 @@ weighted avg       0.88      0.88      0.88      1470
 '''
 
 '''
-model = RandomizedSearchCV(pipe, parameters, cv=5)
+
 acc :  0.8836734693877552
               precision    recall  f1-score   support
 
