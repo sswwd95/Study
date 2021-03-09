@@ -4,7 +4,7 @@
 
 # 2. 위 쓰레드 값으로 selectfrommodel을 구해서 최적의 피처 갯수를 구할것
 
-# 3. 위 피처 갯수로 데이터(피처)를 수정(삭제)해서 
+# 3. 위 피처 갯수로 데이터(피처)를 수정(삭제)해서
 # 그리드 서치 또는 랜덤서치 적용하여 최적의 r2구할 것
 
 # 1번값과 2번값 비교
@@ -15,24 +15,24 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 from sklearn.feature_selection import SelectFromModel
 from sklearn.metrics import r2_score, accuracy_score
-from xgboost import XGBClassifier,XGBRegressor, plot_importance
-from sklearn.pipeline import Pipeline, make_pipeline 
+from xgboost import XGBClassifier, XGBRegressor, plot_importance
+from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.model_selection import train_test_split, KFold, cross_val_score,\
-     GridSearchCV, RandomizedSearchCV
+    GridSearchCV, RandomizedSearchCV
 
-x, y = load_boston(return_X_y= True)
+x, y = load_boston(return_X_y=True)
 
 x_train, x_test, y_train, y_test = train_test_split(
-    x, y, train_size = 0.8, shuffle = True, random_state = 66
+    x, y, train_size=0.8, shuffle=True, random_state=66
 )
 
 xgb = XGBRegressor()
 
 parameters = {
-    'max_depth' : [2,4,6,-1],
-    'min_child_weight' : [1,2,4,-1],
-    'eta' : [0.3,0.1,0.01,0.5]
+    'max_depth': [2, 4, 6, -1],
+    'min_child_weight': [1, 2, 4, -1],
+    'eta': [0.3, 0.1, 0.01, 0.5]
 }
 
 # 2. 모델구성
@@ -43,7 +43,8 @@ model.fit(x_train, y_train)
 score = model.score(x_test, y_test)
 print('R2 : ', score)
 
-thresholds = np.sort(model.best_estimator_.feature_importances_) # 이렇게 하면 fi 값들이 정렬되어 나온다!
+# 이렇게 하면 fi 값들이 정렬되어 나온다!
+thresholds = np.sort(model.best_estimator_.feature_importances_)
 print(thresholds)
 # R2 :  0.9328109624443419
 # [0.0007204  0.00150525 0.01197547 0.01352609 0.01669537 0.02149532
@@ -51,18 +52,19 @@ print(thresholds)
 #  0.40165624]
 
 tmp = 0
-tmp2 = [0,0]
+tmp2 = [0, 0]
 
 
 # 하나씩 포문돌린다
 for thresh in thresholds:
     # selection = SelectFromModel(model, threshold = thresh, prefit = True)
-    selection = SelectFromModel(model.best_estimator_, threshold = thresh, prefit = True)
+    selection = SelectFromModel(
+        model.best_estimator_, threshold=thresh, prefit=True)
 
     select_x_train = selection.transform(x_train)
     print(select_x_train.shape)
 
-    selection_model = XGBRegressor(n_jobs = 13)
+    selection_model = XGBRegressor(n_jobs=13)
     selection_model.fit(select_x_train, y_train)
 
     select_x_test = selection.transform(x_test)
@@ -70,20 +72,22 @@ for thresh in thresholds:
     y_predict = selection_model.predict(select_x_test)
 
     score = r2_score(y_test, y_predict)
-    if score>tmp:
+    if score > tmp:
         tmp = score
         tmp2[0] = thresh
         tmp2[1] = select_x_train.shape[1]
 
-    print('Thresh=%.3f, n=%d, R2: %.2f%%' %(thresh, select_x_train.shape[1], score*100))
-    print ('best score so far : ', tmp)
-    print ('best threshold :',tmp2[0])
+    print('Thresh=%.3f, n=%d, R2: %.2f%%' %
+          (thresh, select_x_train.shape[1], score*100))
+    print('best score so far : ', tmp)
+    print('best threshold :', tmp2[0])
 
 print("++++++++++++++++++++++++++++++++++++++++++++++++++")
 
 print(f'best threshold : {tmp2[0]}, n={tmp2[1]}')
 
-selection = SelectFromModel(model.best_estimator_, threshold=tmp2[0], prefit=True)
+selection = SelectFromModel(model.best_estimator_,
+                            threshold=tmp2[0], prefit=True)
 
 select_x_train = selection.transform(x_train)
 
@@ -97,7 +101,6 @@ score = r2_score(y_test, y_predict)
 
 print("=======================================")
 print(f'최종 r2 score : {score*100}%, n={tmp2[1]}일 때')
-
 
 
 '''

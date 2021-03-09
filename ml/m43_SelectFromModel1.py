@@ -5,7 +5,7 @@ import numpy as np
 from sklearn.feature_selection import SelectFromModel
 from sklearn.metrics import r2_score, accuracy_score
 
-x, y = load_boston(return_X_y= True)
+x, y = load_boston(return_X_y= True) # return_X_y : x, y 바로 분리되어 나온다
 
 x_train, x_test, y_train, y_test = train_test_split(
     x, y, train_size = 0.8, shuffle = True, random_state = 66
@@ -31,10 +31,16 @@ print(thresholds)
 
 
 # 하나씩 포문돌린다
+# selectfrommodel : 중요도 가중치를 기반으로 기능을 선택하기 위한 메타 트랜스포머
+# Xgbooster, LGBM, RandomForest등 feature_importances_기능을 쓰는 모델이면 사용 가능
+
 for thresh in thresholds:
     selection = SelectFromModel(model, threshold = thresh, prefit = True)
+    # threshold = thresh : feature 선택에 사용할 임계 값
+    # prefit = true  : 사전 맞춤 모델이 생성자에 직접 전달 될 것으로 예상,
+    # True 인 경우 transform직접 호출 
 
-    select_x_train = selection.transform(x_train)
+    select_x_train = selection.transform(x_train) # x_train을 selection형태로 바꿈
     print(select_x_train.shape)
 
     selection_model = XGBRegressor(n_jobs = 13)
@@ -74,6 +80,8 @@ Thresh=0.301, n=2, R2: 69.41%
 (404, 1)
 Thresh=0.428, n=1, R2: 44.98%
 '''
+
+# m44 기울기, 편향 부분 여기서 확인
 
 print(model.coef_)
 print(model.intercept_)
