@@ -16,6 +16,8 @@ print(np.unique(y))
 ####### 의미없음 ^^ ############
 
 
+############################################ 기존 코딩 방법 ############################################
+# -----새로운 WINE 파일로 해보자!-----------
 wine = pd.read_csv('../data/csv/winequality-white.csv', sep=';', index_col=None, header=0)
 
 print(wine)
@@ -71,3 +73,24 @@ x_test = scale.transform(x_test)
 
 print(x_train.shape, x_test.shape)
 # (3918, 11) (980, 11)
+
+from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
+from sklearn.neighbors import KNeighborsClassifier
+
+model = RandomForestClassifier()
+
+model.fit(x_train, y_train)
+
+score = model.score(x_test, y_test)
+print('score : ', score)
+
+# model = KNeighborsClassifier()
+# score :  0.5428571428571428
+
+# model = XGBClassifier()
+# score :  0.6683673469387755
+
+# model = RandomForestClassifier()
+# score :  0.7020408163265306
+
