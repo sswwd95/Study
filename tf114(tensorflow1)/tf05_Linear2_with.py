@@ -19,16 +19,34 @@ cost = tf.reduce_mean(tf.square(hypothesis - y_train))
 # loss = mse (예측값에서 원래 결과값을 빼서 제곱하고 평균을 낸다)
 # loss값을 최적화를 했다, gradient descent
 
-optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
-train = optimizer.minimize(cost) # cost를 집어넣고 최소화시키는 것을 훈련시키겠다 => 최적의 weight를 구한다
+# optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
+# train = optimizer.minimize(cost) # cost를 집어넣고 최소화시키는 것을 훈련시키겠다 => 최적의 weight를 구한다
+train = tf.train.GradientDescentOptimizer(learning_rate=0.01).minimize(cost)
 
-sess = tf.Session()
-sess.run(tf.global_variables_initializer())
+'''
+# sess = tf.Session()
 
-for step in range(2001):
-    sess.run(train) # train을 실행시켜라
-    if step % 20 ==0: # step을 20으로 나눈 나머지가 0이면 출력한다(2000 epoch돌면서 20번마다 출력)
-        print(step, sess.run(cost), sess.run(W), sess.run(b))
+# sess.run(tf.global_variables_initializer())
+
+# for step in range(2001):
+#     sess.run(train) # train을 실행시켜라
+#     if step % 20 ==0: # step을 20으로 나눈 나머지가 0이면 출력한다(2000 epoch돌면서 20번마다 출력)
+#         print(step, sess.run(cost), sess.run(W), sess.run(b))
+
+# sess.close() # session하면 메모리 오픈된다. 자동으로 닫아주긴 하지만 그래도 수동으로 닫아주는게 좋다
+
+'''
+
+# 자동으로 session닫아주는 것 = with문으로 감싸준다
+with tf.Session() as sess:
+    sess.run(tf.global_variables_initializer())
+
+    for step in range(2001):
+        sess.run(train) # train을 실행시켜라
+        if step % 20 ==0: # step을 20으로 나눈 나머지가 0이면 출력한다(2000 epoch돌면서 20번마다 출력)
+            print(step, sess.run(cost), sess.run(W), sess.run(b))
+
+
 
 # 결과 : weight는 2에 수렴하고 bias는 1에 수렴한다
 '''
@@ -137,6 +155,9 @@ for step in range(2001):
 
 # mse가 최소가 된다 = cost가 최소가 된다
 
+'''
+수현님 코드(w, b 갱신 확인)
+
 import tensorflow as tf
 
 tf.set_random_seed(66)
@@ -169,3 +190,4 @@ for step in range(2001):
         print("hypothesis - y_train : ",sess.run(hypothesis - y_train))
         print("cost : ",sess.run(cost))
         print("\n\n")
+'''
