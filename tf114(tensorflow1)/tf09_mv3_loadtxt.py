@@ -41,7 +41,7 @@ w = tf.Variable(tf.random_normal([3,1]), name='weight')
 #  x의 shape=[None, 3] 에서 y의 shape=[None, 1]이 되려면 [3,1]이 되어야 한다.
 
 b = tf.Variable(tf.random_normal([1]), name='bias')
-# bias는 1개여서 1이다
+
 
 # hypothesis = x * w + b
 hypothesis = tf.matmul(x,w) + b
