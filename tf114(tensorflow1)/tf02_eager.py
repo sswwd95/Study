@@ -1,4 +1,4 @@
-# 즉시 실행 모드
+# 즉시 실행 모드(sess.run을 쓸 수 있게 해준다)
 # from tensorflow.python.framework.ops import disable_eager_execution
 import tensorflow as tf
 print(tf.executing_eagerly()) # false

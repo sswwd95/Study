@@ -24,14 +24,22 @@ print(y_train.shape) #(50000, 10)
 #2. 모델구성
 
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Conv2D, Flatten
+from tensorflow.keras.layers import Dense, Conv2D, Flatten,Dropout, MaxPooling2D
 
 model = Sequential()
-model.add(Conv2D(20,3,padding='same', input_shape=(32,32,3)))
+model.add(Conv2D(filters=128, kernel_size=(2,2), strides=1, padding='same', input_shape=(32,32,3), activation='relu'))
+model.add(Dropout(0.3))
+model.add(MaxPooling2D(pool_size=2))
+model.add(Conv2D(96, (2,2), padding='same'))
+model.add(Dropout(0.2))
+model.add(MaxPooling2D(pool_size=2))
+model.add(Conv2D(64, (2,2), padding='same'))
+model.add(MaxPooling2D(pool_size=2))
 model.add(Flatten())
-model.add(Dense(20, activation='relu'))
-model.add(Dense(20, activation='relu'))
-model.add(Dense(20, activation='relu'))
+model.add(Dense(64, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(16, activation='relu'))
 model.add(Dense(10, activation='softmax'))
 
 # 3. 컴파일, 훈련
