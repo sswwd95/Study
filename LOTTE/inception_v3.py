@@ -47,9 +47,9 @@ model.summary()
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
 es = EarlyStopping(patience= 15)
 lr = ReduceLROnPlateau(patience= 7, factor=0.6)
-mc = ModelCheckpoint('../data/lotte/mc/lotte_v3_2.h5',save_best_only=True, verbose=1)
+mc = ModelCheckpoint('../data/lotte/mc/lotte_v3_3.h5',save_best_only=True, verbose=1)
 
-model.compile(optimizer = RMSprop(lr=1e-5), 
+model.compile(optimizer = RMSprop(lr=1e-6), 
               loss = 'categorical_crossentropy', 
               metrics = ['acc'])
 
@@ -63,6 +63,12 @@ result = model.predict(x_pred, verbose=True)
 import pandas as pd
 submission = pd.read_csv('../lotte/sample.csv')
 submission['prediction'] = result.argmax(1)
-submission.to_csv('../data/lotte/answer_v3_2.csv', index=False)
+submission.to_csv('../data/lotte/answer_v3_3.csv', index=False)
 
+# v3_2파일
+# lr=1e-5
 # score = 34.250
+
+# v3_3 파일
+# lr=1e-6
+# score = 32

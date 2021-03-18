@@ -23,8 +23,8 @@ for i in range(0,1000) :
 
 nb_classes = len(categories)
 
-image_w = 150
-image_h = 150
+image_w = 128
+image_h = 128
 
 pixels = image_h * image_w * 3
 
