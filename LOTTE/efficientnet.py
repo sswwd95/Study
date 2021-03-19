@@ -1,3 +1,5 @@
+# 서영아 사랑해
+
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -23,16 +25,18 @@ x = preprocess_input(x)
 x_pred = preprocess_input(x_pred)
 
 idg = ImageDataGenerator(
-    width_shift_range=(1,-1),   
-    height_shift_range=(1,-1),  
-    shear_range=0.2) 
+    width_shift_range=(-1,1),  
+    height_shift_range=(-1,1), 
+    # rotation_range=20,
+    zoom_range=0.15)
+    # horizontal_flip=True,
+    # fill_mode='nearest')
 
 
 idg2 = ImageDataGenerator()
 
-# y = np.argmax(y, axis=1)
 print(x.shape, y.shape, x_pred.shape)
-print(y[0])
+# print(y[0])
 
 from sklearn.model_selection import train_test_split
 x_train, x_valid, y_train, y_valid = train_test_split(
@@ -52,7 +56,7 @@ from tensorflow.keras.applications import VGG19, MobileNet, EfficientNetB4,Effic
 
 
 ef = EfficientNetB4(weights="imagenet", include_top=False, input_shape=(128, 128, 3))
-
+ef.trainable = True
 top_model = ef.output
 top_model = Flatten()(top_model)
 # top_model = Dense(1024, activation="relu")(top_model)
@@ -65,7 +69,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 es = EarlyStopping(patience= 20)
 lr = ReduceLROnPlateau(patience= 10, factor=0.5)
 
-model.compile(optimizer=tf.keras.optimizers.SGD(learning_rate=0.05, momentum=0.9), loss = 'categorical_crossentropy', metrics=['accuracy'])
+model.compile(optimizer=tf.keras.optimizers.SGD(learning_rate=0.005, momentum=0.9), loss = 'categorical_crossentropy', metrics=['accuracy'])
 
 learning_history = model.fit_generator(train_generator,epochs=200, 
     validation_data=valid_generator, callbacks=[es,lr,mc])
@@ -85,9 +89,14 @@ sub.to_csv('../data/lotte/answer_b4_sgd_2.csv',index=False)
 # score 73
 
 
-# b4 파일(sgd lr=1e-2)
+# b4_sgd 파일(sgd lr=1e-2)
 # Epoch 00043: val_loss did not improve from 0.00800
 # 675/675 [==============================] - 217s 321ms/step - loss: 1.3907e-04 - accuracy: 1.0000 - val_loss: 0.0080 - val_accuracy: 0.9979
 # score = 74
 
-# b4 파일(sgd lr=0.05)
+# b4_sgd_2파일(sgd lr=0.05)
+# Epoch 00067: val_loss did not improve from 0.00187
+# 675/675 [==============================] - 215s 319ms/step - loss: 1.4300e-04 - accuracy: 1.0000 - val_loss: 0.0027 - val_accuracy: 0.9994
+# score = 71
+
+# b4_sgd_2파일(sgd lr=0.05) img 제너레이터 수정
