@@ -82,7 +82,7 @@ a = BatchNormalization() (a)
 a = Activation('swish') (a)
 a = GlobalAveragePooling2D() (a)
 # a = Flatten() (a)
-a = Dense(1024, activation= 'swish') (a)
+a = Dense(512, activation= 'swish') (a)
 a = Dropout(0.5) (a)
 a = Dense(1000, activation= 'softmax') (a)
 
