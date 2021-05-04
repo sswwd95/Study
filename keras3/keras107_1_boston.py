@@ -17,12 +17,11 @@ x_train, x_test, y_train, y_test = train_test_split(
 print(x_train.shape, x_test.shape)
 print(x.shape, y.shape)
 # (506, 13) (506,)
-
-
+'''
 #2 . 모델구성
 model = ak.StructuredDataRegressor(
-    overwrite=True, # true, false 큰 효과 모르겠다
-    max_trials=2, # 최대 시도 횟수 설정
+    overwrite=True, 
+    max_trials=10, 
     loss = 'mse',
     metrics=['mae'],
     directory='C:/data/ak/'
@@ -33,7 +32,7 @@ es = EarlyStopping(patience=4, verbose=1, restore_best_weights=True, monitor='va
 lr = ReduceLROnPlateau(patience=2, factor=0.5, verbose=1)
 cp = ModelCheckpoint(monitor='val_loss', filepath='C:/data/mc/', save_best_only=True, save_weights_only=True)
 
-model.fit(x_train, y_train, epochs=10)  # 1에폭 돌때 배치사이즈 8번 나눠서 해서 64번돈다
+model.fit(x_train, y_train, epochs=10) 
 
 # 4. 평가 예측
 loss, mae = model.evaluate(x_test, y_test, batch_size=64)
@@ -52,16 +51,16 @@ print("R2 : ", r2)
 
 model_ak = model.export_model()
 try:
-    model.save("C:/data/h5/ak_boston", save_format="tf")
+    model_ak.save("C:/data/h5/ak_boston", save_format="tf")
 except Exception:
-    model.save('C:/data/h5/ak_boston.h5')
+    model_ak.save('C:/data/h5/ak_boston.h5')
 
 
 best_model = model.tuner.get_best_model()
 try:
-    model.save("C:/data/h5/best_ak_boston", save_format="tf")
+    best_model.save("C:/data/h5/best_ak_boston", save_format="tf")
 except Exception:
-    model.save('C:/data/h5/best_ak_boston.h5')
+    best_model.save('C:/data/h5/best_ak_boston.h5')
 
 # 저장 에러날 때
 # https://autokeras.com/tutorial/export/
@@ -79,6 +78,54 @@ except Exception:
 # ValueError: Expect the data to ImageInput to have shape (batch_size, height, width, channels) or (batch_size, height, width) dimensions, but got input shape [64, 13]
 
 # StructuredDataRegressor
-# loss, mae :  15.099772453308105 2.5873918533325195
-# RMSE :  3.885370964657517
-# R2 :  0.7941452509002509
+# loss, mae :  15.613632202148438 2.7075181007385254
+# RMSE :  3.9514088969530325
+# R2 :  0.7870881386715735
+'''
+
+from tensorflow.keras.models import load_model
+model = load_model('C:/data/h5/ak_boston', custom_objects=ak.CUSTOM_OBJECTS)
+model.summary()
+
+
+best_model = load_model('C:/data/ak/structured_data_regressor/best_model', custom_objects=ak.CUSTOM_OBJECTS)
+best_model.summary()
+###################################################################
+
+result = model.evaluate(x_test, y_test)
+print(result)
+
+best_result = best_model.evaluate(x_test, y_test)
+print(best_result)
+
+'''
+Model: "model"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #
+=================================================================
+input_1 (InputLayer)         [(None, 13)]              0
+_________________________________________________________________
+multi_category_encoding (Mul (None, 13)                0
+_________________________________________________________________
+normalization (Normalization (None, 13)                27
+_________________________________________________________________
+dense (Dense)                (None, 128)               1792
+_________________________________________________________________
+re_lu (ReLU)                 (None, 128)               0
+_________________________________________________________________
+dense_1 (Dense)              (None, 32)                4128
+_________________________________________________________________
+re_lu_1 (ReLU)               (None, 32)                0
+_________________________________________________________________
+dense_2 (Dense)              (None, 32)                1056
+_________________________________________________________________
+re_lu_2 (ReLU)               (None, 32)                0
+_________________________________________________________________
+regression_head_1 (Dense)    (None, 1)                 33
+=================================================================
+Total params: 7,036
+Trainable params: 7,009
+Non-trainable params: 27
+_________________________________________________________________
+'''
+# [15.613630294799805, 2.7075181007385254]
