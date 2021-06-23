@@ -1,5 +1,5 @@
 import tensorflow as tf
-tf.set_random_seed(66)
+tf.random.set_seed(66)
 
 x_train = [[1.,2.],[3.,4.]]
 y_train = [[1.,2.],[3.,4.]]
