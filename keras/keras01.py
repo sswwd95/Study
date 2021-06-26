@@ -17,6 +17,7 @@ model.add(Dense(5, input_dim=1, activation='linear'))
 model.add(Dense(3, activation='linear'))     
 model.add(Dense(4))
 model.add(Dense(1))
+model.summary()
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam') #최소의 loss를 구하는 건 mse
